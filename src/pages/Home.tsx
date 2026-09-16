@@ -462,6 +462,7 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                onClick={() => navigate('/jobs')}
                 className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -523,6 +524,7 @@ const Home: React.FC = () => {
                     variant="primary"
                     size="sm"
                     className="flex items-center"
+                    onClick={() => navigate('/jobs')}
                   >
                     Apply Now
                     <ArrowRight className="h-3 w-3 ml-1" />
