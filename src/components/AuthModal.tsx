@@ -13,6 +13,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [emailExists, setEmailExists] = useState<boolean | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'student' | 'recruiter'>('student');
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,7 +29,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState('');
 
-  const { login, register, loading, error, clearError, checkEmailExists } = useAuth();
+  const { login, register, resetPassword, loading, error, clearError, checkEmailExists } = useAuth();
 
   // Clear errors when modal opens/closes or switches modes
   useEffect(() => {
@@ -138,12 +142,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           name: formData.name.trim(),
           email: formData.email.trim(),
           password: formData.password,
+          role: selectedRole,
           location: formData.location.trim(),
           skills: formData.skills.split(',').map(s => s.trim()).filter(s => s),
           phone: formData.phone.trim()
         });
         console.log('Registration successful');
-        setSuccessMessage('Account created successfully!');
+        setSuccessMessage(`Account created successfully as ${selectedRole.toUpperCase()}!`);
         setTimeout(() => {
           onClose();
           setSuccessMessage('');
@@ -333,6 +338,39 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Sign Up Form */}
             {emailExists === false && (
               <div className="space-y-4">
+                {/* Role Selector */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    I am joining as:
+                  </label>
+                  <div className="grid grid-cols-2 gap-3 mb-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedRole('student')}
+                      className={`p-3 rounded-xl border text-sm font-semibold transition-all flex flex-col items-center justify-center ${
+                        selectedRole === 'student'
+                          ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-sm ring-2 ring-indigo-500/20'
+                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span>🎓 Student</span>
+                      <span className="text-[10px] font-normal text-slate-500">Apply & Build Skills</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedRole('recruiter')}
+                      className={`p-3 rounded-xl border text-sm font-semibold transition-all flex flex-col items-center justify-center ${
+                        selectedRole === 'recruiter'
+                          ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-sm ring-2 ring-indigo-500/20'
+                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span>🏢 Recruiter</span>
+                      <span className="text-[10px] font-normal text-slate-500">Post & Hire Interns</span>
+                    </button>
+                  </div>
+                </div>
+
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name

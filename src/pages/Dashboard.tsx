@@ -1,801 +1,561 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Briefcase,
-  BookOpen,
-  TrendingUp, 
-  Users,
-  Calendar,
-  Bell,
-  Settings,
-  Eye,
-  Download,
-  Share2,
-  Plus,
-  CheckCircle,
-  Clock,
-  Star,
-  MapPin,
-  Building,
-  DollarSign,
-  Target,
+  Briefcase, 
+  Users, 
+  Clock, 
+  CheckCircle2, 
+  XCircle, 
+  Plus, 
+  Building, 
+  MapPin, 
+  DollarSign, 
+  FileText, 
+  ShieldCheck, 
+  Lock, 
+  Sparkles, 
+  ChevronRight, 
   Award,
-  X,
-  Trophy,
-  Flag,
-  BarChart3,
-  TrendingUp as TrendingIcon,
-  Zap,
-  Lightbulb,
-  Rocket,
-  Heart,
-  ExternalLink
+  ExternalLink,
+  X
 } from 'lucide-react';
-import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
-
-interface JobApplication {
-  id: string;
-  jobTitle: string;
-  company: string;
-  status: 'applied' | 'interviewing' | 'offered' | 'rejected';
-  appliedDate: string;
-  lastUpdated: string;
-}
-
-interface RecentJob {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
-  type: string;
-  postedDate: string;
-  isBookmarked: boolean;
-}
-
-interface Skill {
-  name: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  progress: number;
-}
+import { InternshipService, InternshipListing, Application } from '../services/internshipService';
+import { SkillGraphService, StudentSkill } from '../services/skillGraphService';
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [loading, setLoading] = useState(false);
-  const [applications, setApplications] = useState<JobApplication[]>([]);
-  const [recentJobs, setRecentJobs] = useState<RecentJob[]>([]);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [achievements, setAchievements] = useState<any[]>([]);
-  const [goals, setGoals] = useState<any[]>([]);
-  const [analytics, setAnalytics] = useState<any>({});
-  const [showGoalModal, setShowGoalModal] = useState(false);
-  const [newGoal, setNewGoal] = useState({ title: '', target: '', deadline: '' });
-
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { addNotification } = useNotifications();
 
+  const [loading, setLoading] = useState(true);
+
+  // Student state
+  const [studentApplications, setStudentApplications] = useState<Application[]>([]);
+  const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
+
+  // Recruiter state
+  const [recruiterListings, setRecruiterListings] = useState<InternshipListing[]>([]);
+  const [selectedListingForApplicants, setSelectedListingForApplicants] = useState<InternshipListing | null>(null);
+  const [applicantsForListing, setApplicantsForListing] = useState<Application[]>([]);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [posting, setPosting] = useState(false);
+
+  // New Listing Form Data
+  const [newListing, setNewListing] = useState({
+    title: '',
+    companyName: '',
+    location: 'Remote',
+    stipend: '₹25,000/month',
+    stipendAmount: 25000,
+    duration: '3 months',
+    description: '',
+    skills: '',
+    requirements: ''
+  });
+
   useEffect(() => {
-    // Mock data loading
-    setApplications([
-      {
-        id: '1',
-        jobTitle: 'Frontend Developer',
-        company: 'TechCorp Solutions',
-        status: 'interviewing',
-        appliedDate: '2024-01-15',
-        lastUpdated: '2024-01-20'
-      },
-      {
-        id: '2',
-        jobTitle: 'Software Engineer',
-        company: 'InnovateLab',
-        status: 'applied',
-        appliedDate: '2024-01-18',
-        lastUpdated: '2024-01-18'
-      },
-      {
-        id: '3',
-        jobTitle: 'UI/UX Designer',
-        company: 'DesignStudio Pro',
-        status: 'offered',
-        appliedDate: '2024-01-10',
-        lastUpdated: '2024-01-22'
-      }
-    ]);
-
-    setRecentJobs([
-      {
-        id: '1',
-        title: 'React Developer',
-        company: 'TechStartup Inc.',
-        location: 'Mumbai, India',
-        salary: '₹6-8 LPA',
-        type: 'Full-time',
-        postedDate: '2 hours ago',
-        isBookmarked: false
-      },
-      {
-        id: '2',
-        title: 'Python Developer',
-        company: 'DataMinds Analytics',
-        location: 'Bangalore, India',
-        salary: '₹5-7 LPA',
-        type: 'Full-time',
-        postedDate: '4 hours ago',
-        isBookmarked: true
-      },
-      {
-        id: '3',
-        title: 'Product Manager',
-        company: 'Growth Masters',
-        location: 'Delhi, India',
-        salary: '₹8-12 LPA',
-        type: 'Full-time',
-        postedDate: '6 hours ago',
-        isBookmarked: false
-      }
-    ]);
-
-    setSkills([
-      { name: 'JavaScript', level: 'advanced', progress: 90 },
-      { name: 'React', level: 'intermediate', progress: 75 },
-      { name: 'Node.js', level: 'intermediate', progress: 70 },
-      { name: 'Python', level: 'beginner', progress: 45 },
-      { name: 'UI/UX Design', level: 'beginner', progress: 30 }
-    ]);
-
-    // Mock achievements data
-    setAchievements([
-      {
-        id: '1',
-        title: 'First Application',
-        description: 'Submitted your first job application',
-        icon: '🎯',
-        earned: true,
-        date: '2024-01-15'
-      },
-      {
-        id: '2',
-        title: 'Skill Master',
-        description: 'Reached advanced level in JavaScript',
-        icon: '🏆',
-        earned: true,
-        date: '2024-01-18'
-      },
-      {
-        id: '3',
-        title: 'Interview Ready',
-        description: 'Completed 5 mock interviews',
-        icon: '🎤',
-        earned: false,
-        progress: 3
-      },
-      {
-        id: '4',
-        title: 'Network Builder',
-        description: 'Connected with 10+ professionals',
-        icon: '🤝',
-        earned: false,
-        progress: 7
-      }
-    ]);
-
-    // Mock goals data
-    setGoals([
-      {
-        id: '1',
-        title: 'Apply to 20 jobs',
-        target: 20,
-        current: 8,
-        deadline: '2024-02-15',
-        type: 'applications'
-      },
-      {
-        id: '2',
-        title: 'Complete React certification',
-        target: 100,
-        current: 75,
-        deadline: '2024-01-30',
-        type: 'certification'
-      },
-      {
-        id: '3',
-        title: 'Build portfolio website',
-        target: 100,
-        current: 30,
-        deadline: '2024-02-01',
-        type: 'project'
-      }
-    ]);
-
-    // Mock analytics data
-    setAnalytics({
-      applicationsThisMonth: 12,
-      interviewsScheduled: 3,
-      profileViews: 45,
-      skillsCompleted: 8,
-      averageResponseTime: '2.3 days',
-      successRate: 85,
-      topSkills: ['JavaScript', 'React', 'Node.js'],
-      trendingCompanies: ['TechCorp', 'InnovateLab', 'DesignStudio']
-    });
-  }, []);
-
-  const handleBookmarkJob = (jobId: string) => {
-    setRecentJobs(prev => prev.map(job => 
-      job.id === jobId ? { ...job, isBookmarked: !job.isBookmarked } : job
-    ));
-    
-    const job = recentJobs.find(j => j.id === jobId);
-    if (job) {
-      addNotification({
-        type: job.isBookmarked ? 'info' : 'success',
-        title: job.isBookmarked ? 'Job removed' : 'Job bookmarked',
-        message: job.isBookmarked ? 'Job removed from bookmarks' : 'Job added to bookmarks'
-      });
+    if (user?.id) {
+      loadDashboardData();
     }
-  };
+  }, [user?.id, user?.role]);
 
-  const handleApplyJob = (jobId: string) => {
+  const loadDashboardData = async () => {
+    if (!user?.id) return;
     setLoading(true);
-    
-    setTimeout(() => {
+    try {
+      if (user.role === 'recruiter') {
+        const listings = await InternshipService.fetchRecruiterListings(user.id);
+        setRecruiterListings(listings);
+        if (listings.length > 0) {
+          loadApplicantsForListing(listings[0]);
+        }
+      } else {
+        // Student role
+        const apps = await InternshipService.fetchStudentApplications(user.id);
+        setStudentApplications(apps);
+        const skills = await SkillGraphService.fetchStudentSkills(user.id);
+        setStudentSkills(skills);
+      }
+    } catch (err) {
+      console.error('Error loading dashboard data:', err);
+    } finally {
       setLoading(false);
-      addNotification({
-        type: 'success',
-        title: 'Application Submitted!',
-        message: 'Your job application has been submitted successfully'
-      });
-    }, 1500);
-  };
-
-  const handleShareJob = (job: RecentJob) => {
-    const shareText = `Check out this job opportunity: ${job.title} at ${job.company}`;
-    const shareUrl = window.location.href;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: job.title,
-        text: shareText,
-        url: shareUrl
-      });
-    } else {
-      navigator.clipboard.writeText(`${shareText} - ${shareUrl}`);
-      addNotification({
-        type: 'success',
-        title: 'Link copied!',
-        message: 'Job link copied to clipboard'
-      });
     }
   };
 
-  const handleDownloadResume = () => {
-    addNotification({
-      type: 'info',
-      title: 'Download Started',
-      message: 'Preparing your resume for download...'
-    });
-    
-    setTimeout(() => {
+  const loadApplicantsForListing = async (listing: InternshipListing) => {
+    setSelectedListingForApplicants(listing);
+    try {
+      const apps = await InternshipService.fetchApplicationsForListing(listing.id);
+      setApplicantsForListing(apps);
+    } catch (err) {
+      console.error('Error loading applicants:', err);
+    }
+  };
+
+  const handleCreateListing = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newListing.title.trim() || !newListing.companyName.trim()) {
+      addNotification({ type: 'warning', title: 'Missing Info', message: 'Please enter Title and Company Name.' });
+      return;
+    }
+
+    setPosting(true);
+    try {
+      const created = await InternshipService.createListing({
+        title: newListing.title.trim(),
+        companyName: newListing.companyName.trim(),
+        location: newListing.location,
+        stipend: newListing.stipend,
+        stipendAmount: Number(newListing.stipendAmount),
+        duration: newListing.duration,
+        description: newListing.description,
+        skills: newListing.skills.split(',').map(s => s.trim()).filter(Boolean),
+        requirements: newListing.requirements.split('\n').map(s => s.trim()).filter(Boolean)
+      });
+
       addNotification({
         type: 'success',
-        title: 'Download Complete',
-        message: 'Your resume has been downloaded successfully'
+        title: 'Internship Posted!',
+        message: `Successfully posted ${created.title}`
       });
-    }, 2000);
+
+      setShowPostModal(false);
+      setNewListing({
+        title: '',
+        companyName: '',
+        location: 'Remote',
+        stipend: '₹25,000/month',
+        stipendAmount: 25000,
+        duration: '3 months',
+        description: '',
+        skills: '',
+        requirements: ''
+      });
+
+      loadDashboardData();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to post internship.';
+      addNotification({ type: 'error', title: 'Error', message: msg });
+    } finally {
+      setPosting(false);
+    }
   };
 
-  const handleUpdateProfile = () => {
-    addNotification({
-      type: 'info',
-      title: 'Profile Update',
-      message: 'Redirecting to profile settings...'
-    });
-  };
+  const handleUpdateApplicantStatus = async (appId: string, newStatus: 'applied' | 'shortlisted' | 'rejected' | 'selected') => {
+    try {
+      await InternshipService.updateApplicationStatus(appId, newStatus);
+      
+      setApplicantsForListing(prev => prev.map(a => a.id === appId ? { ...a, status: newStatus } : a));
 
-  const handleAddGoal = () => {
-    if (newGoal.title && newGoal.target && newGoal.deadline) {
-      const goal = {
-        id: Date.now().toString(),
-        title: newGoal.title,
-        target: parseInt(newGoal.target),
-        current: 0,
-        deadline: newGoal.deadline,
-        type: 'custom'
-      };
-      setGoals(prev => [...prev, goal]);
-      setNewGoal({ title: '', target: '', deadline: '' });
-      setShowGoalModal(false);
       addNotification({
         type: 'success',
-        title: 'Goal Added!',
-        message: 'New goal has been added to your dashboard'
+        title: 'Status Updated',
+        message: `Applicant status changed to ${newStatus.toUpperCase()}`
       });
+    } catch (err) {
+      addNotification({ type: 'error', title: 'Update Error', message: 'Failed to update applicant status.' });
     }
   };
 
-  const handleDeleteGoal = (goalId: string) => {
-    setGoals(prev => prev.filter(goal => goal.id !== goalId));
-    addNotification({
-      type: 'info',
-      title: 'Goal Removed',
-      message: 'Goal has been removed from your dashboard'
-    });
-  };
-
-  const handleUpdateGoalProgress = (goalId: string, increment: number) => {
-    setGoals(prev => prev.map(goal => 
-      goal.id === goalId 
-        ? { ...goal, current: Math.min(goal.current + increment, goal.target) }
-        : goal
-    ));
-  };
-
-  const getGoalProgressColor = (current: number, target: number) => {
-    const percentage = (current / target) * 100;
-    if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 50) return 'bg-yellow-500';
-    return 'bg-blue-500';
-  };
-
-  const getGoalProgressText = (current: number, target: number) => {
-    const percentage = (current / target) * 100;
-    if (percentage >= 100) return 'Completed!';
-    if (percentage >= 80) return 'Almost there!';
-    if (percentage >= 50) return 'Halfway there!';
-    return 'Getting started...';
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'applied': return 'bg-blue-100 text-blue-800';
-      case 'interviewing': return 'bg-yellow-100 text-yellow-800';
-      case 'offered': return 'bg-green-100 text-green-800';
-      case 'rejected': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'applied': return <Clock className="h-4 w-4" />;
-      case 'interviewing': return <Users className="h-4 w-4" />;
-      case 'offered': return <CheckCircle className="h-4 w-4" />;
-      case 'rejected': return <X className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
-    }
-  };
-
-  const stats = [
-    { label: 'Applications', value: applications.length, icon: <Briefcase className="h-6 w-6" />, color: 'text-blue-600' },
-    { label: 'Interviews', value: applications.filter(app => app.status === 'interviewing').length, icon: <Users className="h-6 w-6" />, color: 'text-yellow-600' },
-    { label: 'Offers', value: applications.filter(app => app.status === 'offered').length, icon: <Award className="h-6 w-6" />, color: 'text-green-600' },
-    { label: 'Skills', value: skills.length, icon: <Target className="h-6 w-6" />, color: 'text-purple-600' }
-  ];
-
-  if (!user) {
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Please sign in to view your dashboard</h2>
-          <p className="text-gray-600">You need to be logged in to access this page.</p>
-        </div>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
+        <Lock className="w-12 h-12 text-slate-300 mb-4" />
+        <h2 className="text-2xl font-bold text-slate-800">Sign In Required</h2>
+        <p className="text-slate-500 text-sm mt-1 max-w-sm">
+          Please log in to view your application status or recruiter dashboard.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex justify-between items-center mb-8"
-        >
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user.name}!</h1>
-            <p className="text-gray-600">Here's what's happening with your job search</p>
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Banner Header */}
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold text-indigo-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Role: {user?.role?.toUpperCase() || 'STUDENT'}</span>
+            </div>
+            <h1 className="text-3xl font-black">Welcome back, {user?.name}!</h1>
+            <p className="text-slate-300 text-xs sm:text-sm">
+              {user?.role === 'recruiter' 
+                ? 'Manage your posted internships and review top student candidates.'
+                : 'Track your submitted applications and monitor hiring status in real time.'}
+            </p>
           </div>
-          <div className="flex space-x-3">
-            <Button
-              variant="outline"
-              onClick={handleDownloadResume}
-              icon={<Download className="h-4 w-4" />}
+
+          {user?.role === 'recruiter' && (
+            <button
+              onClick={() => setShowPostModal(true)}
+              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 font-bold text-xs rounded-xl hover:shadow-lg transition-all flex items-center space-x-2 shadow-indigo-300 flex-shrink-0"
             >
-              Download Resume
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleUpdateProfile}
-              icon={<Settings className="h-4 w-4" />}
-            >
-              Update Profile
-            </Button>
-          </div>
-        </motion.div>
+              <Plus className="w-4 h-4" />
+              <span>Post New Internship</span>
+            </button>
+          )}
+        </div>
 
-        {/* Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-              className="bg-white rounded-2xl shadow-lg p-6"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                </div>
-                <div className={`p-3 rounded-full bg-gray-50 ${stat.color}`}>
-                  {stat.icon}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* RECRUITER DASHBOARD */}
+        {user?.role === 'recruiter' ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Posted Listings */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm flex items-center justify-between">
+                <span>My Internship Postings</span>
+                <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">
+                  {recruiterListings.length} Active
+                </span>
+              </h3>
 
-        {/* Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-            {['overview', 'applications', 'skills', 'recommendations'].map((tab) => (
-              <Button
-                key={tab}
-                variant={activeTab === tab ? 'primary' : 'ghost'}
-                onClick={() => setActiveTab(tab)}
-                className="flex-1 capitalize"
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Tab Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-8"
-        >
-          {activeTab === 'overview' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Recent Applications */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Recent Applications</h3>
-                  <Button variant="ghost" size="sm">
-                    View All
-                  </Button>
-                </div>
-                <div className="space-y-4">
-                  {applications.slice(0, 3).map((application) => (
-                    <div key={application.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{application.jobTitle}</h4>
-                        <p className="text-sm text-gray-600">{application.company}</p>
-                        <p className="text-xs text-gray-500">Applied: {application.appliedDate}</p>
-                      </div>
-                      <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
-                        {getStatusIcon(application.status)}
-                        <span className="capitalize">{application.status}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Skills Progress */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">Skills Progress</h3>
-                <div className="space-y-4">
-                  {skills.slice(0, 4).map((skill, index) => (
-                    <div key={skill.name}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-900">{skill.name}</span>
-                        <span className="text-sm text-gray-600 capitalize">{skill.level}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-gradient-to-r from-primary-500 to-accent-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${skill.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Achievements */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
-                  <Trophy className="h-6 w-6 text-yellow-500" />
-                </div>
-                <div className="space-y-4">
-                  {achievements.map((achievement) => (
-                    <div key={achievement.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="text-2xl">{achievement.icon}</div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{achievement.title}</h4>
-                        <p className="text-sm text-gray-600">{achievement.description}</p>
-                        {achievement.earned && (
-                          <p className="text-xs text-green-600 mt-1">Earned {achievement.date}</p>
-                        )}
-                        {!achievement.earned && achievement.progress && (
-                          <div className="mt-2">
-                            <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-                              <span>Progress</span>
-                              <span>{achievement.progress}/5</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-1">
-                              <div
-                                className="bg-yellow-500 h-1 rounded-full"
-                                style={{ width: `${(achievement.progress / 5) * 100}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      {achievement.earned && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Goals */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Career Goals</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowGoalModal(true)}
-                    icon={<Plus className="h-4 w-4" />}
+              {recruiterListings.length === 0 ? (
+                <div className="py-12 text-center text-xs text-slate-500 border border-dashed border-slate-200 rounded-xl space-y-2">
+                  <Building className="w-8 h-8 text-slate-300 mx-auto" />
+                  <p>You haven't posted any internships yet.</p>
+                  <button
+                    onClick={() => setShowPostModal(true)}
+                    className="text-indigo-600 font-bold hover:underline"
                   >
-                    Add Goal
-                  </Button>
+                    Create First Posting
+                  </button>
                 </div>
-                <div className="space-y-4">
-                  {goals.map((goal) => (
-                    <div key={goal.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-medium text-gray-900">{goal.title}</h4>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleUpdateGoalProgress(goal.id, 1)}
-                            icon={<Plus className="h-3 w-3" />}
-                          >
-                            {""}
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteGoal(goal.id)}
-                            icon={<X className="h-3 w-3" />}
-                          >
-                            {""}
-                          </Button>
+              ) : (
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+                  {recruiterListings.map(listing => {
+                    const isSelected = selectedListingForApplicants?.id === listing.id;
+                    return (
+                      <div
+                        key={listing.id}
+                        onClick={() => loadApplicantsForListing(listing)}
+                        className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                          isSelected ? 'bg-indigo-50/70 border-indigo-300 shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-bold text-slate-900 text-xs">{listing.title}</h4>
+                            <p className="text-[11px] text-slate-500">{listing.location} • {listing.stipend}</p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-slate-400" />
                         </div>
                       </div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600">
-                          {goal.current} / {goal.target}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          Due: {goal.deadline}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Applicant Review List */}
+            <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    Applicants for: {selectedListingForApplicants?.title || 'Select a posting'}
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Review student profiles, cover letters, and manage hiring status.
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
+                  {applicantsForListing.length} Candidates
+                </span>
+              </div>
+
+              {applicantsForListing.length === 0 ? (
+                <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                  <Users className="w-10 h-10 text-slate-300 mx-auto" />
+                  <p>No student applications received for this posting yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {applicantsForListing.map(app => (
+                    <div key={app.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-indigo-600 text-white rounded-xl font-bold flex items-center justify-center text-sm">
+                            {app.student?.name.charAt(0) || 'S'}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-900 text-xs">{app.student?.name}</h4>
+                            <p className="text-[11px] text-slate-500">{app.student?.email} • {app.student?.phone || 'No phone'}</p>
+                          </div>
+                        </div>
+
+                        <span className={`px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-full ${
+                          app.status === 'selected'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : app.status === 'shortlisted'
+                            ? 'bg-indigo-100 text-indigo-800'
+                            : app.status === 'rejected'
+                            ? 'bg-rose-100 text-rose-800'
+                            : 'bg-slate-200 text-slate-700'
+                        }`}>
+                          {app.status}
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                        <div
-                          className={`h-2 rounded-full transition-all duration-300 ${getGoalProgressColor(goal.current, goal.target)}`}
-                          style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
-                        />
+
+                      {app.coverLetter && (
+                        <p className="text-xs text-slate-600 bg-white p-3 rounded-lg border border-slate-100">
+                          "{app.coverLetter}"
+                        </p>
+                      )}
+
+                      {/* Student Skill Badges */}
+                      {app.student?.skills && app.student.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {app.student.skills.map(sk => (
+                            <span key={sk} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-medium rounded-md">
+                              {sk}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center justify-between pt-2 text-xs border-t border-slate-200/60">
+                        {app.resumeUrl ? (
+                          <a
+                            href={app.resumeUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-indigo-600 font-bold hover:underline flex items-center space-x-1"
+                          >
+                            <FileText className="w-3.5 h-3.5" /> <span>View Resume</span>
+                          </a>
+                        ) : <span className="text-slate-400 text-[10px]">No resume link</span>}
+
+                        <div className="flex items-center space-x-1.5">
+                          <button
+                            onClick={() => handleUpdateApplicantStatus(app.id, 'shortlisted')}
+                            className="px-2.5 py-1 bg-indigo-600 text-white rounded-md text-[11px] font-semibold hover:bg-indigo-700"
+                          >
+                            Shortlist
+                          </button>
+                          <button
+                            onClick={() => handleUpdateApplicantStatus(app.id, 'selected')}
+                            className="px-2.5 py-1 bg-emerald-600 text-white rounded-md text-[11px] font-semibold hover:bg-emerald-700"
+                          >
+                            Select
+                          </button>
+                          <button
+                            onClick={() => handleUpdateApplicantStatus(app.id, 'rejected')}
+                            className="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-md text-[11px] font-semibold hover:bg-rose-200"
+                          >
+                            Reject
+                          </button>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-500">
-                        {getGoalProgressText(goal.current, goal.target)}
-                      </p>
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Analytics */}
-              <div className="bg-white rounded-2xl shadow-lg p-6 lg:col-span-2">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Analytics Overview</h3>
-                  <BarChart3 className="h-6 w-6 text-blue-500" />
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{analytics.applicationsThisMonth}</div>
-                    <div className="text-sm text-gray-600">Applications This Month</div>
-                  </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">{analytics.interviewsScheduled}</div>
-                    <div className="text-sm text-gray-600">Interviews Scheduled</div>
-                  </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">{analytics.profileViews}</div>
-                    <div className="text-sm text-gray-600">Profile Views</div>
-                  </div>
-                  <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">{analytics.successRate}%</div>
-                    <div className="text-sm text-gray-600">Success Rate</div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-3">Top Skills</h4>
-                    <div className="space-y-2">
-                      {analytics.topSkills?.map((skill: string, index: number) => (
-                        <div key={skill} className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">{skill}</span>
-                          <div className="flex items-center space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-3 w-3 ${i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-3">Trending Companies</h4>
-                    <div className="space-y-2">
-                      {analytics.trendingCompanies?.map((company: string) => (
-                        <div key={company} className="flex items-center space-x-2">
-                          <Building className="h-4 w-4 text-gray-400" />
-                          <span className="text-sm text-gray-600">{company}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
-          )}
 
-          {activeTab === 'applications' && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">All Applications</h3>
-              <div className="space-y-4">
-                {applications.map((application) => (
-                  <div key={application.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{application.jobTitle}</h4>
-                      <p className="text-sm text-gray-600">{application.company}</p>
-                      <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
-                        <span>Applied: {application.appliedDate}</span>
-                        <span>Updated: {application.lastUpdated}</span>
+          </div>
+        ) : (
+          /* STUDENT DASHBOARD */
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Applied Internships */}
+            <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="font-extrabold text-slate-900 text-base">My Submitted Applications</h3>
+                  <p className="text-xs text-slate-500">Track application status and responses from recruiters.</p>
+                </div>
+                <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
+                  {studentApplications.length} Applications
+                </span>
+              </div>
+
+              {studentApplications.length === 0 ? (
+                <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                  <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
+                  <p>You haven't submitted any internship applications yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {studentApplications.map(app => (
+                    <div key={app.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-sm">
+                            {app.listing?.title || 'Internship Title'}
+                          </h4>
+                          <p className="text-xs text-slate-500">{app.listing?.companyName} • {app.listing?.location}</p>
+                        </div>
+
+                        <span className={`px-3 py-1 text-xs font-black uppercase rounded-full ${
+                          app.status === 'selected'
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                            : app.status === 'shortlisted'
+                            ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
+                            : app.status === 'rejected'
+                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                            : 'bg-slate-200 text-slate-700'
+                        }`}>
+                          {app.status}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
+                        <span>Applied on: {new Date(app.appliedAt).toLocaleDateString()}</span>
+                        <span className="font-semibold text-slate-700">Stipend: {app.listing?.stipend}</span>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
-                        {getStatusIcon(application.status)}
-                        <span className="capitalize">{application.status}</span>
-                      </div>
-                      <Button variant="ghost" size="sm" icon={<Eye className="h-4 w-4" />}>
-                        View
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
 
-          {activeTab === 'skills' && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Skills Development</h3>
-              <div className="space-y-6">
-                {skills.map((skill, index) => (
-                  <div key={skill.name} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
+            {/* Student Skill Graph Summary */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm flex items-center">
+                <Award className="w-4 h-4 mr-2 text-indigo-600" /> Skill Graph Summary
+              </h3>
+
+              {studentSkills.length === 0 ? (
+                <p className="text-xs text-slate-500 py-6 text-center">
+                  No skills in your graph yet. Go to Profile to connect GitHub or upload resume.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {studentSkills.map(sk => (
+                    <div key={sk.id} className="p-2.5 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
                       <div>
-                        <h4 className="font-medium text-gray-900">{skill.name}</h4>
-                        <p className="text-sm text-gray-600 capitalize">{skill.level} level</p>
+                        <span className="font-semibold text-slate-800">{sk.skillName || sk.skillId}</span>
+                        <span className="text-[10px] text-slate-400 block capitalize">{sk.source} source</span>
                       </div>
-                      <span className="text-sm font-medium text-primary-600">{skill.progress}%</span>
+                      <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md capitalize">
+                        {sk.proficiencyLevel}
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div
-                        className="bg-gradient-to-r from-primary-500 to-accent-500 h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${skill.progress}%` }}
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </div>
+        )}
+
+        {/* Post Internship Modal for Recruiters */}
+        <AnimatePresence>
+          {showPostModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col"
+              >
+                <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+                  <h3 className="text-lg font-bold">Post New Internship Listing</h3>
+                  <button onClick={() => setShowPostModal(false)} className="text-slate-400 hover:text-white">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleCreateListing} className="p-6 overflow-y-auto space-y-4 text-xs">
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Internship Title</label>
+                    <input
+                      type="text"
+                      required
+                      value={newListing.title}
+                      onChange={e => setNewListing(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="e.g. Frontend Developer Intern"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Company Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={newListing.companyName}
+                      onChange={e => setNewListing(prev => ({ ...prev, companyName: e.target.value }))}
+                      placeholder="e.g. TechCorp Systems"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-medium text-slate-700 mb-1">Location</label>
+                      <input
+                        type="text"
+                        value={newListing.location}
+                        onChange={e => setNewListing(prev => ({ ...prev, location: e.target.value }))}
+                        placeholder="Remote / City"
+                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium text-slate-700 mb-1">Stipend Text</label>
+                      <input
+                        type="text"
+                        value={newListing.stipend}
+                        onChange={e => setNewListing(prev => ({ ...prev, stipend: e.target.value }))}
+                        placeholder="₹25,000/month"
+                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
                       />
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'recommendations' && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Recommended Jobs</h3>
-              <div className="space-y-4">
-                {recentJobs.map((job) => (
-                  <div key={job.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 mb-1">{job.title}</h4>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-                          <div className="flex items-center">
-                            <Building className="h-4 w-4 mr-1" />
-                            <span>{job.company}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            <span>{job.location}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
-                            <span>{job.salary}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500">
-                          <span className="px-2 py-1 bg-gray-100 rounded">{job.type}</span>
-                          <span>Posted {job.postedDate}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleBookmarkJob(job.id)}
-                          icon={job.isBookmarked ? <Star className="h-4 w-4 fill-current text-yellow-500" /> : <Star className="h-4 w-4" />}
-                        >
-                          {""}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShareJob(job)}
-                          icon={<Share2 className="h-4 w-4" />}
-                        >
-                          {""}
-                        </Button>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          loading={loading}
-                          onClick={() => handleApplyJob(job.id)}
-                        >
-                          Apply
-                        </Button>
-                      </div>
-                    </div>
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Required Skills (Comma separated)</label>
+                    <input
+                      type="text"
+                      value={newListing.skills}
+                      onChange={e => setNewListing(prev => ({ ...prev, skills: e.target.value }))}
+                      placeholder="React, JavaScript, TypeScript, Tailwind CSS"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                    />
                   </div>
-                ))}
-              </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">Role Description</label>
+                    <textarea
+                      rows={3}
+                      value={newListing.description}
+                      onChange={e => setNewListing(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Detailed responsibilities and project description..."
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                    />
+                  </div>
+
+                  <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowPostModal(false)}
+                      className="px-4 py-2 font-semibold text-slate-600 hover:text-slate-800"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={posting}
+                      className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md"
+                    >
+                      {posting ? 'Posting...' : 'Publish Internship'}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
             </div>
           )}
-        </motion.div>
+        </AnimatePresence>
+
       </div>
     </div>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
