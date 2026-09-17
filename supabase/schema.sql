@@ -328,3 +328,73 @@ DROP POLICY IF EXISTS "Users can delete own saved items" ON public.saved_items;
 CREATE POLICY "Users can delete own saved items" ON public.saved_items
   FOR DELETE USING (auth.uid() = user_id);
 
+
+-- 7. COMMUNITY REVIEWS TABLE & POLICIES
+CREATE TABLE IF NOT EXISTS public.company_reviews (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  listing_id UUID NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
+  company_name TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  review_text TEXT DEFAULT '',
+  status TEXT DEFAULT 'approved' CHECK (status IN ('approved', 'pending', 'rejected')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_student_listing_review UNIQUE (student_id, listing_id)
+);
+
+ALTER TABLE public.company_reviews ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Approved reviews viewable by everyone" ON public.company_reviews;
+CREATE POLICY "Approved reviews viewable by everyone" ON public.company_reviews
+  FOR SELECT USING (status = 'approved' OR auth.uid() = student_id);
+
+DROP POLICY IF EXISTS "Applicants can insert own review" ON public.company_reviews;
+CREATE POLICY "Applicants can insert own review" ON public.company_reviews
+  FOR INSERT WITH CHECK (
+    auth.uid() IS NOT NULL AND auth.uid() = student_id AND
+    EXISTS (
+      SELECT 1 FROM public.applications 
+      WHERE applications.listing_id = company_reviews.listing_id 
+      AND applications.student_id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "Students can delete own review" ON public.company_reviews;
+CREATE POLICY "Students can delete own review" ON public.company_reviews
+  FOR DELETE USING (auth.uid() = student_id);
+
+
+-- 8. SCAM REPORTS TABLE & POLICIES (NON-PUBLIC / PRIVATELY MODERATED)
+CREATE TABLE IF NOT EXISTS public.scam_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  listing_id UUID NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
+  company_name TEXT NOT NULL,
+  reason TEXT NOT NULL CHECK (reason IN ('Asked for money', 'No response after selection', 'Fake/misleading listing', 'Other')),
+  details TEXT DEFAULT '',
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'investigating', 'resolved', 'dismissed')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_student_listing_report UNIQUE (student_id, listing_id)
+);
+
+ALTER TABLE public.scam_reports ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Reporting student and admin can view scam reports" ON public.scam_reports;
+CREATE POLICY "Reporting student and admin can view scam reports" ON public.scam_reports
+  FOR SELECT USING (
+    auth.uid() = student_id OR
+    EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+  );
+
+DROP POLICY IF EXISTS "Applicants can insert scam report" ON public.scam_reports;
+CREATE POLICY "Applicants can insert scam report" ON public.scam_reports
+  FOR INSERT WITH CHECK (
+    auth.uid() IS NOT NULL AND auth.uid() = student_id AND
+    EXISTS (
+      SELECT 1 FROM public.applications 
+      WHERE applications.listing_id = scam_reports.listing_id 
+      AND applications.student_id = auth.uid()
+    )
+  );
+
+
