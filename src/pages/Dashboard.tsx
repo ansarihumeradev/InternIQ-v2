@@ -571,7 +571,7 @@ const Dashboard: React.FC = () => {
                                 <a
                                   href={
                                     item.itemType === 'job'
-                                      ? '/jobs'
+                                      ? '/internships'
                                       : item.itemType === 'internship'
                                       ? '/internships'
                                       : item.itemType === 'company'

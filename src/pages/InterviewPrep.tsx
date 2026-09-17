@@ -83,7 +83,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 156,
       author: 'Michael Chen',
       image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/jobs',
+      route: '/internships',
       tags: ['Algorithms', 'Data Structures', 'System Design'],
       difficulty: 'advanced'
     },

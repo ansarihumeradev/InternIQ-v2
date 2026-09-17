@@ -204,8 +204,8 @@ const Companies: React.FC = () => {
   };
 
   const handleViewJobs = (company: Company) => {
-    // Navigate to jobs page with company filter
-    window.location.href = `/jobs?company=${encodeURIComponent(company.name)}`;
+    // Navigate to internships page with company filter
+    window.location.href = `/internships?search=${encodeURIComponent(company.name)}`;
   };
 
   const handleShare = (company: Company) => {
