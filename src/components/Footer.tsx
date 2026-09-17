@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import { Briefcase, Mail, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -73,11 +73,7 @@ const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">contact@fresherjobs.com</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Phone className="h-4 w-4" />
-                <span className="text-sm">+91 98765 43210</span>
+                <span className="text-sm">contact.interniq@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <MapPin className="h-4 w-4" />
