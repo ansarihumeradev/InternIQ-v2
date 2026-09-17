@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import CareerGuidance from './pages/CareerGuidance';
 import ResumeBuilder from './pages/ResumeBuilder';
 import InterviewPrep from './pages/InterviewPrep';
+import SkillAssessment from './pages/SkillAssessment';
 import TestAuth from './pages/TestAuth';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './components/NotificationSystem';
@@ -87,7 +88,8 @@ function App() {
                 <Route path="/mentorship" element={<CareerGuidance />} />
                 <Route path="/resume-builder" element={<ResumeBuilder />} />
                 <Route path="/interview-prep" element={<InterviewPrep />} />
-                <Route path="/skill-development" element={<InterviewPrep />} />
+                <Route path="/skill-assessment" element={<SkillAssessment />} />
+                <Route path="/skill-development" element={<SkillAssessment />} />
                 <Route path="/online-branding" element={<CareerGuidance />} />
                 <Route path="/quick-apply" element={<Jobs />} />
                 <Route path="/test-auth" element={<TestAuth />} />

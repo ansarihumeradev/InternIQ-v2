@@ -17,12 +17,16 @@ import {
   ChevronRight, 
   Award,
   ExternalLink,
-  X
+  X,
+  Bookmark,
+  Trash2,
+  BookOpen
 } from 'lucide-react';
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import { InternshipService, InternshipListing, Application } from '../services/internshipService';
 import { SkillGraphService, StudentSkill } from '../services/skillGraphService';
+import { BookmarkService, SavedItem } from '../services/bookmarkService';
 
 const Dashboard: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -33,6 +37,9 @@ const Dashboard: React.FC = () => {
   // Student state
   const [studentApplications, setStudentApplications] = useState<Application[]>([]);
   const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
+  const [studentTab, setStudentTab] = useState<'applications' | 'saved'>('applications');
+  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
+  const [savedFilter, setSavedFilter] = useState<'all' | 'job' | 'internship' | 'company' | 'resource'>('all');
 
   // Recruiter state
   const [recruiterListings, setRecruiterListings] = useState<InternshipListing[]>([]);
@@ -53,6 +60,13 @@ const Dashboard: React.FC = () => {
     skills: '',
     requirements: ''
   });
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('tab') === 'saved') {
+      setStudentTab('saved');
+    }
+  }, []);
 
   useEffect(() => {
     if (user?.id) {
@@ -76,11 +90,27 @@ const Dashboard: React.FC = () => {
         setStudentApplications(apps);
         const skills = await SkillGraphService.fetchStudentSkills(user.id);
         setStudentSkills(skills);
+        const saved = await BookmarkService.fetchSavedItems(user.id);
+        setSavedItems(saved);
       }
     } catch (err) {
       console.error('Error loading dashboard data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemoveSaved = async (itemId: string, itemType: string) => {
+    try {
+      await BookmarkService.removeSavedItem(user?.id, itemId, itemType);
+      setSavedItems(prev => prev.filter(i => !(i.itemId === itemId && i.itemType === itemType)));
+      addNotification({
+        type: 'info',
+        title: 'Removed',
+        message: 'Item removed from your saved list.'
+      });
+    } catch (err) {
+      console.error('Failed to remove saved item:', err);
     }
   };
 
@@ -360,87 +390,236 @@ const Dashboard: React.FC = () => {
           </div>
         ) : (
           /* STUDENT DASHBOARD */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* Applied Internships */}
-            <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div>
-                  <h3 className="font-extrabold text-slate-900 text-base">My Submitted Applications</h3>
-                  <p className="text-xs text-slate-500">Track application status and responses from recruiters.</p>
-                </div>
-                <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
-                  {studentApplications.length} Applications
+          <div className="space-y-6">
+            {/* Student Navigation Tabs */}
+            <div className="flex border-b border-slate-200 space-x-4">
+              <button
+                onClick={() => setStudentTab('applications')}
+                className={`pb-3 text-sm font-bold flex items-center space-x-2 transition-all border-b-2 ${
+                  studentTab === 'applications'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Briefcase className="w-4 h-4" />
+                <span>My Applications</span>
+                <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                  {studentApplications.length}
                 </span>
-              </div>
+              </button>
 
-              {studentApplications.length === 0 ? (
-                <div className="py-16 text-center text-xs text-slate-500 space-y-2">
-                  <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
-                  <p>You haven't submitted any internship applications yet.</p>
+              <button
+                onClick={() => setStudentTab('saved')}
+                className={`pb-3 text-sm font-bold flex items-center space-x-2 transition-all border-b-2 ${
+                  studentTab === 'saved'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Bookmark className="w-4 h-4" />
+                <span>Saved Items</span>
+                <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                  {savedItems.length}
+                </span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {studentTab === 'applications' ? (
+                /* Applied Internships */
+                <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div>
+                      <h3 className="font-extrabold text-slate-900 text-base">My Submitted Applications</h3>
+                      <p className="text-xs text-slate-500">Track application status and responses from recruiters.</p>
+                    </div>
+                    <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
+                      {studentApplications.length} Applications
+                    </span>
+                  </div>
+
+                  {studentApplications.length === 0 ? (
+                    <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                      <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
+                      <p>You haven't submitted any internship applications yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {studentApplications.map(app => (
+                        <div key={app.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-bold text-slate-900 text-sm">
+                                {app.listing?.title || 'Internship Title'}
+                              </h4>
+                              <p className="text-xs text-slate-500">{app.listing?.companyName} • {app.listing?.location}</p>
+                            </div>
+
+                            <span className={`px-3 py-1 text-xs font-black uppercase rounded-full ${
+                              app.status === 'selected'
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                : app.status === 'shortlisted'
+                                ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
+                                : app.status === 'rejected'
+                                ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                                : 'bg-slate-200 text-slate-700'
+                            }`}>
+                              {app.status}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
+                            <span>Applied on: {new Date(app.appliedAt).toLocaleDateString()}</span>
+                            <span className="font-semibold text-slate-700">Stipend: {app.listing?.stipend}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {studentApplications.map(app => (
-                    <div key={app.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-bold text-slate-900 text-sm">
-                            {app.listing?.title || 'Internship Title'}
-                          </h4>
-                          <p className="text-xs text-slate-500">{app.listing?.companyName} • {app.listing?.location}</p>
-                        </div>
+                /* Saved Items Tab */
+                <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-2">
+                    <div>
+                      <h3 className="font-extrabold text-slate-900 text-base flex items-center">
+                        <Bookmark className="w-5 h-5 mr-2 text-indigo-600" /> Saved Items & Bookmarks
+                      </h3>
+                      <p className="text-xs text-slate-500">Your saved jobs, internships, companies, and career resources.</p>
+                    </div>
 
-                        <span className={`px-3 py-1 text-xs font-black uppercase rounded-full ${
-                          app.status === 'selected'
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                            : app.status === 'shortlisted'
-                            ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
-                            : app.status === 'rejected'
-                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                            : 'bg-slate-200 text-slate-700'
-                        }`}>
-                          {app.status}
+                    {/* Filter Pills */}
+                    <div className="flex items-center space-x-1 overflow-x-auto text-[11px]">
+                      {(['all', 'job', 'internship', 'company', 'resource'] as const).map(type => (
+                        <button
+                          key={type}
+                          onClick={() => setSavedFilter(type)}
+                          className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all ${
+                            savedFilter === type
+                              ? 'bg-indigo-600 text-white shadow-sm'
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {savedItems.filter(i => savedFilter === 'all' || i.itemType === savedFilter).length === 0 ? (
+                    <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                      <Bookmark className="w-10 h-10 text-slate-300 mx-auto" />
+                      <p>No saved items found in this category.</p>
+                      <p className="text-[11px] text-slate-400">Browse Jobs, Internships, or Career Guidance to bookmark items!</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {savedItems
+                        .filter(i => savedFilter === 'all' || i.itemType === savedFilter)
+                        .map(item => {
+                          const data = item.itemData || {};
+                          const title = data.title || data.name || 'Saved Item';
+                          const subtitle = data.company || data.companyName || data.category || data.industry || '';
+                          const locationStr = data.location || '';
+                          const stipendOrSalary = data.stipend || data.salary || '';
+
+                          return (
+                            <div key={item.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3 hover:shadow-sm transition-all">
+                              <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                  <div className="flex items-center space-x-2">
+                                    <span className={`px-2 py-0.5 text-[9px] font-extrabold uppercase rounded ${
+                                      item.itemType === 'job'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : item.itemType === 'internship'
+                                        ? 'bg-amber-100 text-amber-800'
+                                        : item.itemType === 'company'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : 'bg-emerald-100 text-emerald-800'
+                                    }`}>
+                                      {item.itemType}
+                                    </span>
+                                    <h4 className="font-bold text-slate-900 text-sm">{title}</h4>
+                                  </div>
+
+                                  {subtitle && (
+                                    <p className="text-xs text-slate-600 font-medium">{subtitle}</p>
+                                  )}
+
+                                  {(locationStr || stipendOrSalary) && (
+                                    <p className="text-[11px] text-slate-500">
+                                      {locationStr && <span>📍 {locationStr} </span>}
+                                      {stipendOrSalary && <span>💰 {stipendOrSalary}</span>}
+                                    </p>
+                                  )}
+                                </div>
+
+                                <button
+                                  onClick={() => handleRemoveSaved(item.itemId, item.itemType)}
+                                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                                  title="Remove from saved"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-200/60">
+                                <span className="text-slate-400">
+                                  Saved: {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recently'}
+                                </span>
+
+                                <a
+                                  href={
+                                    item.itemType === 'job'
+                                      ? '/jobs'
+                                      : item.itemType === 'internship'
+                                      ? '/internships'
+                                      : item.itemType === 'company'
+                                      ? '/companies'
+                                      : '/career-guidance'
+                                  }
+                                  className="text-indigo-600 font-bold hover:underline inline-flex items-center space-x-1"
+                                >
+                                  <span>View Page</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Student Skill Graph Summary */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+                <h3 className="font-bold text-slate-900 text-sm flex items-center">
+                  <Award className="w-4 h-4 mr-2 text-indigo-600" /> Skill Graph Summary
+                </h3>
+
+                {studentSkills.length === 0 ? (
+                  <p className="text-xs text-slate-500 py-6 text-center">
+                    No skills in your graph yet. Go to Profile to connect GitHub or upload resume.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {studentSkills.map(sk => (
+                      <div key={sk.id} className="p-2.5 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
+                        <div>
+                          <span className="font-semibold text-slate-800">{sk.skillName || sk.skillId}</span>
+                          <span className="text-[10px] text-slate-400 block capitalize">{sk.source} source</span>
+                        </div>
+                        <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md capitalize">
+                          {sk.proficiencyLevel}
                         </span>
                       </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
-                        <span>Applied on: {new Date(app.appliedAt).toLocaleDateString()}</span>
-                        <span className="font-semibold text-slate-700">Stipend: {app.listing?.stipend}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-
-            {/* Student Skill Graph Summary */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                <Award className="w-4 h-4 mr-2 text-indigo-600" /> Skill Graph Summary
-              </h3>
-
-              {studentSkills.length === 0 ? (
-                <p className="text-xs text-slate-500 py-6 text-center">
-                  No skills in your graph yet. Go to Profile to connect GitHub or upload resume.
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {studentSkills.map(sk => (
-                    <div key={sk.id} className="p-2.5 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
-                      <div>
-                        <span className="font-semibold text-slate-800">{sk.skillName || sk.skillId}</span>
-                        <span className="text-[10px] text-slate-400 block capitalize">{sk.source} source</span>
-                      </div>
-                      <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md capitalize">
-                        {sk.proficiencyLevel}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
           </div>
         )}
 

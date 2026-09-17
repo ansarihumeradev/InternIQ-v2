@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -21,6 +21,7 @@ import {
 import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
+import { BookmarkService } from '../services/bookmarkService';
 
 interface InterviewResource {
   id: string;
@@ -157,7 +158,20 @@ const InterviewPrep: React.FC = () => {
     });
   }, [searchTerm, categoryFilter, typeFilter, difficultyFilter, resources]);
 
-  const handleBookmark = (resourceId: string) => {
+  useEffect(() => {
+    loadSavedResources();
+  }, [user?.id]);
+
+  const loadSavedResources = async () => {
+    try {
+      const savedSet = await BookmarkService.fetchSavedItemIds(user?.id);
+      setBookmarkedResources(savedSet);
+    } catch (err) {
+      console.error('Error loading saved resources:', err);
+    }
+  };
+
+  const handleBookmark = async (resourceId: string) => {
     if (!user) {
       addNotification({
         type: 'warning',
@@ -166,24 +180,23 @@ const InterviewPrep: React.FC = () => {
       });
       return;
     }
+    const targetResource = resources.find(r => r.id === resourceId);
+    const isSavedNow = await BookmarkService.toggleSavedItem(
+      user.id,
+      resourceId,
+      'resource',
+      targetResource || { id: resourceId, title: 'Interview Prep Resource' }
+    );
     setBookmarkedResources(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(resourceId)) {
-        newSet.delete(resourceId);
-        addNotification({
-          type: 'info',
-          title: 'Resource removed',
-          message: 'Resource removed from bookmarks'
-        });
-      } else {
-        newSet.add(resourceId);
-        addNotification({
-          type: 'success',
-          title: 'Resource bookmarked',
-          message: 'Resource added to your bookmarks'
-        });
-      }
+      if (isSavedNow) newSet.add(resourceId);
+      else newSet.delete(resourceId);
       return newSet;
+    });
+    addNotification({
+      type: isSavedNow ? 'success' : 'info',
+      title: isSavedNow ? 'Resource bookmarked' : 'Resource removed',
+      message: isSavedNow ? 'Resource added to your bookmarks' : 'Resource removed from bookmarks'
     });
   };
 

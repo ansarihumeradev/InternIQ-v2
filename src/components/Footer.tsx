@@ -55,18 +55,18 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <div className="space-y-2">
-              <a href="#" className="block text-gray-300 hover:text-white transition-colors">
+              <Link to="/career-guidance" className="block text-gray-300 hover:text-white transition-colors">
                 Career Tips
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-white transition-colors">
+              </Link>
+              <Link to="/interview-prep" className="block text-gray-300 hover:text-white transition-colors">
                 Interview Prep
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-white transition-colors">
+              </Link>
+              <Link to="/resume-builder" className="block text-gray-300 hover:text-white transition-colors">
                 Resume Builder
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-white transition-colors">
+              </Link>
+              <Link to="/skill-development" className="block text-gray-300 hover:text-white transition-colors">
                 Skill Assessment
-              </a>
+              </Link>
             </div>
           </div>
 

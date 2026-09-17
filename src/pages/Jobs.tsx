@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../components/NotificationSystem';
 import Button from '../components/ui/Button';
 import ScraperService from '../services/scraperService';
+import { BookmarkService } from '../services/bookmarkService';
 import { Job, JobFilters } from '../types/job';
 
 const Jobs: React.FC = () => {
@@ -32,26 +33,42 @@ const Jobs: React.FC = () => {
 
   useEffect(() => {
     loadJobs();
-    loadUserData();
   }, []);
 
   useEffect(() => {
+    loadUserData();
+  }, [user?.id]);
+
+  const loadUserData = async () => {
+    try {
+      const savedIds = await BookmarkService.fetchSavedItemIds(user?.id);
+      setBookmarkedJobs(savedIds);
+    } catch (err) {
+      console.error('Error loading saved job IDs:', err);
+    }
+  };
+
+  useEffect(() => {
     applyFilters();
-  }, [jobs, filters]);
+  }, [jobs, filters, bookmarkedJobs]);
 
   const loadJobs = async () => {
     try {
       setLoading(true);
       console.log('Loading jobs using scraper service...');
       
-      // Use scraper service for faster loading
       const scrapedJobs = await scraperService.scrapeJobs();
-      setJobs(scrapedJobs);
-      setFilteredJobs(scrapedJobs);
+      const savedIds = await BookmarkService.fetchSavedItemIds(user?.id);
+
+      const jobsWithSaved = scrapedJobs.map(job => ({
+        ...job,
+        isBookmarked: savedIds.has(job.id)
+      }));
+
+      setJobs(jobsWithSaved);
+      setFilteredJobs(jobsWithSaved);
       setLastUpdate(scraperService.getLastScrapeTime());
       setNextUpdate(scraperService.getNextScrapeTime());
-      
-      console.log(`Loaded ${scrapedJobs.length} jobs from scraper service`);
     } catch (error) {
       console.error('Error loading jobs:', error);
       addNotification({
@@ -74,7 +91,10 @@ const Jobs: React.FC = () => {
   };
 
   const applyFilters = () => {
-    let filtered = [...jobs];
+    let filtered = jobs.map(job => ({
+      ...job,
+      isBookmarked: bookmarkedJobs.has(job.id)
+    }));
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
@@ -111,7 +131,7 @@ const Jobs: React.FC = () => {
     setFilteredJobs(filtered);
   };
 
-  const handleBookmark = (jobId: string) => {
+  const handleBookmark = async (jobId: string) => {
     if (!user) {
       addNotification({
         type: 'warning',
@@ -121,15 +141,35 @@ const Jobs: React.FC = () => {
       return;
     }
 
+    const targetJob = jobs.find(j => j.id === jobId);
+    if (!targetJob) return;
+
+    const isSavedNow = await BookmarkService.toggleSavedItem(
+      user.id,
+      targetJob.id,
+      'job',
+      targetJob
+    );
+
+    setBookmarkedJobs(prev => {
+      const next = new Set(prev);
+      if (isSavedNow) next.add(jobId);
+      else next.delete(jobId);
+      return next;
+    });
+
     setJobs(prev => prev.map(job =>
-      job.id === jobId ? { ...job, isBookmarked: !job.isBookmarked } : job
+      job.id === jobId ? { ...job, isBookmarked: isSavedNow } : job
     ));
 
-    const job = jobs.find(j => j.id === jobId);
+    if (selectedJob?.id === jobId) {
+      setSelectedJob(prev => prev ? { ...prev, isBookmarked: isSavedNow } : null);
+    }
+
     addNotification({
       type: 'success',
-      title: `${job?.title}`,
-      message: `${job?.isBookmarked ? 'removed from' : 'added to'} your bookmarks`
+      title: `${targetJob.title}`,
+      message: `${isSavedNow ? 'added to' : 'removed from'} your bookmarks`
     });
   };
 
@@ -207,10 +247,6 @@ const Jobs: React.FC = () => {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
-  };
-
-  const loadUserData = () => {
-    // Implementation of loadUserData
   };
 
   return (
