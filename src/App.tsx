@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Jobs from './pages/Jobs';
 import Internships from './pages/Internships';
 import Companies from './pages/Companies';
 import Dashboard from './pages/Dashboard';
@@ -79,7 +78,7 @@ function App() {
             >
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/jobs" element={<Navigate to="/internships" replace />} />
                 <Route path="/internships" element={<Internships />} />
                 <Route path="/companies" element={<Companies />} />
                 <Route path="/dashboard" element={<Dashboard />} />
@@ -91,7 +90,7 @@ function App() {
                 <Route path="/skill-assessment" element={<SkillAssessment />} />
                 <Route path="/skill-development" element={<SkillAssessment />} />
                 <Route path="/online-branding" element={<CareerGuidance />} />
-                <Route path="/quick-apply" element={<Jobs />} />
+                <Route path="/quick-apply" element={<Internships />} />
                 <Route path="/test-auth" element={<TestAuth />} />
               </Routes>
             </motion.main>

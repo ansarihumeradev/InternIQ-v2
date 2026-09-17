@@ -308,11 +308,11 @@ const Home: React.FC = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
             >
               <Link
-                to="/jobs"
+                to="/internships"
                 className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center"
               >
                 <Search className="mr-2 h-5 w-5" />
-                Find Smart Matches
+                Explore Internships
               </Link>
               <Link
                 to="/career-guidance"
@@ -462,7 +462,7 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={() => navigate('/jobs')}
+                onClick={() => navigate('/internships')}
                 className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -524,7 +524,7 @@ const Home: React.FC = () => {
                     variant="primary"
                     size="sm"
                     className="flex items-center"
-                    onClick={() => navigate('/jobs')}
+                    onClick={() => navigate('/internships')}
                   >
                     Apply Now
                     <ArrowRight className="h-3 w-3 ml-1" />
@@ -541,10 +541,10 @@ const Home: React.FC = () => {
             className="text-center mt-12"
           >
             <Link
-              to="/jobs"
+              to="/internships"
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all duration-200"
             >
-              View All Jobs
+              View All Internships
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </motion.div>
@@ -656,7 +656,7 @@ const Home: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/jobs"
+                to="/internships"
                 className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200 inline-flex items-center justify-center"
               >
                 Start Your Journey

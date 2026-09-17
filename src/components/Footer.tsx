@@ -36,14 +36,11 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <div className="space-y-2">
-              <Link to="/jobs" className="block text-gray-300 hover:text-white transition-colors">
-                Browse Jobs
-              </Link>
               <Link to="/internships" className="block text-gray-300 hover:text-white transition-colors">
-                Find Internships
+                Explore Internships
               </Link>
               <Link to="/companies" className="block text-gray-300 hover:text-white transition-colors">
-                Companies
+                Partner Companies
               </Link>
               <Link to="/profile" className="block text-gray-300 hover:text-white transition-colors">
                 Create Profile
