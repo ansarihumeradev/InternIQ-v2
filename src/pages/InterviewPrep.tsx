@@ -1,4 +1,9 @@
+<<<<<<< HEAD
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+=======
 import React, { useState, useMemo, useEffect } from 'react';
+>>>>>>> origin/main
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -34,13 +39,15 @@ interface InterviewResource {
   reviews: number;
   author: string;
   image: string;
-  url: string;
+  route?: string;
+  url?: string;
   isBookmarked?: boolean;
   tags: string[];
   difficulty: 'beginner' | 'intermediate' | 'advanced';
 }
 
 const InterviewPrep: React.FC = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
@@ -65,7 +72,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 234,
       author: 'Sarah Johnson',
       image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/behavioral-questions',
+      route: '/career-guidance',
       tags: ['Behavioral', 'STAR Method', 'Confidence'],
       difficulty: 'beginner'
     },
@@ -80,7 +87,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 156,
       author: 'Michael Chen',
       image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/technical-guide',
+      route: '/jobs',
       tags: ['Algorithms', 'Data Structures', 'System Design'],
       difficulty: 'advanced'
     },
@@ -95,7 +102,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 89,
       author: 'Emily Rodriguez',
       image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/mock-interview',
+      route: '/dashboard',
       tags: ['Practice', 'Feedback', 'Real-time'],
       difficulty: 'intermediate'
     },
@@ -110,7 +117,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 78,
       author: 'David Wilson',
       image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/body-language',
+      route: '/career-guidance',
       tags: ['Communication', 'Body Language', 'Confidence'],
       difficulty: 'beginner'
     },
@@ -125,7 +132,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 112,
       author: 'Lisa Thompson',
       image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/salary-negotiation',
+      route: '/internships',
       tags: ['Salary', 'Negotiation', 'Benefits'],
       difficulty: 'intermediate'
     },
@@ -140,7 +147,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 167,
       author: 'Alex Kumar',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/company-research',
+      route: '/companies',
       tags: ['Research', 'Culture', 'Company Knowledge'],
       difficulty: 'beginner'
     }
@@ -222,10 +229,14 @@ const InterviewPrep: React.FC = () => {
   const handleViewResource = (resource: InterviewResource) => {
     addNotification({
       type: 'info',
-      title: 'Opening resource...',
-      message: `Opening ${resource.title}`
+      title: 'Opening ' + resource.title,
+      message: `Navigating to ${resource.title}`
     });
-    window.open(resource.url, '_blank');
+    if (resource.route) {
+      navigate(resource.route);
+    } else if (resource.url) {
+      window.open(resource.url, '_blank');
+    }
   };
 
   const handleScheduleMockInterview = () => {
