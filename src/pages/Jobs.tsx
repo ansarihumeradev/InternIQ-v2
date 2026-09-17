@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Briefcase, Clock, DollarSign, Bookmark, Share2, ExternalLink, Filter, RefreshCw, X, CheckCircle, Award } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, DollarSign, Bookmark, Share2, ExternalLink, Filter, RefreshCw, X, CheckCircle, Award, Star, ShieldAlert, ShieldCheck, MessageSquare, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../components/NotificationSystem';
 import Button from '../components/ui/Button';
 import ScraperService from '../services/scraperService';
 import { BookmarkService } from '../services/bookmarkService';
+import { ReviewService, CompanyReview, ApplicantEligibility, TrustIndicator } from '../services/reviewService';
+import ReviewModal from '../components/ReviewModal';
+import ScamReportModal from '../components/ScamReportModal';
 import { Job, JobFilters } from '../types/job';
 
 const Jobs: React.FC = () => {
@@ -30,6 +33,18 @@ const Jobs: React.FC = () => {
   const [scraperService] = useState(() => ScraperService.getInstance());
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [showJobModal, setShowJobModal] = useState(false);
+
+  // Community Reviews & Scam Reporting state
+  const [trustIndicators, setTrustIndicators] = useState<Record<string, TrustIndicator>>({});
+  const [jobReviews, setJobReviews] = useState<CompanyReview[]>([]);
+  const [applicantEligibility, setApplicantEligibility] = useState<ApplicantEligibility>({
+    hasApplied: false,
+    hasReviewed: false,
+    hasReported: false
+  });
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
 
   useEffect(() => {
     loadJobs();
@@ -69,6 +84,11 @@ const Jobs: React.FC = () => {
       setFilteredJobs(jobsWithSaved);
       setLastUpdate(scraperService.getLastScrapeTime());
       setNextUpdate(scraperService.getNextScrapeTime());
+
+      // Fetch trust indicators map for companies
+      const companyNames = Array.from(new Set(scrapedJobs.map(j => j.company)));
+      const trustMap = await ReviewService.fetchTrustIndicatorsMap(companyNames);
+      setTrustIndicators(trustMap);
     } catch (error) {
       console.error('Error loading jobs:', error);
       addNotification({
@@ -218,9 +238,23 @@ const Jobs: React.FC = () => {
     }
   };
 
-  const handleViewJob = (job: Job) => {
+  const handleViewJob = async (job: Job) => {
     setSelectedJob(job);
     setShowJobModal(true);
+
+    setLoadingReviews(true);
+    try {
+      const [reviews, eligibility] = await Promise.all([
+        ReviewService.fetchReviewsForCompany(job.company),
+        ReviewService.checkApplicantEligibility(user?.id, job.id)
+      ]);
+      setJobReviews(reviews);
+      setApplicantEligibility(eligibility);
+    } catch (err) {
+      console.error('Error loading job reviews/eligibility:', err);
+    } finally {
+      setLoadingReviews(false);
+    }
   };
 
   const closeJobModal = () => {
@@ -448,9 +482,31 @@ const Jobs: React.FC = () => {
                         />
                         <div>
                           <h3 className="font-semibold text-gray-900 line-clamp-2">
-                          {job.title}
-                        </h3>
-                          <p className="text-sm text-gray-600">{job.company}</p>
+                            {job.title}
+                          </h3>
+                          <div className="flex items-center space-x-2 mt-0.5">
+                            <p className="text-sm text-gray-600">{job.company}</p>
+                            {(() => {
+                              const trust = trustIndicators[job.company];
+                              if (!trust) return null;
+                              return (
+                                <div className="flex items-center space-x-1 text-xs">
+                                  {trust.reviewCount > 0 && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-semibold">
+                                      <Star className="w-3 h-3 text-amber-500 fill-amber-500 mr-0.5" />
+                                      {trust.avgRating.toFixed(1)} ({trust.reviewCount})
+                                    </span>
+                                  )}
+                                  {trust.pendingReportCount > 0 && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold" title="Pending community scam report under review">
+                                      <ShieldAlert className="w-3 h-3 text-rose-500 mr-0.5" />
+                                      Caution
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })()}
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -699,6 +755,80 @@ const Jobs: React.FC = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Community Reviews & Trust Score */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-xs space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                          <span className="font-bold text-gray-800 text-sm">Community Reviews & Trust Score</span>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => setShowReviewModal(true)}
+                            disabled={!applicantEligibility.hasApplied || applicantEligibility.hasReviewed}
+                            className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1 transition-colors ${
+                              applicantEligibility.hasApplied && !applicantEligibility.hasReviewed
+                                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            }`}
+                            title={!applicantEligibility.hasApplied ? 'Only verified applicants can leave a review' : applicantEligibility.hasReviewed ? 'You have already reviewed this listing' : ''}
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>{applicantEligibility.hasReviewed ? 'Reviewed' : 'Write Review'}</span>
+                          </button>
+
+                          <button
+                            onClick={() => setShowReportModal(true)}
+                            disabled={!applicantEligibility.hasApplied || applicantEligibility.hasReported}
+                            className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1 transition-colors ${
+                              applicantEligibility.hasApplied && !applicantEligibility.hasReported
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
+                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            }`}
+                            title={!applicantEligibility.hasApplied ? 'Only verified applicants can report a listing' : applicantEligibility.hasReported ? 'Report submitted under investigation' : ''}
+                          >
+                            <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
+                            <span>{applicantEligibility.hasReported ? 'Reported' : 'Report Listing'}</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {!applicantEligibility.hasApplied && (
+                        <div className="flex items-center space-x-1.5 text-xs text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                          <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>Reviewing and reporting are restricted to verified applicants who have applied for this listing.</span>
+                        </div>
+                      )}
+
+                      {/* Review List */}
+                      <div className="space-y-2 pt-1">
+                        {loadingReviews ? (
+                          <p className="text-gray-400 italic text-xs">Loading authentic student reviews...</p>
+                        ) : jobReviews.length === 0 ? (
+                          <p className="text-gray-500 text-xs">No student reviews submitted yet for {selectedJob.company}. Be the first verified applicant to review after applying!</p>
+                        ) : (
+                          jobReviews.map((rev) => (
+                            <div key={rev.id} className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold text-gray-800">{rev.studentName || 'Verified Student'}</span>
+                                <div className="flex items-center space-x-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`w-3 h-3 ${i < rev.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              {rev.reviewText && <p className="text-gray-600 text-xs">{rev.reviewText}</p>}
+                              <p className="text-[10px] text-gray-400">{new Date(rev.createdAt).toLocaleDateString()}</p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Sidebar */}
@@ -802,6 +932,34 @@ const Jobs: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Review & Scam Report Modals */}
+      {selectedJob && (
+        <>
+          <ReviewModal
+            isOpen={showReviewModal}
+            onClose={() => setShowReviewModal(false)}
+            listingId={selectedJob.id}
+            companyName={selectedJob.company}
+            onSuccess={(newReview) => {
+              setJobReviews(prev => [newReview, ...prev]);
+              setApplicantEligibility(prev => ({ ...prev, hasReviewed: true }));
+              loadJobs();
+            }}
+          />
+          <ScamReportModal
+            isOpen={showReportModal}
+            onClose={() => setShowReportModal(false)}
+            listingId={selectedJob.id}
+            companyName={selectedJob.company}
+            onSuccess={() => {
+              setApplicantEligibility(prev => ({ ...prev, hasReported: true }));
+              loadJobs();
+            }}
+          />
+        </>
+      )}
+
     </div>
   );
 };

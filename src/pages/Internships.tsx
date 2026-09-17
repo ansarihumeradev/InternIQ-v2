@@ -14,13 +14,22 @@ import {
   CheckCircle2,
   AlertCircle,
   Share2,
-  BookOpen
+  BookOpen,
+  Star,
+  AlertTriangle,
+  MessageSquare,
+  ShieldAlert,
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import { InternshipService, InternshipListing } from '../services/internshipService';
 import { SkillGraphService, StudentSkill, CourseRecommendation } from '../services/skillGraphService';
 import { BookmarkService } from '../services/bookmarkService';
+import { ReviewService, CompanyReview, ApplicantEligibility, TrustIndicator } from '../services/reviewService';
+import ReviewModal from '../components/ReviewModal';
+import ScamReportModal from '../components/ScamReportModal';
 
 const Internships: React.FC = () => {
   const [listings, setListings] = useState<InternshipListing[]>([]);
@@ -40,6 +49,18 @@ const Internships: React.FC = () => {
   // Skill Graph integration
   const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
   const [courseGaps, setCourseGaps] = useState<CourseRecommendation[]>([]);
+
+  // Community Reviews & Scam Reporting state
+  const [trustIndicators, setTrustIndicators] = useState<Record<string, TrustIndicator>>({});
+  const [listingReviews, setListingReviews] = useState<CompanyReview[]>([]);
+  const [applicantEligibility, setApplicantEligibility] = useState<ApplicantEligibility>({
+    hasApplied: false,
+    hasReviewed: false,
+    hasReported: false
+  });
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
 
   const { user, isAuthenticated } = useAuth();
   const { addNotification } = useNotifications();
@@ -87,6 +108,11 @@ const Internships: React.FC = () => {
       scoredListings.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
 
       setListings(scoredListings);
+
+      // Load trust indicators for company names
+      const companyNames = Array.from(new Set(scoredListings.map(l => l.companyName)));
+      const trustMap = await ReviewService.fetchTrustIndicatorsMap(companyNames);
+      setTrustIndicators(trustMap);
     } catch (err) {
       console.error('Error loading listings:', err);
       addNotification({
@@ -123,12 +149,12 @@ const Internships: React.FC = () => {
     });
   };
 
-  const openApplyModal = (listing: InternshipListing) => {
+  const openApplyModal = async (listing: InternshipListing) => {
     if (!isAuthenticated) {
       addNotification({
         type: 'warning',
         title: 'Authentication Required',
-        message: 'Please sign in or create an account to apply for internships.'
+        message: 'Please sign in or create an account to view and apply for internships.'
       });
       return;
     }
@@ -137,6 +163,21 @@ const Internships: React.FC = () => {
     const gaps = SkillGraphService.getSkillGapCourses(studentSkills, listing.skills);
     setCourseGaps(gaps);
     setShowApplyModal(true);
+
+    // Fetch reviews & eligibility for selected listing
+    setLoadingReviews(true);
+    try {
+      const [reviews, eligibility] = await Promise.all([
+        ReviewService.fetchReviewsForCompany(listing.companyName),
+        ReviewService.checkApplicantEligibility(user?.id, listing.id)
+      ]);
+      setListingReviews(reviews);
+      setApplicantEligibility(eligibility);
+    } catch (err) {
+      console.error('Error loading reviews/eligibility:', err);
+    } finally {
+      setLoadingReviews(false);
+    }
   };
 
   const submitApplication = async () => {
@@ -296,7 +337,30 @@ const Internships: React.FC = () => {
                           <h3 className="font-bold text-slate-900 line-clamp-1 group-hover:text-indigo-600 transition-colors">
                             {listing.title}
                           </h3>
-                          <p className="text-xs font-medium text-slate-500">{listing.companyName}</p>
+                          <div className="flex items-center space-x-2 mt-0.5">
+                            <p className="text-xs font-medium text-slate-500">{listing.companyName}</p>
+                            {/* Trust Indicator Badges */}
+                            {(() => {
+                              const trust = trustIndicators[listing.companyName];
+                              if (!trust) return null;
+                              return (
+                                <div className="flex items-center space-x-1 text-[11px]">
+                                  {trust.reviewCount > 0 && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-semibold">
+                                      <Star className="w-3 h-3 text-amber-500 fill-amber-500 mr-0.5" />
+                                      {trust.avgRating.toFixed(1)} ({trust.reviewCount})
+                                    </span>
+                                  )}
+                                  {trust.pendingReportCount > 0 && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold" title="Pending community scam report under review">
+                                      <ShieldAlert className="w-3 h-3 text-rose-500 mr-0.5" />
+                                      Caution
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })()}
+                          </div>
                         </div>
                       </div>
 
@@ -443,6 +507,80 @@ const Internships: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Community Reviews & Scam Reporting Section */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                        <span className="font-bold text-slate-800">Community Reviews & Trust Score</span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setShowReviewModal(true)}
+                          disabled={!applicantEligibility.hasApplied || applicantEligibility.hasReviewed}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-[11px] flex items-center space-x-1 transition-colors ${
+                            applicantEligibility.hasApplied && !applicantEligibility.hasReviewed
+                              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                              : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                          }`}
+                          title={!applicantEligibility.hasApplied ? 'Only verified applicants can leave a review' : applicantEligibility.hasReviewed ? 'You have already reviewed this listing' : ''}
+                        >
+                          <MessageSquare className="w-3 h-3" />
+                          <span>{applicantEligibility.hasReviewed ? 'Reviewed' : 'Write Review'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => setShowReportModal(true)}
+                          disabled={!applicantEligibility.hasApplied || applicantEligibility.hasReported}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-[11px] flex items-center space-x-1 transition-colors ${
+                            applicantEligibility.hasApplied && !applicantEligibility.hasReported
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
+                              : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                          }`}
+                          title={!applicantEligibility.hasApplied ? 'Only verified applicants can report a listing' : applicantEligibility.hasReported ? 'Report submitted under investigation' : ''}
+                        >
+                          <ShieldAlert className="w-3 h-3 text-rose-500" />
+                          <span>{applicantEligibility.hasReported ? 'Reported' : 'Report Listing'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {!applicantEligibility.hasApplied && (
+                      <div className="flex items-center space-x-1.5 text-[11px] text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                        <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>Reviewing and reporting are restricted to verified applicants who have applied for this listing.</span>
+                      </div>
+                    )}
+
+                    {/* Review List */}
+                    <div className="space-y-2 pt-1">
+                      {loadingReviews ? (
+                        <p className="text-slate-400 italic text-[11px]">Loading authentic student reviews...</p>
+                      ) : listingReviews.length === 0 ? (
+                        <p className="text-slate-500 text-[11px]">No student reviews submitted yet for {selectedListing.companyName}. Be the first verified applicant to review after applying!</p>
+                      ) : (
+                        listingReviews.map((rev) => (
+                          <div key={rev.id} className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-slate-800">{rev.studentName || 'Verified Student'}</span>
+                              <div className="flex items-center space-x-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-3 h-3 ${i < rev.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            {rev.reviewText && <p className="text-slate-600 text-[11px]">{rev.reviewText}</p>}
+                            <p className="text-[10px] text-slate-400">{new Date(rev.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wider">
                       Cover Letter / Why should you be hired?
@@ -485,6 +623,33 @@ const Internships: React.FC = () => {
             </div>
           )}
         </AnimatePresence>
+
+        {/* Review & Scam Report Modals */}
+        {selectedListing && (
+          <>
+            <ReviewModal
+              isOpen={showReviewModal}
+              onClose={() => setShowReviewModal(false)}
+              listingId={selectedListing.id}
+              companyName={selectedListing.companyName}
+              onSuccess={(newReview) => {
+                setListingReviews(prev => [newReview, ...prev]);
+                setApplicantEligibility(prev => ({ ...prev, hasReviewed: true }));
+                loadListings();
+              }}
+            />
+            <ScamReportModal
+              isOpen={showReportModal}
+              onClose={() => setShowReportModal(false)}
+              listingId={selectedListing.id}
+              companyName={selectedListing.companyName}
+              onSuccess={() => {
+                setApplicantEligibility(prev => ({ ...prev, hasReported: true }));
+                loadListings();
+              }}
+            />
+          </>
+        )}
 
       </div>
     </div>
