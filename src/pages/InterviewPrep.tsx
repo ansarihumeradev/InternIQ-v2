@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-=======
 import React, { useState, useMemo, useEffect } from 'react';
->>>>>>> origin/main
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search,
