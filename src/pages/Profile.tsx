@@ -227,61 +227,60 @@ const Profile: React.FC = () => {
 
   const handleManualAddSkill = async () => {
     if (!newSkill.trim() || !user?.id) return;
-<<<<<<< HEAD
-    
+    const skillInput = newSkill.trim();
+    if (!skillInput || !user?.id) return;
+
     // Accept ANY valid skill - support single or comma-separated entries (e.g. "Java, PHP, Excel, SEO")
-    const rawSkills = newSkill.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    const rawSkills = skillInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
     if (rawSkills.length === 0) return;
 
-    const suggestions: SkillSuggestion[] = rawSkills.map(skillName => {
-      const skillId = skillName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-      return {
+    // Check for duplicates against already added student skills (case-insensitive)
+    const newSuggestions: SkillSuggestion[] = [];
+    const duplicates: string[] = [];
+
+    for (const rawSkill of rawSkills) {
+      const isDuplicate = studentSkills.some(
+        s => (s.skillName && s.skillName.toLowerCase() === rawSkill.toLowerCase()) ||
+             (s.skillId && s.skillId.toLowerCase() === rawSkill.toLowerCase())
+      );
+
+      if (isDuplicate) {
+        duplicates.push(rawSkill);
+        continue;
+      }
+
+      const matchedTaxonomy = taxonomySkills.find(
+        t => t.name.toLowerCase() === rawSkill.toLowerCase() || t.id.toLowerCase() === rawSkill.toLowerCase()
+      );
+
+      const skillId = matchedTaxonomy ? matchedTaxonomy.id : rawSkill.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      const skillName = matchedTaxonomy ? matchedTaxonomy.name : rawSkill;
+      const skillCategory = matchedTaxonomy ? matchedTaxonomy.category : 'Custom';
+
+      newSuggestions.push({
         skillId,
         skillName,
-        category: 'Custom',
+        category: skillCategory,
         source: 'self',
         confidenceScore: 0.8,
         proficiencyLevel: 'intermediate',
         evidence: 'Manually added by student'
-      };
-    });
-=======
-    const skillInput = newSkill.trim();
-
-    // Check for duplicates in current student skills (case-insensitive)
-    const isDuplicate = studentSkills.some(
-      s => (s.skillName && s.skillName.toLowerCase() === skillInput.toLowerCase()) ||
-           (s.skillId && s.skillId.toLowerCase() === skillInput.toLowerCase())
-    );
-
-    if (isDuplicate) {
-      addNotification({
-        type: 'info',
-        title: 'Skill Already Added',
-        message: `"${skillInput}" is already in your skills.`
       });
+    }
+
+    if (newSuggestions.length === 0) {
+      if (duplicates.length > 0) {
+        addNotification({
+          type: 'info',
+          title: 'Skill Already Added',
+          message: `"${duplicates.join(', ')}" is already in your skills.`
+        });
+      }
       setNewSkill('');
       return;
     }
 
-    const matchedTaxonomy = taxonomySkills.find(
-      t => t.name.toLowerCase() === skillInput.toLowerCase() || t.id.toLowerCase() === skillInput.toLowerCase()
-    );
-
-    const skillId = matchedTaxonomy ? matchedTaxonomy.id : skillInput.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const skillName = matchedTaxonomy ? matchedTaxonomy.name : skillInput;
-    const skillCategory = matchedTaxonomy ? matchedTaxonomy.category : 'Custom';
-
-    const suggestion: SkillSuggestion = {
-      skillId,
-      skillName,
-      category: skillCategory,
-      source: 'self',
-      confidenceScore: 0.7,
-      proficiencyLevel: 'intermediate',
-      evidence: 'Manually added by student'
-    };
->>>>>>> origin/main
+    const suggestions = newSuggestions;
 
     try {
       await SkillGraphService.acceptStudentSkills(user.id, suggestions);
@@ -550,17 +549,13 @@ const Profile: React.FC = () => {
                   list="available-skills-list"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-<<<<<<< HEAD
-                  onKeyDown={(e) => {
+onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
                       handleManualAddSkill();
                     }
                   }}
                   placeholder="Add any skill (e.g. Java, PHP, React, Excel, SEO, Communication)"
-=======
-                  placeholder="Add skill manually (e.g. Java, PHP, React)"
->>>>>>> origin/main
                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500"
                 />
                 <datalist id="available-skills-list">
