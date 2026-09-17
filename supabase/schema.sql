@@ -293,3 +293,32 @@ INSERT INTO public.role_requirements (role_id, skill_id, min_proficiency, weight
   ('data-science-intern', 'pandas', 'intermediate', 0.9),
   ('data-science-intern', 'machine-learning', 'beginner', 0.8)
 ON CONFLICT DO NOTHING;
+
+
+-- 6. SAVED / BOOKMARKED ITEMS TABLE & POLICIES
+CREATE TABLE IF NOT EXISTS public.saved_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  item_id TEXT NOT NULL,
+  item_type TEXT NOT NULL CHECK (item_type IN ('job', 'internship', 'company', 'resource')),
+  item_data JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_user_saved_item UNIQUE (user_id, item_id, item_type)
+);
+
+-- Enable RLS on saved_items
+ALTER TABLE public.saved_items ENABLE ROW LEVEL SECURITY;
+
+-- Saved items policies
+DROP POLICY IF EXISTS "Users can view own saved items" ON public.saved_items;
+CREATE POLICY "Users can view own saved items" ON public.saved_items
+  FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own saved items" ON public.saved_items;
+CREATE POLICY "Users can insert own saved items" ON public.saved_items
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete own saved items" ON public.saved_items;
+CREATE POLICY "Users can delete own saved items" ON public.saved_items
+  FOR DELETE USING (auth.uid() = user_id);
+

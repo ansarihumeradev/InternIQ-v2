@@ -25,6 +25,7 @@ import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import CompanyService from '../services/companyService';
 import { Company, CompanyFilters } from '../types/company';
+import { BookmarkService } from '../services/bookmarkService';
 
 const Companies: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +56,7 @@ const Companies: React.FC = () => {
     loadCompanies();
     loadBookmarks();
     loadRecentlyViewed();
-  }, []);
+  }, [user?.id]);
 
   const loadCompanies = async () => {
     setLoading(true);
@@ -110,12 +111,10 @@ const Companies: React.FC = () => {
     }
   };
 
-  const loadBookmarks = () => {
+  const loadBookmarks = async () => {
     try {
-      const stored = localStorage.getItem('bookmarkedCompanies');
-      if (stored) {
-        setBookmarkedCompanies(new Set(JSON.parse(stored)));
-      }
+      const savedSet = await BookmarkService.fetchSavedItemIds(user?.id);
+      setBookmarkedCompanies(savedSet);
     } catch (error) {
       console.error('Error loading bookmarks:', error);
     }
@@ -184,17 +183,24 @@ const Companies: React.FC = () => {
     });
   }, [filteredCompanies, sortBy]);
 
-  const handleBookmark = (companyId: string) => {
-    const newBookmarks = new Set(bookmarkedCompanies);
-    if (newBookmarks.has(companyId)) {
-      newBookmarks.delete(companyId);
-      addNotification('Company removed from bookmarks', 'info');
-    } else {
-      newBookmarks.add(companyId);
-      addNotification('Company added to bookmarks', 'success');
-    }
-    setBookmarkedCompanies(newBookmarks);
-    saveBookmarks(newBookmarks);
+  const handleBookmark = async (companyId: string) => {
+    const targetCompany = companies.find(c => c.id === companyId);
+    const isSavedNow = await BookmarkService.toggleSavedItem(
+      user?.id,
+      companyId,
+      'company',
+      targetCompany || { id: companyId, name: companyId }
+    );
+    setBookmarkedCompanies(prev => {
+      const next = new Set(prev);
+      if (isSavedNow) next.add(companyId);
+      else next.delete(companyId);
+      return next;
+    });
+    addNotification(
+      isSavedNow ? 'Company added to bookmarks' : 'Company removed from bookmarks',
+      isSavedNow ? 'success' : 'info'
+    );
   };
 
   const handleViewJobs = (company: Company) => {

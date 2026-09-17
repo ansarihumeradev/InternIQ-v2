@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, User, Bell, Menu, X, Briefcase, ChevronDown } from 'lucide-react';
+import { Search, User, Bell, Menu, X, Briefcase, ChevronDown, Bookmark } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
 
@@ -154,6 +154,13 @@ const Header: React.FC = () => {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         Dashboard
+                      </Link>
+                      <Link
+                        to="/dashboard?tab=saved"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between"
+                      >
+                        <span>Saved Items</span>
+                        <Bookmark className="h-4 w-4 text-indigo-500" />
                       </Link>
                       <button
                         onClick={handleLogout}
