@@ -20,6 +20,7 @@ import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import { InternshipService, InternshipListing } from '../services/internshipService';
 import { SkillGraphService, StudentSkill, CourseRecommendation } from '../services/skillGraphService';
+import { BookmarkService } from '../services/bookmarkService';
 
 const Internships: React.FC = () => {
   const [listings, setListings] = useState<InternshipListing[]>([]);
@@ -45,14 +46,16 @@ const Internships: React.FC = () => {
 
   useEffect(() => {
     loadListings();
-    if (user?.id) {
-      loadStudentSkillsAndApplications();
-    }
+    loadStudentSkillsAndApplications();
   }, [user?.id]);
 
   const loadStudentSkillsAndApplications = async () => {
-    if (!user?.id) return;
     try {
+      const savedSet = await BookmarkService.fetchSavedItemIds(user?.id);
+      setBookmarkedIds(savedSet);
+
+      if (!user?.id) return;
+
       const skills = await SkillGraphService.fetchStudentSkills(user.id);
       setStudentSkills(skills);
 
@@ -60,7 +63,7 @@ const Internships: React.FC = () => {
       const appliedSet = new Set(applications.map(a => a.listingId));
       setAppliedIds(appliedSet);
     } catch (err) {
-      console.error('Error loading student skills/applications:', err);
+      console.error('Error loading student data:', err);
     }
   };
 
@@ -101,17 +104,22 @@ const Internships: React.FC = () => {
     loadListings();
   };
 
-  const handleBookmarkToggle = (id: string) => {
+  const handleBookmarkToggle = async (listing: InternshipListing) => {
+    if (!isAuthenticated) {
+      addNotification({ type: 'warning', title: 'Sign In Required', message: 'Please sign in to bookmark listings.' });
+      return;
+    }
+    const isSavedNow = await BookmarkService.toggleSavedItem(user?.id, listing.id, 'internship', listing);
     setBookmarkedIds(prev => {
       const updated = new Set(prev);
-      if (updated.has(id)) {
-        updated.delete(id);
-        addNotification({ type: 'info', title: 'Removed', message: 'Listing removed from bookmarks' });
-      } else {
-        updated.add(id);
-        addNotification({ type: 'success', title: 'Saved', message: 'Listing saved to bookmarks' });
-      }
+      if (isSavedNow) updated.add(listing.id);
+      else updated.delete(listing.id);
       return updated;
+    });
+    addNotification({
+      type: isSavedNow ? 'success' : 'info',
+      title: isSavedNow ? 'Saved' : 'Removed',
+      message: `Listing ${isSavedNow ? 'saved to' : 'removed from'} bookmarks`
     });
   };
 
@@ -348,7 +356,7 @@ const Internships: React.FC = () => {
                   {/* Actions */}
                   <div className="flex items-center space-x-2 pt-4 border-t border-slate-100">
                     <button
-                      onClick={() => handleBookmarkToggle(listing.id)}
+                      onClick={() => handleBookmarkToggle(listing)}
                       className={`p-2.5 rounded-xl border text-slate-500 hover:text-slate-800 transition-colors ${
                         isBookmarked ? 'bg-yellow-50 border-yellow-300 text-yellow-600' : 'border-slate-200'
                       }`}

@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+=======
+import React, { useState, useMemo, useEffect } from 'react';
+>>>>>>> origin/main
 import { motion } from 'framer-motion';
-import { 
+import {
   Search,
   BookOpen,
-  Video, 
+  Video,
   FileText,
   Star,
   Heart,
@@ -22,6 +26,7 @@ import {
 import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
+import { BookmarkService } from '../services/bookmarkService';
 
 interface Resource {
   id: string;
@@ -151,7 +156,20 @@ const CareerGuidance: React.FC = () => {
     });
   }, [searchTerm, categoryFilter, typeFilter, resources]);
 
-  const handleBookmark = (resourceId: string) => {
+  useEffect(() => {
+    loadSavedResources();
+  }, [user?.id]);
+
+  const loadSavedResources = async () => {
+    try {
+      const savedSet = await BookmarkService.fetchSavedItemIds(user?.id);
+      setBookmarkedResources(savedSet);
+    } catch (err) {
+      console.error('Error loading saved resources:', err);
+    }
+  };
+
+  const handleBookmark = async (resourceId: string) => {
     if (!user) {
       addNotification({
         type: 'warning',
@@ -160,24 +178,23 @@ const CareerGuidance: React.FC = () => {
       });
       return;
     }
+    const targetResource = resources.find(r => r.id === resourceId);
+    const isSavedNow = await BookmarkService.toggleSavedItem(
+      user.id,
+      resourceId,
+      'resource',
+      targetResource || { id: resourceId, title: 'Career Guidance Resource' }
+    );
     setBookmarkedResources(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(resourceId)) {
-        newSet.delete(resourceId);
-        addNotification({
-          type: 'info',
-          title: 'Resource removed',
-          message: 'Resource removed from bookmarks'
-        });
-      } else {
-        newSet.add(resourceId);
-        addNotification({
-          type: 'success',
-          title: 'Resource bookmarked',
-          message: 'Resource added to your bookmarks'
-        });
-      }
+      if (isSavedNow) newSet.add(resourceId);
+      else newSet.delete(resourceId);
       return newSet;
+    });
+    addNotification({
+      type: isSavedNow ? 'success' : 'info',
+      title: isSavedNow ? 'Resource bookmarked' : 'Resource removed',
+      message: isSavedNow ? 'Resource added to your bookmarks' : 'Resource removed from bookmarks'
     });
   };
 
@@ -341,15 +358,15 @@ const CareerGuidance: React.FC = () => {
               Clear Filters
             </Button>
           )}
-          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredResources.map((resource, index) => (
-              <motion.div
+            <motion.div
               key={resource.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
             >
               <div className="relative">
@@ -363,14 +380,14 @@ const CareerGuidance: React.FC = () => {
                     {getTypeIcon(resource.type)}
                     <span className="text-sm font-medium capitalize">{resource.type}</span>
                   </div>
-                  </div>
+                </div>
                 <div className="absolute top-3 right-3">
                   <div className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
                     <Clock className="h-4 w-4" />
                     <span className="text-sm font-medium">{resource.duration}</span>
                   </div>
                 </div>
-                    </div>
+              </div>
 
               <div className="p-6">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
@@ -391,7 +408,7 @@ const CareerGuidance: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4" />
                     <span>{resource.author}</span>
-                </div>
+                  </div>
                   <div className="flex items-center space-x-1">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
                     <span>{resource.rating}</span>
@@ -442,13 +459,13 @@ const CareerGuidance: React.FC = () => {
                     View
                   </Button>
                 </div>
-                </div>
-              </motion.div>
-            ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {filteredResources.length === 0 && (
-        <motion.div
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center py-16"
@@ -466,7 +483,7 @@ const CareerGuidance: React.FC = () => {
             >
               Clear All Filters
             </Button>
-        </motion.div>
+          </motion.div>
         )}
       </div>
     </div>

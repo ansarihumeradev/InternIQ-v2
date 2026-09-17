@@ -22,7 +22,7 @@ import {
 import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabase';
-import { SkillGraphService, StudentSkill, SkillSuggestion } from '../services/skillGraphService';
+import { SkillGraphService, StudentSkill, SkillSuggestion, Skill } from '../services/skillGraphService';
 import { SkillSuggestionsModal } from '../components/SkillSuggestionsModal';
 
 const Profile: React.FC = () => {
@@ -40,6 +40,7 @@ const Profile: React.FC = () => {
 
   // Skill Graph state
   const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
+  const [taxonomySkills, setTaxonomySkills] = useState<Skill[]>([]);
   const [suggestions, setSuggestions] = useState<SkillSuggestion[]>([]);
   const [showConsentModal, setShowConsentModal] = useState(false);
 
@@ -55,6 +56,10 @@ const Profile: React.FC = () => {
     githubUsername: user?.githubUsername || '',
     resumeUrl: user?.resumeUrl || ''
   });
+
+  useEffect(() => {
+    SkillGraphService.fetchTaxonomySkills().then(setTaxonomySkills).catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -154,7 +159,8 @@ const Profile: React.FC = () => {
     if (!file || !user) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      addNotification({ type: 'error', title: 'File Too Large', message: 'Resume file must be smaller than 5MB.' });
+      addNotification({ type: 'error', title: 'File Too Large', message: 'Resume file size must be 5MB or less.' });
+      if (e.target) e.target.value = '';
       return;
     }
 
@@ -221,6 +227,7 @@ const Profile: React.FC = () => {
 
   const handleManualAddSkill = async () => {
     if (!newSkill.trim() || !user?.id) return;
+<<<<<<< HEAD
     
     // Accept ANY valid skill - support single or comma-separated entries (e.g. "Java, PHP, Excel, SEO")
     const rawSkills = newSkill.split(',').map(s => s.trim()).filter(s => s.length > 0);
@@ -238,6 +245,43 @@ const Profile: React.FC = () => {
         evidence: 'Manually added by student'
       };
     });
+=======
+    const skillInput = newSkill.trim();
+
+    // Check for duplicates in current student skills (case-insensitive)
+    const isDuplicate = studentSkills.some(
+      s => (s.skillName && s.skillName.toLowerCase() === skillInput.toLowerCase()) ||
+           (s.skillId && s.skillId.toLowerCase() === skillInput.toLowerCase())
+    );
+
+    if (isDuplicate) {
+      addNotification({
+        type: 'info',
+        title: 'Skill Already Added',
+        message: `"${skillInput}" is already in your skills.`
+      });
+      setNewSkill('');
+      return;
+    }
+
+    const matchedTaxonomy = taxonomySkills.find(
+      t => t.name.toLowerCase() === skillInput.toLowerCase() || t.id.toLowerCase() === skillInput.toLowerCase()
+    );
+
+    const skillId = matchedTaxonomy ? matchedTaxonomy.id : skillInput.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const skillName = matchedTaxonomy ? matchedTaxonomy.name : skillInput;
+    const skillCategory = matchedTaxonomy ? matchedTaxonomy.category : 'Custom';
+
+    const suggestion: SkillSuggestion = {
+      skillId,
+      skillName,
+      category: skillCategory,
+      source: 'self',
+      confidenceScore: 0.7,
+      proficiencyLevel: 'intermediate',
+      evidence: 'Manually added by student'
+    };
+>>>>>>> origin/main
 
     try {
       await SkillGraphService.acceptStudentSkills(user.id, suggestions);
@@ -423,6 +467,9 @@ const Profile: React.FC = () => {
                 <p className="text-[10px] text-slate-400 mt-1">
                   Auto-extracts skills into your Skill Graph (Subject to student consent)
                 </p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  Maximum file size: 5MB
+                </p>
                 <input
                   type="file"
                   accept=".pdf,.docx,.doc,.txt"
@@ -500,8 +547,10 @@ const Profile: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
+                  list="available-skills-list"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
+<<<<<<< HEAD
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -509,8 +558,18 @@ const Profile: React.FC = () => {
                     }
                   }}
                   placeholder="Add any skill (e.g. Java, PHP, React, Excel, SEO, Communication)"
+=======
+                  placeholder="Add skill manually (e.g. Java, PHP, React)"
+>>>>>>> origin/main
                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500"
                 />
+                <datalist id="available-skills-list">
+                  {taxonomySkills
+                    .filter(t => !studentSkills.some(s => (s.skillId && s.skillId.toLowerCase() === t.id.toLowerCase()) || (s.skillName && s.skillName.toLowerCase() === t.name.toLowerCase())))
+                    .map(t => (
+                      <option key={t.id} value={t.name}>{t.name} ({t.category})</option>
+                    ))}
+                </datalist>
                 <button
                   type="button"
                   onClick={handleManualAddSkill}
