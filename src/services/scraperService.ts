@@ -37,7 +37,7 @@ const generateJobs = (): Job[] => {
   ];
 
   const skills = [
-    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift',
+    'JavaScript', 'TypeScript', 'Python', 'Java', 'PHP', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift',
     'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 'Spring Boot',
     'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Elasticsearch', 'Cassandra', 'DynamoDB',
     'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform', 'Jenkins', 'GitLab CI',
@@ -198,7 +198,7 @@ const generateInternships = (): Internship[] => {
   ];
 
   const skills = [
-    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift',
+    'JavaScript', 'TypeScript', 'Python', 'Java', 'PHP', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift',
     'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 'Spring Boot',
     'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Elasticsearch', 'Cassandra', 'DynamoDB',
     'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform', 'Jenkins', 'GitLab CI',

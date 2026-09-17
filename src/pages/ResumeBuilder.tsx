@@ -566,6 +566,8 @@ const ResumeBuilder: React.FC = () => {
       'node': 'Node.js',
       'typescript': 'TypeScript',
       'python': 'Python',
+      'java': 'Java',
+      'php': 'PHP',
       'html': 'HTML5',
       'css': 'CSS3',
       'sass': 'Sass/SCSS',
