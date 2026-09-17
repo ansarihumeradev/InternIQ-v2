@@ -90,6 +90,24 @@ const COURSE_LIBRARY: Record<string, CourseRecommendation> = {
     level: 'Beginner',
     estimatedHours: 40
   },
+  java: {
+    skillId: 'java',
+    skillName: 'Java',
+    courseTitle: 'Java Programming and Software Engineering Fundamentals',
+    platform: 'Coursera (Duke University)',
+    url: 'https://www.coursera.org/specializations/java-programming',
+    level: 'Beginner',
+    estimatedHours: 35
+  },
+  php: {
+    skillId: 'php',
+    skillName: 'PHP',
+    courseTitle: 'Building Web Applications in PHP',
+    platform: 'Coursera (University of Michigan)',
+    url: 'https://www.coursera.org/learn/web-applications-php',
+    level: 'Beginner',
+    estimatedHours: 30
+  },
   nodejs: {
     skillId: 'nodejs',
     skillName: 'Node.js',
@@ -158,6 +176,8 @@ export class SkillGraphService {
         { id: 'javascript', name: 'JavaScript', category: 'Languages' },
         { id: 'typescript', name: 'TypeScript', category: 'Languages' },
         { id: 'python', name: 'Python', category: 'Languages' },
+        { id: 'java', name: 'Java', category: 'Languages' },
+        { id: 'php', name: 'PHP', category: 'Languages' },
         { id: 'nodejs', name: 'Node.js', category: 'Backend' },
         { id: 'postgresql', name: 'PostgreSQL', category: 'Databases' },
         { id: 'mongodb', name: 'MongoDB', category: 'Databases' },
@@ -198,7 +218,7 @@ export class SkillGraphService {
       return [];
     }
 
-    return data.map((item: any) => ({
+    return data.map(item => ({
       id: item.id,
       studentId: item.student_id,
       skillId: item.skill_id,
@@ -273,20 +293,23 @@ export class SkillGraphService {
 
         const skillId = matchedTaxonomy ? matchedTaxonomy.id : langName.toLowerCase().replace(/[^a-z0-9]/g, '-');
         const skillCategory = matchedTaxonomy ? matchedTaxonomy.category : 'Languages';
+        const skillName = matchedTaxonomy ? matchedTaxonomy.name : langName;
 
         let proficiency: 'beginner' | 'intermediate' | 'advanced' = 'beginner';
         if (count >= 5 || totalStars >= 10) proficiency = 'advanced';
         else if (count >= 2) proficiency = 'intermediate';
 
-        suggestions.push({
-          skillId,
-          skillName: matchedTaxonomy ? matchedTaxonomy.name : langName,
-          category: skillCategory,
-          source: 'github',
-          confidenceScore: 0.85, // Weighted 0.6 in overall model
-          proficiencyLevel: proficiency,
-          evidence: `Found in ${count} GitHub repositories (${totalStars} total stars)`
-        });
+        if (!suggestions.some(s => s.skillId.toLowerCase() === skillId.toLowerCase())) {
+          suggestions.push({
+            skillId,
+            skillName,
+            category: skillCategory,
+            source: 'github',
+            confidenceScore: 0.85, // Weighted 0.6 in overall model
+            proficiencyLevel: proficiency,
+            evidence: `Found in ${count} GitHub repositories (${totalStars} total stars)`
+          });
+        }
       });
 
       return suggestions;
@@ -311,15 +334,17 @@ export class SkillGraphService {
       // Match exact word or boundary
       const regex = new RegExp(`\\b${skillName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
       if (regex.test(resumeText) || textUpper.includes(skillName)) {
-        suggestions.push({
-          skillId: skill.id,
-          skillName: skill.name,
-          category: skill.category,
-          source: 'resume',
-          confidenceScore: 0.70, // Weight 0.25 in overall model
-          proficiencyLevel: 'intermediate',
-          evidence: `Extracted from uploaded resume text keyword match: "${skill.name}"`
-        });
+        if (!suggestions.some(s => s.skillId.toLowerCase() === skill.id.toLowerCase())) {
+          suggestions.push({
+            skillId: skill.id,
+            skillName: skill.name,
+            category: skill.category,
+            source: 'resume',
+            confidenceScore: 0.70, // Weight 0.25 in overall model
+            proficiencyLevel: 'intermediate',
+            evidence: `Extracted from uploaded resume text keyword match: "${skill.name}"`
+          });
+        }
       }
     });
 

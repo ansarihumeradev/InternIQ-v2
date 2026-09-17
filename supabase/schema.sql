@@ -260,6 +260,8 @@ INSERT INTO public.skills (id, name, category) VALUES
   ('javascript', 'JavaScript', 'Languages'),
   ('typescript', 'TypeScript', 'Languages'),
   ('python', 'Python', 'Languages'),
+  ('java', 'Java', 'Languages'),
+  ('php', 'PHP', 'Languages'),
   ('nodejs', 'Node.js', 'Backend'),
   ('postgresql', 'PostgreSQL', 'Databases'),
   ('mongodb', 'MongoDB', 'Databases'),
