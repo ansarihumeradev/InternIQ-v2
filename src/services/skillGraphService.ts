@@ -108,24 +108,6 @@ const COURSE_LIBRARY: Record<string, CourseRecommendation> = {
     level: 'Beginner',
     estimatedHours: 40
   },
-  java: {
-    skillId: 'java',
-    skillName: 'Java',
-    courseTitle: 'Java Programming and Software Engineering Fundamentals',
-    platform: 'Coursera (Duke University)',
-    url: 'https://www.coursera.org/specializations/java-programming',
-    level: 'Beginner',
-    estimatedHours: 35
-  },
-  php: {
-    skillId: 'php',
-    skillName: 'PHP',
-    courseTitle: 'Building Web Applications in PHP',
-    platform: 'Coursera (University of Michigan)',
-    url: 'https://www.coursera.org/learn/web-applications-php',
-    level: 'Beginner',
-    estimatedHours: 30
-  },
   nodejs: {
     skillId: 'nodejs',
     skillName: 'Node.js',
@@ -313,7 +295,6 @@ export class SkillGraphService {
    * Fetch all skills taxonomy
    */
   public static async fetchTaxonomySkills(): Promise<Skill[]> {
-<<<<<<< HEAD
     try {
       const { data, error } = await supabase.from('skills').select('*').order('name');
       if (error || !data || data.length === 0) {
@@ -333,29 +314,6 @@ export class SkillGraphService {
       return combined;
     } catch {
       return DEFAULT_TAXONOMY;
-=======
-    const { data, error } = await supabase.from('skills').select('*').order('name');
-    if (error || !data || data.length === 0) {
-      return [
-        { id: 'react', name: 'React', category: 'Frontend' },
-        { id: 'javascript', name: 'JavaScript', category: 'Languages' },
-        { id: 'typescript', name: 'TypeScript', category: 'Languages' },
-        { id: 'python', name: 'Python', category: 'Languages' },
-        { id: 'java', name: 'Java', category: 'Languages' },
-        { id: 'php', name: 'PHP', category: 'Languages' },
-        { id: 'nodejs', name: 'Node.js', category: 'Backend' },
-        { id: 'postgresql', name: 'PostgreSQL', category: 'Databases' },
-        { id: 'mongodb', name: 'MongoDB', category: 'Databases' },
-        { id: 'figma', name: 'Figma', category: 'Design' },
-        { id: 'docker', name: 'Docker', category: 'DevOps' },
-        { id: 'git', name: 'Git', category: 'Tools' },
-        { id: 'html', name: 'HTML5', category: 'Frontend' },
-        { id: 'css', name: 'CSS3', category: 'Frontend' },
-        { id: 'tailwind', name: 'Tailwind CSS', category: 'Frontend' },
-        { id: 'pandas', name: 'Pandas', category: 'Data Science' },
-        { id: 'machine-learning', name: 'Machine Learning', category: 'Data Science' }
-      ];
->>>>>>> origin/main
     }
   }
 
@@ -409,7 +367,6 @@ export class SkillGraphService {
       console.warn('fetchStudentSkills table error:', e);
     }
 
-<<<<<<< HEAD
     // 2. Also merge any skills from profiles.skills array
     try {
       const { data: profile } = await supabase
@@ -445,19 +402,6 @@ export class SkillGraphService {
     }
 
     return results;
-=======
-    return data.map(item => ({
-      id: item.id,
-      studentId: item.student_id,
-      skillId: item.skill_id,
-      skillName: item.skills?.name || item.skill_id,
-      confidenceScore: Number(item.confidence_score || 0.7),
-      proficiencyLevel: item.proficiency_level || 'intermediate',
-      source: item.source || 'self',
-      evidence: item.evidence || {},
-      lastUpdated: item.last_updated
-    }));
->>>>>>> origin/main
   }
 
   /**
@@ -644,7 +588,6 @@ export class SkillGraphService {
       const skillName = skill.name.toUpperCase();
       // Match exact word or boundary
       const regex = new RegExp(`\\b${skillName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-<<<<<<< HEAD
       if ((regex.test(resumeText) || textUpper.includes(skillName)) && !matchedIds.has(skill.id.toLowerCase())) {
         matchedIds.add(skill.id.toLowerCase());
         suggestions.push({
@@ -656,20 +599,6 @@ export class SkillGraphService {
           proficiencyLevel: 'intermediate',
           evidence: `Extracted from uploaded resume text keyword match: "${skill.name}"`
         });
-=======
-      if (regex.test(resumeText) || textUpper.includes(skillName)) {
-        if (!suggestions.some(s => s.skillId.toLowerCase() === skill.id.toLowerCase())) {
-          suggestions.push({
-            skillId: skill.id,
-            skillName: skill.name,
-            category: skill.category,
-            source: 'resume',
-            confidenceScore: 0.70, // Weight 0.25 in overall model
-            proficiencyLevel: 'intermediate',
-            evidence: `Extracted from uploaded resume text keyword match: "${skill.name}"`
-          });
-        }
->>>>>>> origin/main
       }
     });
 
