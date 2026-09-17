@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Search,
@@ -15,7 +16,8 @@ import {
   TrendingUp,
   Users,
   Award,
-  Clock
+  Clock,
+  ArrowRight
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
@@ -32,12 +34,14 @@ interface Resource {
   reviews: number;
   author: string;
   image: string;
-  url: string;
+  route?: string;
+  url?: string;
   isBookmarked?: boolean;
   tags: string[];
 }
 
 const CareerGuidance: React.FC = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
@@ -61,7 +65,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 156,
       author: 'Sarah Johnson',
       image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/resume-guide',
+      route: '/resume-builder',
       tags: ['Resume', 'Career Tips', 'Freshers']
     },
     {
@@ -75,7 +79,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 234,
       author: 'Michael Chen',
       image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/interview-video',
+      route: '/interview-prep',
       tags: ['Interview', 'Confidence', 'Communication']
     },
     {
@@ -89,7 +93,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 89,
       author: 'Emily Rodriguez',
       image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/career-course',
+      route: '/skill-development',
       tags: ['Career Planning', 'Technology', 'Graduates']
     },
     {
@@ -103,7 +107,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 78,
       author: 'David Wilson',
       image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/networking-guide',
+      route: '/companies',
       tags: ['Networking', 'Professional', 'Relationships']
     },
     {
@@ -117,7 +121,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 112,
       author: 'Lisa Thompson',
       image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/salary-negotiation',
+      route: '/interview-prep',
       tags: ['Salary', 'Negotiation', 'Entry Level']
     },
     {
@@ -131,7 +135,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 167,
       author: 'Alex Kumar',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      url: 'https://example.com/personal-branding',
+      route: '/profile',
       tags: ['Personal Brand', 'Online Presence', 'Social Media']
     }
   ];
@@ -199,10 +203,14 @@ const CareerGuidance: React.FC = () => {
   const handleViewResource = (resource: Resource) => {
     addNotification({
       type: 'info',
-      title: 'Opening resource...',
-      message: `Opening ${resource.title}`
+      title: 'Opening ' + resource.title,
+      message: `Navigating to ${resource.title}`
     });
-    window.open(resource.url, '_blank');
+    if (resource.route) {
+      navigate(resource.route);
+    } else if (resource.url) {
+      window.open(resource.url, '_blank');
+    }
   };
 
   const handleDownload = (resource: Resource) => {

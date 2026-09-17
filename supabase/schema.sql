@@ -198,6 +198,10 @@ CREATE POLICY "Admins can manage skills" ON public.skills
     EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Authenticated users can insert skills" ON public.skills;
+CREATE POLICY "Authenticated users can insert skills" ON public.skills
+  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
 
 -- 4b. STUDENT_SKILLS
 CREATE TABLE IF NOT EXISTS public.student_skills (

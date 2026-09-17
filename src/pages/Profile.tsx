@@ -221,26 +221,51 @@ const Profile: React.FC = () => {
 
   const handleManualAddSkill = async () => {
     if (!newSkill.trim() || !user?.id) return;
-    const skillName = newSkill.trim();
-    const skillId = skillName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    
+    // Accept ANY valid skill - support single or comma-separated entries (e.g. "Java, PHP, Excel, SEO")
+    const rawSkills = newSkill.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    if (rawSkills.length === 0) return;
 
-    const suggestion: SkillSuggestion = {
-      skillId,
-      skillName,
-      category: 'Custom',
-      source: 'github', // assigned default source
-      confidenceScore: 0.7,
-      proficiencyLevel: 'intermediate',
-      evidence: 'Manually added by student'
-    };
+    const suggestions: SkillSuggestion[] = rawSkills.map(skillName => {
+      const skillId = skillName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      return {
+        skillId,
+        skillName,
+        category: 'Custom',
+        source: 'self',
+        confidenceScore: 0.8,
+        proficiencyLevel: 'intermediate',
+        evidence: 'Manually added by student'
+      };
+    });
 
     try {
-      await SkillGraphService.acceptStudentSkills(user.id, [suggestion]);
+      await SkillGraphService.acceptStudentSkills(user.id, suggestions);
       await loadStudentSkills();
       setNewSkill('');
-      addNotification({ type: 'success', title: 'Skill Added', message: `Added "${skillName}" to your skills.` });
+      addNotification({ 
+        type: 'success', 
+        title: 'Skill(s) Added', 
+        message: `Added ${suggestions.map(s => `"${s.skillName}"`).join(', ')} to your skills.` 
+      });
     } catch (err) {
       console.error('Error adding skill:', err);
+      await loadStudentSkills();
+    }
+  };
+
+  const handleDeleteSkill = async (skillId: string, skillName?: string) => {
+    if (!user?.id) return;
+    try {
+      await SkillGraphService.deleteStudentSkill(user.id, skillId, skillName);
+      setStudentSkills(prev => prev.filter(s => s.skillId !== skillId && s.skillName !== skillName));
+      addNotification({
+        type: 'info',
+        title: 'Skill Removed',
+        message: `Removed "${skillName || skillId}" from your skills.`
+      });
+    } catch (err) {
+      console.error('Error removing skill:', err);
     }
   };
 
@@ -477,12 +502,19 @@ const Profile: React.FC = () => {
                   type="text"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add skill manually (e.g. React, PostgreSQL)"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleManualAddSkill();
+                    }
+                  }}
+                  placeholder="Add any skill (e.g. Java, PHP, React, Excel, SEO, Communication)"
                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500"
                 />
                 <button
+                  type="button"
                   onClick={handleManualAddSkill}
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl flex items-center space-x-1 flex-shrink-0"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl flex items-center space-x-1 flex-shrink-0 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Skill</span>
@@ -492,14 +524,14 @@ const Profile: React.FC = () => {
               {/* Skill Cards Grid */}
               {studentSkills.length === 0 ? (
                 <div className="py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200 text-xs text-slate-500">
-                  No skills in your graph yet. Connect GitHub username or upload your resume above!
+                  No skills in your graph yet. Connect GitHub username, upload your resume, or type any skill above!
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {studentSkills.map((sk) => (
                     <div
                       key={sk.id || `${sk.skillId}_${sk.source}`}
-                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs"
+                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs hover:border-slate-300 transition-colors"
                     >
                       <div className="space-y-0.5">
                         <div className="flex items-center space-x-2">
@@ -519,7 +551,14 @@ const Profile: React.FC = () => {
                         </p>
                       </div>
 
-                      <div className="w-2 h-2 rounded-full bg-indigo-600" />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSkill(sk.skillId, sk.skillName)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                        title="Remove skill"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   ))}
                 </div>
