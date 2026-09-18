@@ -66,7 +66,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 156,
       author: 'Sarah Johnson',
       image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/resume-builder',
+      url: 'https://naukri.com/campus/career-guidance/best-resume-for-freshers',
       tags: ['Resume', 'Career Tips', 'Freshers']
     },
     {
@@ -80,7 +80,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 234,
       author: 'Michael Chen',
       image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/interview-prep',
+      url: 'https://www.youtube.com/watch?v=C3fYu1TFweU',
       tags: ['Interview', 'Confidence', 'Communication']
     },
     {
@@ -94,7 +94,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 89,
       author: 'Emily Rodriguez',
       image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/skill-development',
+      url: 'https://www.coursera.org/learn/career-development-planning',
       tags: ['Career Planning', 'Technology', 'Graduates']
     },
     {
@@ -108,7 +108,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 78,
       author: 'David Wilson',
       image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/companies',
+      url: 'https://www.jobberman.com.gh/discover/7-networking-strategies-for-fresh-graduates',
       tags: ['Networking', 'Professional', 'Relationships']
     },
     {
@@ -122,7 +122,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 112,
       author: 'Lisa Thompson',
       image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/interview-prep',
+      url: 'https://www.naukri.com/campus/career-guidance/how-to-negotiate-salary-for-freshers',
       tags: ['Salary', 'Negotiation', 'Entry Level']
     },
     {
@@ -136,7 +136,7 @@ const CareerGuidance: React.FC = () => {
       reviews: 167,
       author: 'Alex Kumar',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/profile',
+      url: 'https://blog.verisign.com/getting-online/four-steps-to-build-your-professional-brand/',
       tags: ['Personal Brand', 'Online Presence', 'Social Media']
     }
   ];
