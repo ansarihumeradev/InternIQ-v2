@@ -23,6 +23,7 @@ import { useNotifications } from '../components/NotificationSystem';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabase';
 import { SkillGraphService, StudentSkill, SkillSuggestion, Skill } from '../services/skillGraphService';
+import { openResume } from '../utils/resumeViewer';
 import { SkillSuggestionsModal } from '../components/SkillSuggestionsModal';
 
 const Profile: React.FC = () => {
@@ -176,8 +177,14 @@ const Profile: React.FC = () => {
 
       let publicUrl = '';
       if (uploadErr) {
-        console.warn('Storage upload note:', uploadErr.message);
-        publicUrl = `https://storage.placeholder.url/resumes/${file.name}`;
+        console.warn('Storage upload fallback to Data URL:', uploadErr.message);
+        // Encode actual file as Data URL so the real document is preserved and viewable
+        publicUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
       } else {
         const { data: urlData } = supabase.storage.from('resumes').getPublicUrl(filePath);
         publicUrl = urlData.publicUrl;
@@ -479,14 +486,14 @@ const Profile: React.FC = () => {
               </div>
 
               {formData.resumeUrl && (
-                <a
-                  href={formData.resumeUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block text-center text-xs font-semibold text-indigo-600 hover:underline pt-2"
+                <button
+                  type="button"
+                  onClick={() => openResume(formData.resumeUrl, `${formData.name || 'Student'}_Resume.pdf`)}
+                  className="w-full text-center text-xs font-semibold text-indigo-600 hover:underline pt-2 cursor-pointer flex items-center justify-center space-x-1"
                 >
-                  View Attached Resume File
-                </a>
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>View Attached Resume File</span>
+                </button>
               )}
             </div>
           </div>

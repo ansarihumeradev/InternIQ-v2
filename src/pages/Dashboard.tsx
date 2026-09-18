@@ -27,6 +27,7 @@ import { useAuth } from '../context/AuthContext';
 import { InternshipService, InternshipListing, Application } from '../services/internshipService';
 import { SkillGraphService, StudentSkill } from '../services/skillGraphService';
 import { BookmarkService, SavedItem } from '../services/bookmarkService';
+import { openResume } from '../utils/resumeViewer';
 
 const Dashboard: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -350,14 +351,14 @@ const Dashboard: React.FC = () => {
                       {/* Action Buttons */}
                       <div className="flex items-center justify-between pt-2 text-xs border-t border-slate-200/60">
                         {app.resumeUrl ? (
-                          <a
-                            href={app.resumeUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-indigo-600 font-bold hover:underline flex items-center space-x-1"
+                          <button
+                            type="button"
+                            onClick={() => openResume(app.resumeUrl!, app.student?.name || 'Applicant')}
+                            className="text-indigo-600 font-bold hover:underline flex items-center space-x-1.5 hover:text-indigo-800 transition-colors"
+                            title="View student's uploaded PDF resume"
                           >
                             <FileText className="w-3.5 h-3.5" /> <span>View Resume</span>
-                          </a>
+                          </button>
                         ) : <span className="text-slate-400 text-[10px]">No resume link</span>}
 
                         <div className="flex items-center space-x-1.5">
