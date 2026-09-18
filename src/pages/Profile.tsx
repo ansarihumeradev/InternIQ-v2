@@ -54,7 +54,8 @@ const Profile: React.FC = () => {
     education: user?.education || '',
     experience: user?.experience || 'Fresher',
     githubUsername: user?.githubUsername || '',
-    resumeUrl: user?.resumeUrl || ''
+    resumeUrl: user?.resumeUrl || '',
+    summary: user?.summary || ''
   });
 
   useEffect(() => {
@@ -73,7 +74,8 @@ const Profile: React.FC = () => {
         education: user.education || '',
         experience: user.experience || 'Fresher',
         githubUsername: user.githubUsername || '',
-        resumeUrl: user.resumeUrl || ''
+        resumeUrl: user.resumeUrl || '',
+        summary: user.summary || ''
       });
       setGithubInput(user.githubUsername || '');
       loadStudentSkills();
@@ -103,7 +105,8 @@ const Profile: React.FC = () => {
         education: formData.education,
         experience: formData.experience,
         githubUsername: formData.githubUsername,
-        resumeUrl: formData.resumeUrl
+        resumeUrl: formData.resumeUrl,
+        summary: formData.summary
       });
 
       setIsEditing(false);
@@ -394,10 +397,26 @@ const Profile: React.FC = () => {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500"
+                      placeholder="e.g. Humera Ansari"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
                     />
                   ) : (
-                    <p className="font-semibold text-slate-800">{formData.name || 'Not provided'}</p>
+                    <p className="font-semibold text-slate-800">{formData.name || <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-slate-400 block font-medium">Email Address</label>
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      value={formData.email}
+                      disabled
+                      placeholder="e.g. student@example.com"
+                      className="w-full mt-1 p-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-500 cursor-not-allowed"
+                    />
+                  ) : (
+                    <p className="font-semibold text-slate-800">{formData.email || <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
                   )}
                 </div>
 
@@ -408,10 +427,11 @@ const Profile: React.FC = () => {
                       type="text"
                       value={formData.phone}
                       onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500"
+                      placeholder="e.g. +91 98765 43210"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
                     />
                   ) : (
-                    <p className="font-semibold text-slate-800">{formData.phone || 'Not provided'}</p>
+                    <p className="font-semibold text-slate-800">{formData.phone || <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
                   )}
                 </div>
 
@@ -422,10 +442,11 @@ const Profile: React.FC = () => {
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500"
+                      placeholder="e.g. Mumbai, India"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
                     />
                   ) : (
-                    <p className="font-semibold text-slate-800">{formData.location || 'Not provided'}</p>
+                    <p className="font-semibold text-slate-800">{formData.location || <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
                   )}
                 </div>
 
@@ -436,10 +457,71 @@ const Profile: React.FC = () => {
                       type="text"
                       value={formData.education}
                       onChange={(e) => setFormData(prev => ({ ...prev, education: e.target.value }))}
-                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500"
+                      placeholder="e.g. B.Tech / MCA"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
                     />
                   ) : (
-                    <p className="font-semibold text-slate-800">{formData.education || 'B.Tech / MCA'}</p>
+                    <p className="font-semibold text-slate-800">{formData.education || <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-slate-400 block font-medium">LinkedIn Profile</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={formData.linkedin}
+                      onChange={(e) => setFormData(prev => ({ ...prev, linkedin: e.target.value }))}
+                      placeholder="e.g. linkedin.com/in/yourprofile"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    />
+                  ) : (
+                    <p className="font-semibold text-indigo-600 truncate">{formData.linkedin ? <a href={formData.linkedin.startsWith('http') ? formData.linkedin : `https://${formData.linkedin}`} target="_blank" rel="noreferrer" className="hover:underline">{formData.linkedin}</a> : <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-slate-400 block font-medium">GitHub Profile</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={formData.githubUsername}
+                      onChange={(e) => setFormData(prev => ({ ...prev, githubUsername: e.target.value }))}
+                      placeholder="e.g. github.com/yourusername"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    />
+                  ) : (
+                    <p className="font-semibold text-indigo-600 truncate">{formData.githubUsername ? <a href={formData.githubUsername.includes('github.com') ? (formData.githubUsername.startsWith('http') ? formData.githubUsername : `https://${formData.githubUsername}`) : `https://github.com/${formData.githubUsername}`} target="_blank" rel="noreferrer" className="hover:underline">{formData.githubUsername}</a> : <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-slate-400 block font-medium">Portfolio / Website</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={formData.portfolio}
+                      onChange={(e) => setFormData(prev => ({ ...prev, portfolio: e.target.value }))}
+                      placeholder="e.g. yourportfolio.com"
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    />
+                  ) : (
+                    <p className="font-semibold text-indigo-600 truncate">{formData.portfolio ? <a href={formData.portfolio.startsWith('http') ? formData.portfolio : `https://${formData.portfolio}`} target="_blank" rel="noreferrer" className="hover:underline">{formData.portfolio}</a> : <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-slate-400 block font-medium">Professional Summary</label>
+                  {isEditing ? (
+                    <textarea
+                      rows={3}
+                      value={formData.summary}
+                      onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
+                      placeholder="Write a short professional summary..."
+                      className="w-full mt-1 p-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 text-slate-800 resize-none text-xs"
+                    />
+                  ) : (
+                    <p className="text-slate-700 leading-relaxed">{formData.summary ? formData.summary : <span className="text-slate-400 italic font-normal">Not provided</span>}</p>
                   )}
                 </div>
               </div>

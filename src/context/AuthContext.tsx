@@ -16,6 +16,7 @@ export interface User {
   education?: string;
   resumeUrl?: string;
   githubUsername?: string;
+  summary?: string;
   createdAt: string;
   lastLogin: string;
 }
@@ -60,6 +61,7 @@ const mapProfileToUser = (profile: any, email: string): User => ({
   education: profile.education || '',
   resumeUrl: profile.resume_url || '',
   githubUsername: profile.github_username || '',
+  summary: profile.summary || '',
   createdAt: profile.created_at || new Date().toISOString(),
   lastLogin: profile.last_login || new Date().toISOString(),
 });
@@ -294,6 +296,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         education: userData.education,
         resume_url: userData.resumeUrl,
         github_username: userData.githubUsername,
+        summary: userData.summary,
       })
       .eq('id', user.id);
 
