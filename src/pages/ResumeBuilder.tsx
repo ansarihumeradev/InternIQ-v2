@@ -1,38 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import jsPDF from 'jspdf';
-import { 
-  FileText, 
-  Download, 
-  Eye, 
+import {
+  FileText,
+  Download,
   Share2,
   Plus,
   Edit,
   Trash2,
   Save,
-  Upload,
   Star,
-  CheckCircle,
-  Clock,
   Users,
-  Award,
-  Briefcase,
-  GraduationCap,
   MapPin,
   Mail,
   Phone,
-  Globe,
   Linkedin,
   Github,
-  Palette,
-  Type,
-  Layout,
   Sparkles,
-  Target,
-  Zap,
-  Moon,
-  TrendingUp,
-  Heart
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
@@ -50,79 +34,49 @@ const ResumeBuilder: React.FC = () => {
   const { user } = useAuth();
   const { addNotification } = useNotifications();
 
-  const [activeTemplate, setActiveTemplate] = useState('modern');
   const [enhancementStyle, setEnhancementStyle] = useState('professional');
-  const [showAISuggestions, setShowAISuggestions] = useState(false);
   const [templateConfig, setTemplateConfig] = useState({
-    selectedTemplate: 'corporate',
-    layout: 'modern',
+    selectedTemplate: 'classic',
     colorScheme: 'blue',
-    fontStyle: 'inter',
-    headerStyle: 'centered',
-    experienceStyle: 'detailed',
-    educationStyle: 'compact',
-    skillsStyle: 'grid',
-    projectsStyle: 'cards'
   });
   const [resumeData, setResumeData] = useState({
     personal: {
       name: user?.name || '',
       email: user?.email || '',
-      phone: user?.phone || '',
-      location: user?.location || '',
-      linkedin: user?.linkedin || '',
-      github: user?.githubUsername ? `github.com/${user.githubUsername}` : '',
-      portfolio: user?.portfolio || ''
+      phone: '',
+      location: '',
+      linkedin: '',
+      github: '',
+      portfolio: ''
     },
-    summary: 'Results-driven JavaScript Developer with expertise in modern front-end frameworks and a proven track record of delivering high-performance web applications. Skilled in React.js, Vue.js, and Node.js with experience in responsive design and cross-browser compatibility.',
-    experience: [
-      {
-        id: '1',
-        title: 'Senior Front-End JavaScript Developer',
-        company: 'Tech Company Inc.',
-        location: 'City, Country',
-        duration: 'January 2022 - Present',
-        description: '• Established a new workflow with React and Redux, improving code reusability by 45%\n• Streamlined UI/UX design, boosting site usability scores by 30% and increasing user engagement\n• Implemented responsive designs with CSS3 and Bootstrap, improving mobile usage by 70%\n• Led a team of five developers in a major project, completing it 20% ahead of schedule'
-      }
-    ],
-    education: [
-      {
-        id: '1',
-        degree: 'Master in Computer Science and Engineering',
-        institution: 'University Name',
-        location: 'City, Country',
-        duration: 'December 2018',
-        gpa: 'Specialization: Software Engineering & Data Structure'
-      }
-    ],
-    skills: {
-      programmingLanguages: ['JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'Python'],
-      frontEndTechnologies: ['React.js', 'Vue.js', 'Angular.js', 'Bootstrap', 'Material-UI', 'Sass', 'Less'],
-      toolsPlatforms: ['VS Code', 'Webpack', 'GitHub', 'Docker', 'AWS', 'Node.js', 'Express.js'],
-      databases: ['MongoDB', 'MySQL', 'PostgreSQL'],
-      methodologies: ['Agile', 'Scrum', 'Git Flow', 'RESTful APIs']
-    },
-    projects: [
-      {
-        id: '1',
-        title: 'E-commerce Platform',
-        description: 'Developed a full-stack e-commerce application using React.js and Node.js, resulting in 40% faster page load times and 25% increase in user engagement',
-        technologies: ['React.js', 'Node.js', 'MongoDB', 'Express.js'],
-        link: 'github.com/username/ecommerce',
-        impact: 'Improved user experience and increased conversion rates by 30%'
-      }
-    ],
-    certifications: [
-      'Certified Web Developer - JavaScript Full Stack (2020)',
-      'Scrum Certified (2019)',
-      'AWS Certified Developer Associate (2021)'
-    ],
-    achievements: [
-      'Led development team of 5 developers',
-      'Reduced bug reports by 40% through improved testing',
-      'Mentored 3 junior developers',
-      'Organized company hackathons'
-    ]
+    summary: '',
+    experience: [] as Array<{
+      id: string;
+      title: string;
+      company: string;
+      location: string;
+      duration: string;
+      description: string;
+    }>,
+    education: [] as Array<{
+      id: string;
+      degree: string;
+      institution: string;
+      location: string;
+      duration: string;
+      gpa: string;
+    }>,
+    skills: [] as string[],
+    projects: [] as Array<{
+      id: string;
+      title: string;
+      description: string;
+      technologies: string[];
+      link: string;
+      impact: string;
+    }>,
+    certifications: [] as string[],
+    achievements: [] as string[],
   });
 
   useEffect(() => {
@@ -130,13 +84,9 @@ const ResumeBuilder: React.FC = () => {
       setResumeData(prev => ({
         ...prev,
         personal: {
+          ...prev.personal,
           name: prev.personal.name || user.name || '',
           email: prev.personal.email || user.email || '',
-          phone: prev.personal.phone || user.phone || '',
-          location: prev.personal.location || user.location || '',
-          linkedin: prev.personal.linkedin || user.linkedin || '',
-          github: prev.personal.github || (user.githubUsername ? `github.com/${user.githubUsername}` : ''),
-          portfolio: prev.personal.portfolio || user.portfolio || ''
         }
       }));
     }
@@ -152,25 +102,18 @@ const ResumeBuilder: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const templates = [
-    { id: 'graphic', name: 'Graphic', icon: <Layout className="h-6 w-6" />, description: 'Contemporary design with visual elements' },
-    { id: 'corporate', name: 'Corporate', icon: <Briefcase className="h-6 w-6" />, description: 'Professional and executive style' },
-    { id: 'social', name: 'Social', icon: <Users className="h-6 w-6" />, description: 'Modern and approachable design' },
-    { id: 'tim', name: 'Tim', icon: <Clock className="h-6 w-6" />, description: 'Clean and time-efficient layout' },
-    { id: 'mark', name: 'Mark', icon: <Target className="h-6 w-6" />, description: 'Executive and experienced professional' },
-    { id: 'shelah', name: 'Shelah', icon: <Star className="h-6 w-6" />, description: 'Elegant and sophisticated design' },
-    { id: 'kim', name: 'Kim', icon: <Zap className="h-6 w-6" />, description: 'Dynamic and energetic layout' },
-    { id: 'moon', name: 'Moon', icon: <Moon className="h-6 w-6" />, description: 'Creative and artistic style' },
-    { id: 'max', name: 'Max', icon: <TrendingUp className="h-6 w-6" />, description: 'Maximum impact design' },
-    { id: 'lana', name: 'Lana', icon: <Heart className="h-6 w-6" />, description: 'Elegant and tasteful template' },
-    { id: 'timeless', name: 'Timeless', icon: <Award className="h-6 w-6" />, description: 'Classic and powerful design' },
-    { id: 'plain', name: 'Plain', icon: <Type className="h-6 w-6" />, description: 'Simple and clean layout' }
-  ];
-
-  const layoutOptions = [
-    { id: 'modern', name: 'Modern', description: 'Clean and contemporary' },
-    { id: 'classic', name: 'Classic', description: 'Traditional and formal' },
-    { id: 'creative', name: 'Creative', description: 'Unique and artistic' },
-    { id: 'minimal', name: 'Minimal', description: 'Simple and focused' }
+    {
+      id: 'classic',
+      name: 'Classic',
+      icon: <FileText className="h-6 w-6" />,
+      description: 'Traditional monochrome layout with dividers'
+    },
+    {
+      id: 'modern',
+      name: 'Modern',
+      icon: <Star className="h-6 w-6" />,
+      description: 'Contemporary design with skill progress bars'
+    },
   ];
 
   const colorSchemes = [
@@ -181,46 +124,6 @@ const ResumeBuilder: React.FC = () => {
     { id: 'orange', name: 'Energetic Orange', colors: ['#ea580c', '#dc2626', '#b91c1c'] }
   ];
 
-  const fontStyles = [
-    { id: 'inter', name: 'Inter', description: 'Modern and clean' },
-    { id: 'roboto', name: 'Roboto', description: 'Professional and readable' },
-    { id: 'poppins', name: 'Poppins', description: 'Friendly and approachable' },
-    { id: 'montserrat', name: 'Montserrat', description: 'Elegant and sophisticated' }
-  ];
-
-  const sectionStyles = {
-    header: [
-      { id: 'centered', name: 'Centered', description: 'Classic centered layout' },
-      { id: 'left', name: 'Left Aligned', description: 'Modern left alignment' },
-      { id: 'split', name: 'Split', description: 'Name and contact split' },
-      { id: 'creative', name: 'Creative', description: 'Unique artistic layout' }
-    ],
-    experience: [
-      { id: 'detailed', name: 'Detailed', description: 'Comprehensive descriptions' },
-      { id: 'compact', name: 'Compact', description: 'Concise bullet points' },
-      { id: 'timeline', name: 'Timeline', description: 'Chronological timeline' },
-      { id: 'cards', name: 'Cards', description: 'Card-based layout' }
-    ],
-    education: [
-      { id: 'compact', name: 'Compact', description: 'Minimal information' },
-      { id: 'detailed', name: 'Detailed', description: 'Full descriptions' },
-      { id: 'academic', name: 'Academic', description: 'Research-focused' },
-      { id: 'modern', name: 'Modern', description: 'Contemporary style' }
-    ],
-    skills: [
-      { id: 'grid', name: 'Grid', description: 'Organized grid layout' },
-      { id: 'bars', name: 'Progress Bars', description: 'Visual skill levels' },
-      { id: 'tags', name: 'Tags', description: 'Tag-based display' },
-      { id: 'categories', name: 'Categories', description: 'Grouped by category' }
-    ],
-    projects: [
-      { id: 'cards', name: 'Cards', description: 'Card-based projects' },
-      { id: 'list', name: 'List', description: 'Simple list format' },
-      { id: 'detailed', name: 'Detailed', description: 'Comprehensive descriptions' },
-      { id: 'portfolio', name: 'Portfolio', description: 'Portfolio-style showcase' }
-    ]
-  };
-
   const handleSaveResume = async () => {
     if (!user) {
       addNotification({
@@ -230,13 +133,9 @@ const ResumeBuilder: React.FC = () => {
       });
       return;
     }
-
     setLoading(true);
-    
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
       addNotification({
         type: 'success',
         title: 'Resume Saved!',
@@ -253,157 +152,458 @@ const ResumeBuilder: React.FC = () => {
     }
   };
 
+  const getActiveColorHex = () => {
+    const selectedScheme = colorSchemes.find(s => s.id === templateConfig.colorScheme);
+    return selectedScheme?.colors[0] || '#2563eb';
+  };
+
+  const hexToRgb = (hex: string) => {
+    const cleanHex = hex.replace('#', '');
+    const bigint = parseInt(cleanHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
+  };
+
   const handleDownloadResume = () => {
     try {
       const doc = new jsPDF();
-      
-      // Apply template configuration
-      const enhancedDoc = applyTemplateToPDF(doc);
-      
-      let yPosition = 20;
+      const activeColorHex = getActiveColorHex();
+      const { r, g, b } = hexToRgb(activeColorHex);
       const margin = 20;
       const lineHeight = 7;
-      const sectionSpacing = 15;
+      const sectionSpacing = 12;
+      let yPos = 20;
 
-      // Skip the header since it's already applied by the template
-      if (templateConfig.selectedTemplate === 'plain') {
-        enhancedDoc.setFontSize(24);
-        enhancedDoc.setFont('helvetica', 'bold');
-        enhancedDoc.text('RESUME', margin, yPosition);
-        yPosition += 20;
+      const addPageIfNeeded = (neededSpace: number) => {
+        if (yPos + neededSpace > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
+      };
+
+      if (templateConfig.selectedTemplate === 'classic') {
+        // Name header
+        doc.setFontSize(22);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(20, 20, 20);
+        doc.text((resumeData.personal.name || 'YOUR NAME').toUpperCase(), margin, yPos);
+        yPos += 8;
+
+        // Contact row
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(80, 80, 80);
+        const contactParts = [
+          resumeData.personal.phone,
+          resumeData.personal.email,
+          resumeData.personal.location
+        ].filter(Boolean);
+        if (contactParts.length > 0) {
+          doc.text(contactParts.join('  \u2022  '), margin, yPos);
+          yPos += 8;
+        }
+
+        doc.setDrawColor(20, 20, 20);
+        doc.setLineWidth(0.5);
+        doc.line(margin, yPos, 190, yPos);
+        yPos += sectionSpacing;
+
+        if (resumeData.summary) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('ABOUT ME', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          const summaryLines = doc.splitTextToSize(resumeData.summary, 170);
+          addPageIfNeeded(summaryLines.length * lineHeight);
+          doc.text(summaryLines, margin, yPos);
+          yPos += summaryLines.length * lineHeight + sectionSpacing;
+        }
+
+        if (resumeData.education.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('EDUCATION', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          resumeData.education.forEach(edu => {
+            addPageIfNeeded(20);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            const instLine = [edu.institution, edu.duration].filter(Boolean).join(' | ');
+            if (instLine) { doc.text(instLine, margin, yPos); yPos += lineHeight; }
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(20, 20, 20);
+            if (edu.degree) { doc.text(edu.degree, margin, yPos); yPos += lineHeight; }
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            if (edu.gpa) { doc.text(edu.gpa, margin, yPos); yPos += lineHeight; }
+            yPos += 4;
+          });
+          yPos += sectionSpacing - 4;
+        }
+
+        if (resumeData.experience.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('WORK EXPERIENCE', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          resumeData.experience.forEach(exp => {
+            addPageIfNeeded(20);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            const companyLine = [exp.company, exp.duration].filter(Boolean).join(' | ');
+            if (companyLine) { doc.text(companyLine, margin, yPos); yPos += lineHeight; }
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(20, 20, 20);
+            if (exp.title) { doc.text(exp.title, margin, yPos); yPos += lineHeight; }
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            if (exp.description) {
+              const descLines = doc.splitTextToSize(exp.description, 170);
+              addPageIfNeeded(descLines.length * lineHeight);
+              doc.text(descLines, margin, yPos);
+              yPos += descLines.length * lineHeight;
+            }
+            yPos += 4;
+          });
+          yPos += sectionSpacing - 4;
+        }
+
+        const validSkillsClassic = resumeData.skills.filter(Boolean);
+        if (validSkillsClassic.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('SKILLS', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(20, 20, 20);
+          const colWidth = 85;
+          const col2X = margin + colWidth;
+          for (let i = 0; i < validSkillsClassic.length; i += 2) {
+            addPageIfNeeded(lineHeight);
+            doc.text('\u2022 ' + validSkillsClassic[i], margin, yPos);
+            if (validSkillsClassic[i + 1]) {
+              doc.text('\u2022 ' + validSkillsClassic[i + 1], col2X, yPos);
+            }
+            yPos += lineHeight;
+          }
+          yPos += sectionSpacing;
+        }
+
+        if (resumeData.certifications.filter(Boolean).length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('CERTIFICATIONS', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          resumeData.certifications.filter(Boolean).forEach(cert => {
+            addPageIfNeeded(lineHeight);
+            doc.text('\u2022 ' + cert, margin, yPos);
+            yPos += lineHeight;
+          });
+          yPos += sectionSpacing;
+        }
+
+        if (resumeData.achievements.filter(Boolean).length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('ACHIEVEMENTS', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          resumeData.achievements.filter(Boolean).forEach(a => {
+            addPageIfNeeded(lineHeight);
+            doc.text('\u2022 ' + a, margin, yPos);
+            yPos += lineHeight;
+          });
+          yPos += sectionSpacing;
+        }
+
+        if (resumeData.projects.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(20, 20, 20);
+          doc.text('PROJECTS', margin, yPos);
+          yPos += 2;
+          doc.setLineWidth(0.3);
+          doc.line(margin, yPos, 190, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          resumeData.projects.forEach(project => {
+            addPageIfNeeded(20);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(20, 20, 20);
+            if (project.title) { doc.text(project.title, margin, yPos); yPos += lineHeight; }
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            if (project.description) {
+              const descLines = doc.splitTextToSize(project.description, 170);
+              addPageIfNeeded(descLines.length * lineHeight);
+              doc.text(descLines, margin, yPos);
+              yPos += descLines.length * lineHeight;
+            }
+            if (project.technologies?.length) {
+              doc.text('Technologies: ' + project.technologies.join(', '), margin, yPos);
+              yPos += lineHeight;
+            }
+            if (project.link) { doc.text('Link: ' + project.link, margin, yPos); yPos += lineHeight; }
+            yPos += 4;
+          });
+        }
+
+        // Classic footer bar
+        const { r: fr, g: fg, b: fb } = hexToRgb(activeColorHex);
+        doc.setFillColor(fr, fg, fb);
+        doc.rect(0, 285, 210, 12, 'F');
+
       } else {
-        yPosition = 40; // Start after the colored header
-      }
+        // MODERN TEMPLATE PDF
+        const initials = (resumeData.personal.name || '?')
+          .split(' ')
+          .map((n: string) => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2);
 
-      enhancedDoc.setFontSize(16);
-      enhancedDoc.setFont('helvetica', 'bold');
-      enhancedDoc.text('PERSONAL INFORMATION', margin, yPosition);
-      yPosition += lineHeight;
-      enhancedDoc.setFontSize(12);
-      enhancedDoc.setFont('helvetica', 'normal');
-      enhancedDoc.text(`Email: ${resumeData.personal.email}`, margin, yPosition); yPosition += lineHeight;
-      enhancedDoc.text(`Phone: ${resumeData.personal.phone}`, margin, yPosition); yPosition += lineHeight;
-      enhancedDoc.text(`Location: ${resumeData.personal.location}`, margin, yPosition); yPosition += lineHeight;
-      enhancedDoc.text(`LinkedIn: ${resumeData.personal.linkedin}`, margin, yPosition); yPosition += lineHeight;
-      enhancedDoc.text(`GitHub: ${resumeData.personal.github}`, margin, yPosition); yPosition += sectionSpacing;
+        doc.setFillColor(r, g, b);
+        doc.circle(170, 25, 14, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(initials, 170 - (initials.length * 3.5), 29);
 
-      enhancedDoc.setFontSize(16);
-      enhancedDoc.setFont('helvetica', 'bold');
-      enhancedDoc.text('PROFESSIONAL SUMMARY', margin, yPosition); yPosition += lineHeight;
-      enhancedDoc.setFontSize(12);
-      enhancedDoc.setFont('helvetica', 'normal');
-      const summaryLines = enhancedDoc.splitTextToSize(resumeData.summary, 170);
-      enhancedDoc.text(summaryLines, margin, yPosition); yPosition += (summaryLines.length * lineHeight) + sectionSpacing;
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(r, g, b);
+        if (resumeData.personal.name) {
+          doc.text(resumeData.personal.name, 105, yPos, { align: 'center' });
+        }
+        yPos += 8;
 
-      if (resumeData.experience.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('EXPERIENCE', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        resumeData.experience.forEach(exp => {
-          enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text(`${exp.title} at ${exp.company}`, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.setFont('helvetica', 'normal'); enhancedDoc.text(`${exp.location} | ${exp.duration}`, margin, yPosition); yPosition += lineHeight;
-          const descLines = enhancedDoc.splitTextToSize(exp.description, 170);
-          enhancedDoc.text(descLines, margin, yPosition); yPosition += (descLines.length * lineHeight) + sectionSpacing;
-        });
-      }
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 100, 100);
+        const contactLine = [
+          resumeData.personal.location,
+          resumeData.personal.phone,
+          resumeData.personal.email
+        ].filter(Boolean).join('  |  ');
+        if (contactLine) {
+          doc.text(contactLine, 105, yPos, { align: 'center' });
+          yPos += 10;
+        }
 
-      if (resumeData.education.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('EDUCATION', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        resumeData.education.forEach(edu => {
-          enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text(`${edu.degree}`, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.setFont('helvetica', 'normal'); enhancedDoc.text(`${edu.institution} | ${edu.location} | ${edu.duration}`, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.text(edu.gpa, margin, yPosition); yPosition += sectionSpacing;
-        });
-      }
+        if (resumeData.summary) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('RESUME OBJECTIVE', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          const summaryLines = doc.splitTextToSize(resumeData.summary, 170);
+          addPageIfNeeded(summaryLines.length * lineHeight);
+          doc.text(summaryLines, margin, yPos);
+          yPos += summaryLines.length * lineHeight + sectionSpacing;
+        }
 
-      if (resumeData.skills.programmingLanguages.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('PROGRAMMING LANGUAGES', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        const skillsText = resumeData.skills.programmingLanguages.join(', ');
-        const skillsLines = enhancedDoc.splitTextToSize(skillsText, 170);
-        enhancedDoc.text(skillsLines, margin, yPosition); yPosition += (skillsLines.length * lineHeight) + sectionSpacing;
-      }
+        if (resumeData.education.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('EDUCATION', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          resumeData.education.forEach(edu => {
+            addPageIfNeeded(20);
+            const detailColX = margin + 35;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(100, 100, 100);
+            if (edu.duration) doc.text(edu.duration, margin, yPos);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(30, 30, 30);
+            if (edu.degree) doc.text(edu.degree, detailColX, yPos);
+            yPos += lineHeight;
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            if (edu.institution) doc.text(edu.institution, detailColX, yPos);
+            yPos += lineHeight;
+            if (edu.gpa) { doc.text(edu.gpa, detailColX, yPos); yPos += lineHeight; }
+            yPos += 4;
+          });
+          yPos += sectionSpacing - 4;
+        }
 
-      if (resumeData.skills.frontEndTechnologies.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('FRONT-END TECHNOLOGIES', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        const frontEndText = resumeData.skills.frontEndTechnologies.join(', ');
-        const frontEndLines = enhancedDoc.splitTextToSize(frontEndText, 170);
-        enhancedDoc.text(frontEndLines, margin, yPosition); yPosition += (frontEndLines.length * lineHeight) + sectionSpacing;
-      }
+        const validSkillsModern = resumeData.skills.filter(Boolean);
+        if (validSkillsModern.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('SKILLS', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          validSkillsModern.forEach((skill, idx) => {
+            addPageIfNeeded(lineHeight + 4);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(30, 30, 30);
+            doc.text(skill, margin, yPos);
+            const barX = margin + 55;
+            const barW = 80;
+            const barH = 3;
+            doc.setFillColor(220, 220, 220);
+            doc.rect(barX, yPos - barH, barW, barH, 'F');
+            const fillPct = 0.70 + (idx % 3) * 0.10;
+            doc.setFillColor(r, g, b);
+            doc.rect(barX, yPos - barH, barW * fillPct, barH, 'F');
+            yPos += lineHeight;
+          });
+          yPos += sectionSpacing;
+        }
 
-      if (resumeData.skills.toolsPlatforms.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('TOOLS AND PLATFORMS', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        const toolsText = resumeData.skills.toolsPlatforms.join(', ');
-        const toolsLines = enhancedDoc.splitTextToSize(toolsText, 170);
-        enhancedDoc.text(toolsLines, margin, yPosition); yPosition += (toolsLines.length * lineHeight) + sectionSpacing;
-      }
+        if (resumeData.experience.length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('WORK HISTORY', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          resumeData.experience.forEach(exp => {
+            addPageIfNeeded(20);
+            const detailColX = margin + 35;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(100, 100, 100);
+            if (exp.duration) doc.text(exp.duration, margin, yPos);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(30, 30, 30);
+            if (exp.title) doc.text(exp.title, detailColX, yPos);
+            yPos += lineHeight;
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(80, 80, 80);
+            if (exp.company) { doc.text(exp.company, detailColX, yPos); yPos += lineHeight; }
+            if (exp.description) {
+              const descLines = doc.splitTextToSize(exp.description, 155);
+              addPageIfNeeded(descLines.length * lineHeight);
+              doc.text(descLines, detailColX, yPos);
+              yPos += descLines.length * lineHeight;
+            }
+            yPos += 4;
+          });
+          yPos += sectionSpacing - 4;
+        }
 
-      if (resumeData.skills.databases.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('DATABASES', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        const databasesText = resumeData.skills.databases.join(', ');
-        const databasesLines = enhancedDoc.splitTextToSize(databasesText, 170);
-        enhancedDoc.text(databasesLines, margin, yPosition); yPosition += (databasesLines.length * lineHeight) + sectionSpacing;
-      }
+        if (resumeData.achievements.filter(Boolean).length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('ACCOMPLISHMENTS', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          resumeData.achievements.filter(Boolean).forEach(a => {
+            addPageIfNeeded(lineHeight);
+            doc.text('\u2022 ' + a, margin, yPos);
+            yPos += lineHeight;
+          });
+        }
 
-      if (resumeData.skills.methodologies.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('METHODOLOGIES', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        const methodologiesText = resumeData.skills.methodologies.join(', ');
-        const methodologiesLines = enhancedDoc.splitTextToSize(methodologiesText, 170);
-        enhancedDoc.text(methodologiesLines, margin, yPosition); yPosition += (methodologiesLines.length * lineHeight) + sectionSpacing;
-      }
-
-      if (resumeData.certifications && resumeData.certifications.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('CERTIFICATIONS', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        resumeData.certifications.forEach(cert => {
-          enhancedDoc.text(`• ${cert}`, margin, yPosition); yPosition += lineHeight;
-        });
-        yPosition += sectionSpacing;
-      }
-
-      if (resumeData.achievements && resumeData.achievements.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('ACHIEVEMENTS', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        resumeData.achievements.forEach(achievement => {
-          enhancedDoc.text(`• ${achievement}`, margin, yPosition); yPosition += lineHeight;
-        });
-        yPosition += sectionSpacing;
-      }
-
-      if (resumeData.projects.length > 0) {
-        if (yPosition > 250) { enhancedDoc.addPage(); yPosition = 20; }
-        enhancedDoc.setFontSize(16); enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text('PROJECTS', margin, yPosition); yPosition += lineHeight;
-        enhancedDoc.setFontSize(12); enhancedDoc.setFont('helvetica', 'normal');
-        resumeData.projects.forEach(project => {
-          enhancedDoc.setFont('helvetica', 'bold'); enhancedDoc.text(project.title, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.setFont('helvetica', 'normal'); enhancedDoc.text(project.description, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.text(`Technologies: ${Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies}`, margin, yPosition); yPosition += lineHeight;
-          enhancedDoc.text(`Link: ${project.link}`, margin, yPosition); yPosition += sectionSpacing;
-        });
+        if (resumeData.certifications.filter(Boolean).length > 0) {
+          addPageIfNeeded(20);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(r, g, b);
+          doc.text('CERTIFICATIONS', margin, yPos);
+          yPos += 3;
+          doc.setDrawColor(r, g, b);
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, 185, yPos);
+          yPos += lineHeight;
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          resumeData.certifications.filter(Boolean).forEach(cert => {
+            addPageIfNeeded(lineHeight);
+            doc.text('\u2022 ' + cert, margin, yPos);
+            yPos += lineHeight;
+          });
+        }
       }
 
       const selectedTemplate = templates.find(t => t.id === templateConfig.selectedTemplate);
-      const fileName = `resume_${selectedTemplate?.name.toLowerCase()}_${Date.now()}.pdf`;
-      
-      enhancedDoc.save(fileName);
-      
+      const fileName = 'resume_' + (selectedTemplate?.name.toLowerCase() || 'resume') + '_' + Date.now() + '.pdf';
+      doc.save(fileName);
+
       addNotification({
         type: 'success',
         title: 'Resume Downloaded!',
-        message: `Resume saved as ${fileName} using ${selectedTemplate?.name} template`
+        message: 'Resume saved as ' + fileName + ' using ' + (selectedTemplate?.name || '') + ' template'
       });
     } catch (error) {
       addNotification({
@@ -414,27 +614,13 @@ const ResumeBuilder: React.FC = () => {
     }
   };
 
-  const handlePreviewResume = () => {
-    const selectedTemplate = templates.find(t => t.id === templateConfig.selectedTemplate);
-    addNotification({
-      type: 'info',
-      title: 'Preview Generated',
-      message: `Preview generated with ${selectedTemplate?.name} template`
-    });
-  };
-
   const handleShareResume = () => {
     const shareText = 'Check out my professional resume!';
     const shareUrl = window.location.href;
-    
     if (navigator.share) {
-      navigator.share({
-        title: 'My Resume',
-        text: shareText,
-        url: shareUrl
-      });
+      navigator.share({ title: 'My Resume', text: shareText, url: shareUrl });
     } else {
-      navigator.clipboard.writeText(`${shareText} - ${shareUrl}`);
+      navigator.clipboard.writeText(shareText + ' - ' + shareUrl);
       addNotification({
         type: 'success',
         title: 'Link copied!',
@@ -443,24 +629,15 @@ const ResumeBuilder: React.FC = () => {
     }
   };
 
-  const handleUploadResume = () => {
-    addNotification({
-      type: 'info',
-      title: 'Upload Feature',
-      message: 'Resume upload feature coming soon!'
-    });
-  };
-
   const handleAIEnhance = async () => {
     setLoading(true);
     try {
-      // Enhanced AI rewriting with multiple styles and professional terminology
       const enhancedSummary = generateProfessionalSummary(resumeData.summary, enhancementStyle);
       const enhancedExperience = resumeData.experience.map(exp => enhanceExperience(exp, enhancementStyle));
       const enhancedEducation = resumeData.education.map(edu => enhanceEducation(edu, enhancementStyle));
       const enhancedSkills = enhanceSkills(resumeData.skills, enhancementStyle);
       const enhancedProjects = resumeData.projects.map(project => enhanceProjects(project, enhancementStyle));
-      
+
       setResumeData(prev => ({
         ...prev,
         summary: enhancedSummary,
@@ -469,11 +646,11 @@ const ResumeBuilder: React.FC = () => {
         skills: enhancedSkills,
         projects: enhancedProjects,
       }));
-      
+
       addNotification({
         type: 'success',
-        title: 'AI Enhancement Complete! ✨',
-        message: `Your resume has been enhanced with ${enhancementStyle} style using industry-standard language and impactful achievements!`
+        title: 'AI Enhancement Complete! \u2728',
+        message: 'Your resume has been enhanced with ' + enhancementStyle + ' style using industry-standard language and impactful achievements!'
       });
     } catch (error) {
       addNotification({
@@ -486,53 +663,24 @@ const ResumeBuilder: React.FC = () => {
     }
   };
 
-  const handleAISuggestions = () => {
-    setShowAISuggestions(!showAISuggestions);
-    if (!showAISuggestions) {
-      addNotification({
-        type: 'info',
-        title: 'AI Suggestions Enabled',
-        message: 'Real-time AI suggestions are now active. Start typing to see improvements!'
-      });
-    }
-  };
-
-  // AI Enhancement Helper Functions
   const generateProfessionalSummary = (originalSummary: string, style: string) => {
-    const professionalTemplates = [
-      `Results-driven ${getRoleFromSkills(style)} with ${getExperienceLevel(style)} of experience in developing scalable web applications and innovative digital solutions. Demonstrated expertise in ${getTopSkills(style)} with a proven track record of delivering high-impact projects that drive business growth and user engagement. Passionate about leveraging cutting-edge technologies to solve complex challenges and create exceptional user experiences.`,
-      `Dynamic and innovative ${getRoleFromSkills(style)} with a strong foundation in modern software development practices. Specialized in ${getTopSkills(style)} with a history of collaborating with cross-functional teams to deliver robust, user-centric applications. Committed to continuous learning and staying ahead of industry trends to deliver optimal solutions.`,
-      `Accomplished ${getRoleFromSkills(style)} with expertise in ${getTopSkills(style)} and a track record of building high-performance applications. Skilled in agile methodologies and team collaboration, with a focus on creating maintainable, scalable code that exceeds business requirements. Dedicated to professional growth and contributing to innovative projects.`
+    const role = getRoleFromSkills(style);
+    const topSkills = getTopSkills(style);
+    const templates = [
+      'Results-driven ' + role + ' with experience developing scalable web applications. Demonstrated expertise in ' + topSkills + ' with a track record of delivering high-impact projects that drive business growth.',
+      'Dynamic ' + role + ' with a strong foundation in modern software development. Specialized in ' + topSkills + ', committed to delivering robust, user-centric applications.',
+      'Accomplished ' + role + ' with expertise in ' + topSkills + '. Skilled in agile methodologies and team collaboration, with a focus on maintainable, scalable code.'
     ];
-    
-    return professionalTemplates[Math.floor(Math.random() * professionalTemplates.length)];
+    return templates[Math.floor(Math.random() * templates.length)];
   };
 
   const enhanceExperience = (exp: any, style: string) => {
-    const actionVerbs = [
-      'Developed', 'Implemented', 'Designed', 'Architected', 'Optimized', 'Streamlined',
-      'Enhanced', 'Built', 'Created', 'Deployed', 'Maintained', 'Collaborated',
-      'Led', 'Mentored', 'Coordinated', 'Delivered', 'Improved', 'Automated'
-    ];
-    
-    const achievements = [
-      'resulting in 40% improved performance',
-      'achieving 95% user satisfaction',
-      'reducing development time by 30%',
-      'increasing team productivity by 25%',
-      'successfully meeting all project deadlines',
-      'exceeding stakeholder expectations'
-    ];
-    
+    const actionVerbs = ['Developed', 'Implemented', 'Designed', 'Optimized', 'Streamlined', 'Built', 'Led', 'Delivered'];
+    const achievements = ['resulting in 40% improved performance', 'achieving 95% user satisfaction', 'reducing development time by 30%', 'exceeding stakeholder expectations'];
     const enhancedDescription = exp.description
-      ? `• ${actionVerbs[Math.floor(Math.random() * actionVerbs.length)]} ${exp.description.toLowerCase()}, ${achievements[Math.floor(Math.random() * achievements.length)]}\n• Collaborated with cross-functional teams to ensure seamless project delivery\n• Implemented best practices and coding standards for maintainable code\n• Conducted code reviews and provided mentorship to junior developers`
+      ? '\u2022 ' + actionVerbs[Math.floor(Math.random() * actionVerbs.length)] + ' ' + exp.description.toLowerCase() + ', ' + achievements[Math.floor(Math.random() * achievements.length)] + '\n\u2022 Collaborated with cross-functional teams to ensure seamless project delivery\n\u2022 Implemented best practices and coding standards for maintainable code'
       : exp.description;
-    
-    return {
-      ...exp,
-      title: enhanceJobTitle(exp.title, style),
-      description: enhancedDescription
-    };
+    return { ...exp, title: enhanceJobTitle(exp.title, style), description: enhancedDescription };
   };
 
   const enhanceJobTitle = (title: string, style: string) => {
@@ -546,12 +694,9 @@ const ResumeBuilder: React.FC = () => {
       'senior': 'Senior Software Engineer',
       'lead': 'Lead Software Engineer'
     };
-    
     const lowerTitle = title.toLowerCase();
     for (const [key, enhanced] of Object.entries(titleEnhancements)) {
-      if (lowerTitle.includes(key)) {
-        return enhanced;
-      }
+      if (lowerTitle.includes(key)) return enhanced;
     }
     return title;
   };
@@ -559,171 +704,43 @@ const ResumeBuilder: React.FC = () => {
   const enhanceEducation = (edu: any, style: string) => {
     return {
       ...edu,
-      degree: edu.degree.includes('Bachelor') ? `${edu.degree} (First Class Honours)` : edu.degree,
-      institution: edu.institution.includes('University') ? `${edu.institution} - Top 10% Graduate` : edu.institution
+      degree: edu.degree.includes('Bachelor') ? edu.degree + ' (First Class Honours)' : edu.degree,
+      institution: edu.institution.includes('University') ? edu.institution + ' - Top 10% Graduate' : edu.institution
     };
   };
 
-  const enhanceSkills = (skills: any, style: string) => {
-    const enhancedSkills: any = {
-      programmingLanguages: skills.programmingLanguages.map((s: string) => enhanceSkill(s, style)),
-      frontEndTechnologies: skills.frontEndTechnologies.map((s: string) => enhanceSkill(s, style)),
-      toolsPlatforms: skills.toolsPlatforms.map((s: string) => enhanceSkill(s, style)),
-      databases: skills.databases.map((s: string) => enhanceSkill(s, style)),
-      methodologies: skills.methodologies.map((s: string) => enhanceSkill(s, style))
-    };
-    return enhancedSkills;
-  };
-
-  const enhanceSkill = (skill: string, style: string) => {
+  const enhanceSkills = (skills: string[], style: string): string[] => {
     const skillEnhancements: { [key: string]: string } = {
-      'javascript': 'JavaScript (ES6+)',
-      'react': 'React.js',
-      'vue': 'Vue.js',
-      'angular': 'Angular.js',
-      'node': 'Node.js',
-      'typescript': 'TypeScript',
-      'python': 'Python',
-      'java': 'Java',
-      'php': 'PHP',
-      'html': 'HTML5',
-      'css': 'CSS3',
-      'sass': 'Sass/SCSS',
-      'less': 'Less',
-      'bootstrap': 'Bootstrap',
-      'material-ui': 'Material-UI',
-      'express': 'Express.js',
-      'mongodb': 'MongoDB',
-      'mysql': 'MySQL',
-      'postgresql': 'PostgreSQL',
-      'aws': 'AWS',
-      'docker': 'Docker',
-      'git': 'Git',
-      'github': 'GitHub',
-      'webpack': 'Webpack',
-      'vs code': 'VS Code',
-      'agile': 'Agile/Scrum',
-      'scrum': 'Scrum',
-      'rest': 'RESTful APIs',
-      'api': 'RESTful APIs'
+      'javascript': 'JavaScript (ES6+)', 'react': 'React.js', 'vue': 'Vue.js', 'angular': 'Angular.js',
+      'node': 'Node.js', 'typescript': 'TypeScript', 'python': 'Python', 'java': 'Java',
+      'html': 'HTML5', 'css': 'CSS3', 'sass': 'Sass/SCSS', 'bootstrap': 'Bootstrap',
+      'express': 'Express.js', 'mongodb': 'MongoDB', 'mysql': 'MySQL', 'postgresql': 'PostgreSQL',
+      'aws': 'AWS', 'docker': 'Docker', 'git': 'Git', 'github': 'GitHub', 'agile': 'Agile/Scrum'
     };
-    
-    const enhancedName = skillEnhancements[skill.toLowerCase()] || skill;
-    return enhancedName;
+    return skills.map(skill => skillEnhancements[skill.toLowerCase()] || skill);
   };
 
   const enhanceProjects = (project: any, style: string) => {
-    const projectEnhancements = [
-      'A comprehensive and innovative project that',
-      'An industry-leading solution that',
-      'A cutting-edge application that',
-      'A scalable and robust system that'
-    ];
-    
+    const prefixes = ['A comprehensive project that', 'An industry-leading solution that', 'A cutting-edge application that', 'A scalable system that'];
     const enhancedDescription = project.description
-      ? `${projectEnhancements[Math.floor(Math.random() * projectEnhancements.length)]} ${project.description.toLowerCase()}. Features include responsive design, optimized performance, and seamless user experience.`
+      ? prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + project.description.toLowerCase() + '. Features include responsive design, optimized performance, and seamless user experience.'
       : project.description;
-    
-    return {
-      ...project,
-      description: enhancedDescription
-    };
+    return { ...project, description: enhancedDescription };
   };
 
   const getRoleFromSkills = (style: string) => {
-    const allSkills = [
-      ...resumeData.skills.programmingLanguages,
-      ...resumeData.skills.frontEndTechnologies,
-      ...resumeData.skills.toolsPlatforms,
-      ...resumeData.skills.databases,
-      ...resumeData.skills.methodologies
-    ];
-    
-    if (allSkills.some(s => s.toLowerCase().includes('react') || s.toLowerCase().includes('frontend'))) return 'Frontend Developer';
-    if (allSkills.some(s => s.toLowerCase().includes('node') || s.toLowerCase().includes('backend'))) return 'Backend Developer';
-    if (allSkills.some(s => s.toLowerCase().includes('full') || s.toLowerCase().includes('stack'))) return 'Full Stack Developer';
+    const allSkills = resumeData.skills.map(s => s.toLowerCase());
+    if (allSkills.some(s => s.includes('react') || s.includes('frontend') || s.includes('html') || s.includes('css'))) return 'Frontend Developer';
+    if (allSkills.some(s => s.includes('node') || s.includes('backend') || s.includes('express'))) return 'Backend Developer';
     return 'Software Developer';
   };
 
-  const getExperienceLevel = (style: string) => {
-    const experienceCount = resumeData.experience.length;
-    if (experienceCount > 5) return 'Senior';
-    if (experienceCount > 2) return 'Mid-level';
-    return 'Junior';
-  };
-
   const getTopSkills = (style: string) => {
-    const allSkills = [
-      ...resumeData.skills.programmingLanguages,
-      ...resumeData.skills.frontEndTechnologies,
-      ...resumeData.skills.toolsPlatforms
-    ];
-    const topSkills = allSkills.slice(0, 3);
-    return topSkills.join(', ');
+    return resumeData.skills.filter(Boolean).slice(0, 3).join(', ') || 'modern technologies';
   };
 
   const updateTemplateConfig = (key: string, value: string) => {
-    setTemplateConfig(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
-  const hexToRgb = (hex: string) => {
-    const cleanHex = hex.replace('#', '');
-    const bigint = parseInt(cleanHex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return { r, g, b };
-  };
-
-  const getActiveColorHex = () => {
-    const selectedScheme = colorSchemes.find(s => s.id === templateConfig.colorScheme);
-    if (selectedScheme && selectedScheme.colors.length > 0) {
-      return selectedScheme.colors[0];
-    }
-    const templateColors: { [key: string]: string } = {
-      'graphic': '#3498db',
-      'corporate': '#2c3e50',
-      'social': '#9b59b6',
-      'tim': '#2ecc71',
-      'mark': '#e74c3c',
-      'shelah': '#8e44ad',
-      'kim': '#f1c40f',
-      'moon': '#34495e',
-      'max': '#e67e22',
-      'lana': '#e91e63',
-      'timeless': '#95a5a6',
-      'plain': '#6c757d'
-    };
-    return templateColors[templateConfig.selectedTemplate] || '#2563eb';
-  };
-
-  const generateTemplatePreview = () => {
-    const selectedTemplate = templates.find(t => t.id === templateConfig.selectedTemplate);
-    const activeColor = getActiveColorHex();
-
-    return {
-      template: selectedTemplate,
-      color: activeColor,
-      name: selectedTemplate?.name || 'Plain'
-    };
-  };
-
-  const applyTemplateToPDF = (doc: any) => {
-    const activeColorHex = getActiveColorHex();
-    const { r, g, b } = hexToRgb(activeColorHex);
-
-    doc.setFillColor(r, g, b);
-    doc.rect(0, 0, 210, 28, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text(resumeData.personal.name || 'Student Name', 20, 18);
-    doc.setTextColor(0, 0, 0);
-
-    return doc;
+    setTemplateConfig(prev => ({ ...prev, [key]: value }));
   };
 
   const handleAddSection = (type: string) => {
@@ -734,181 +751,93 @@ const ResumeBuilder: React.FC = () => {
       content: {},
       isExpanded: true
     };
-    
     setSections(prev => [...prev, newSection]);
-    addNotification({
-      type: 'success',
-      title: 'Section Added',
-      message: `${newSection.title} section has been added`
-    });
+    addNotification({ type: 'success', title: 'Section Added', message: newSection.title + ' section has been added' });
   };
 
   const handleRemoveSection = (sectionId: string) => {
     setSections(prev => prev.filter(section => section.id !== sectionId));
-    addNotification({
-      type: 'info',
-      title: 'Section Removed',
-      message: 'Section has been removed from your resume'
-    });
+    addNotification({ type: 'info', title: 'Section Removed', message: 'Section has been removed from your resume' });
   };
 
   const handleToggleSection = (sectionId: string) => {
-    setSections(prev => prev.map(section => 
+    setSections(prev => prev.map(section =>
       section.id === sectionId ? { ...section, isExpanded: !section.isExpanded } : section
     ));
   };
 
   const handleUpdateData = (field: string, value: any) => {
-    setResumeData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setResumeData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleUpdatePersonal = (field: string, value: string) => {
-    setResumeData(prev => ({
-      ...prev,
-      personal: {
-        ...prev.personal,
-        [field]: value
-      }
-    }));
+    setResumeData(prev => ({ ...prev, personal: { ...prev.personal, [field]: value } }));
   };
 
   const handleUpdateExperience = (index: number, field: string, value: string) => {
     setResumeData(prev => ({
       ...prev,
-      experience: prev.experience.map((exp, i) => 
-        i === index ? { ...exp, [field]: value } : exp
-      )
+      experience: prev.experience.map((exp, i) => i === index ? { ...exp, [field]: value } : exp)
     }));
   };
 
   const handleUpdateEducation = (index: number, field: string, value: string) => {
     setResumeData(prev => ({
       ...prev,
-      education: prev.education.map((edu, i) => 
-        i === index ? { ...edu, [field]: value } : edu
-      )
+      education: prev.education.map((edu, i) => i === index ? { ...edu, [field]: value } : edu)
     }));
   };
 
   const handleUpdateProjects = (index: number, field: string, value: any) => {
     setResumeData(prev => ({
       ...prev,
-      projects: prev.projects.map((project, i) => 
-        i === index ? { ...project, [field]: value } : project
-      )
+      projects: prev.projects.map((project, i) => i === index ? { ...project, [field]: value } : project)
     }));
   };
 
   const addExperience = () => {
-    const newExperience = {
-      id: Date.now().toString(),
-      title: '',
-      company: '',
-      location: '',
-      duration: '',
-      description: ''
-    };
     setResumeData(prev => ({
       ...prev,
-      experience: [...prev.experience, newExperience]
+      experience: [...prev.experience, { id: Date.now().toString(), title: '', company: '', location: '', duration: '', description: '' }]
     }));
   };
 
   const removeExperience = (index: number) => {
-    setResumeData(prev => ({
-      ...prev,
-      experience: prev.experience.filter((_, i) => i !== index)
-    }));
+    setResumeData(prev => ({ ...prev, experience: prev.experience.filter((_, i) => i !== index) }));
   };
 
   const addEducation = () => {
-    const newEducation = {
-      id: Date.now().toString(),
-      degree: '',
-      institution: '',
-      location: '',
-      duration: '',
-      gpa: ''
-    };
     setResumeData(prev => ({
       ...prev,
-      education: [...prev.education, newEducation]
+      education: [...prev.education, { id: Date.now().toString(), degree: '', institution: '', location: '', duration: '', gpa: '' }]
     }));
   };
 
   const removeEducation = (index: number) => {
-    setResumeData(prev => ({
-      ...prev,
-      education: prev.education.filter((_, i) => i !== index)
-    }));
+    setResumeData(prev => ({ ...prev, education: prev.education.filter((_, i) => i !== index) }));
   };
 
   const addSkill = () => {
-    const newSkill = '';
-    setResumeData(prev => ({
-      ...prev,
-      skills: {
-        ...prev.skills,
-        programmingLanguages: [...prev.skills.programmingLanguages, newSkill]
-      }
-    }));
+    setResumeData(prev => ({ ...prev, skills: [...prev.skills, ''] }));
   };
 
-  const removeSkill = (category: keyof typeof resumeData.skills, index: number) => {
-    setResumeData(prev => ({
-      ...prev,
-      skills: {
-        ...prev.skills,
-        [category]: prev.skills[category].filter((_: string, i: number) => i !== index)
-      }
-    }));
+  const removeSkill = (index: number) => {
+    setResumeData(prev => ({ ...prev, skills: prev.skills.filter((_, i) => i !== index) }));
   };
 
-  const addSkillToCategory = (category: keyof typeof resumeData.skills) => {
-    setResumeData(prev => ({
-      ...prev,
-      skills: {
-        ...prev.skills,
-        [category]: [...prev.skills[category], '']
-      }
-    }));
-  };
-
-  const updateSkillInCategory = (category: keyof typeof resumeData.skills, index: number, value: string) => {
-    setResumeData(prev => ({
-      ...prev,
-      skills: {
-        ...prev.skills,
-        [category]: prev.skills[category].map((skill: string, i: number) => 
-          i === index ? value : skill
-        )
-      }
-    }));
+  const updateSkill = (index: number, value: string) => {
+    setResumeData(prev => ({ ...prev, skills: prev.skills.map((skill, i) => i === index ? value : skill) }));
   };
 
   const addProject = () => {
-    const newProject = {
-      id: Date.now().toString(),
-      title: '',
-      description: '',
-      technologies: [],
-      link: '',
-      impact: ''
-    };
     setResumeData(prev => ({
       ...prev,
-      projects: [...prev.projects, newProject]
+      projects: [...prev.projects, { id: Date.now().toString(), title: '', description: '', technologies: [], link: '', impact: '' }]
     }));
   };
 
   const removeProject = (index: number) => {
-    setResumeData(prev => ({
-      ...prev,
-      projects: prev.projects.filter((_, i) => i !== index)
-    }));
+    setResumeData(prev => ({ ...prev, projects: prev.projects.filter((_, i) => i !== index) }));
   };
 
   if (!user) {
@@ -922,6 +851,204 @@ const ResumeBuilder: React.FC = () => {
     );
   }
 
+  const activeColor = getActiveColorHex();
+
+  const ClassicPreview = () => {
+    const validSkills = resumeData.skills.filter(Boolean);
+    const leftSkills = validSkills.filter((_, i) => i % 2 === 0);
+    const rightSkills = validSkills.filter((_, i) => i % 2 === 1);
+    return (
+      <div className="bg-white text-gray-900 p-8 font-serif text-xs leading-relaxed min-h-[900px] relative">
+        {resumeData.personal.name && (
+          <h1 className="text-2xl font-black tracking-widest uppercase text-gray-900 mb-1">
+            {resumeData.personal.name}
+          </h1>
+        )}
+        {(resumeData.personal.phone || resumeData.personal.email || resumeData.personal.location) && (
+          <div className="flex items-center gap-2 text-gray-500 text-xs mb-4 flex-wrap">
+            {resumeData.personal.phone && <span>{resumeData.personal.phone}</span>}
+            {resumeData.personal.phone && resumeData.personal.email && <span>&bull;</span>}
+            {resumeData.personal.email && <span>{resumeData.personal.email}</span>}
+            {(resumeData.personal.phone || resumeData.personal.email) && resumeData.personal.location && <span>&bull;</span>}
+            {resumeData.personal.location && <span>{resumeData.personal.location}</span>}
+          </div>
+        )}
+        {!(resumeData.personal.phone || resumeData.personal.email || resumeData.personal.location) && resumeData.personal.name && <div className="mb-4" />}
+        <hr className="border-gray-900 border-t mb-4" />
+        {resumeData.summary && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">About Me</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            <p className="text-gray-700">{resumeData.summary}</p>
+          </div>
+        )}
+        {resumeData.education.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Education</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            {resumeData.education.map((edu, i) => (
+              <div key={edu.id || i} className="mb-3">
+                {(edu.institution || edu.duration) && (
+                  <div className="text-gray-500">{[edu.institution, edu.duration].filter(Boolean).join(' | ')}</div>
+                )}
+                {edu.degree && <div className="font-bold text-gray-900">{edu.degree}</div>}
+                {edu.gpa && <div className="text-gray-600 mt-0.5">{edu.gpa}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+        {resumeData.experience.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Work Experience</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            {resumeData.experience.map((exp, i) => (
+              <div key={exp.id || i} className="mb-3">
+                {(exp.company || exp.duration) && (
+                  <div className="text-gray-500">{[exp.company, exp.duration].filter(Boolean).join(' | ')}</div>
+                )}
+                {exp.title && <div className="font-bold text-gray-900">{exp.title}</div>}
+                {exp.description && <p className="text-gray-700 mt-0.5 whitespace-pre-line">{exp.description}</p>}
+              </div>
+            ))}
+          </div>
+        )}
+        {validSkills.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Skills</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            <div className="grid grid-cols-2 gap-x-4">
+              <ul className="space-y-0.5">{leftSkills.map((skill, i) => <li key={i} className="text-gray-700">&bull; {skill}</li>)}</ul>
+              <ul className="space-y-0.5">{rightSkills.map((skill, i) => <li key={i} className="text-gray-700">&bull; {skill}</li>)}</ul>
+            </div>
+          </div>
+        )}
+        {resumeData.certifications.filter(Boolean).length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Certifications</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            <ul className="space-y-0.5">{resumeData.certifications.filter(Boolean).map((cert, i) => <li key={i} className="text-gray-700">&bull; {cert}</li>)}</ul>
+          </div>
+        )}
+        {resumeData.achievements.filter(Boolean).length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Achievements</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            <ul className="space-y-0.5">{resumeData.achievements.filter(Boolean).map((a, i) => <li key={i} className="text-gray-700">&bull; {a}</li>)}</ul>
+          </div>
+        )}
+        {resumeData.projects.length > 0 && (
+          <div className="mb-12">
+            <h2 className="font-bold uppercase tracking-widest text-xs text-gray-900 mb-1">Projects</h2>
+            <hr className="border-gray-300 border-t mb-2" />
+            {resumeData.projects.map((project, i) => (
+              <div key={project.id || i} className="mb-3">
+                {project.title && <div className="font-bold text-gray-900">{project.title}</div>}
+                {project.description && <p className="text-gray-700">{project.description}</p>}
+                {project.technologies?.length > 0 && <div className="text-gray-500">Technologies: {project.technologies.join(', ')}</div>}
+                {project.link && <div className="text-gray-500">Link: {project.link}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0 right-0 h-4" style={{ backgroundColor: activeColor }} />
+      </div>
+    );
+  };
+
+  const ModernPreview = () => {
+    const validSkills = resumeData.skills.filter(Boolean);
+    const initials = (resumeData.personal.name || '?').split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    return (
+      <div className="bg-white text-gray-900 p-8 font-sans text-xs leading-relaxed min-h-[900px]">
+        <div className="relative flex flex-col items-center mb-6">
+          <div className="absolute top-0 right-0 w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ backgroundColor: activeColor }}>
+            {initials}
+          </div>
+          {resumeData.personal.name && (
+            <h1 className="text-2xl font-bold" style={{ color: activeColor }}>{resumeData.personal.name}</h1>
+          )}
+          {(resumeData.personal.location || resumeData.personal.phone || resumeData.personal.email) && (
+            <div className="text-gray-400 text-xs mt-1 text-center">
+              {[resumeData.personal.location, resumeData.personal.phone, resumeData.personal.email].filter(Boolean).join('  |  ')}
+            </div>
+          )}
+        </div>
+        {resumeData.summary && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Resume Objective</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            <p className="text-gray-600">{resumeData.summary}</p>
+          </div>
+        )}
+        {resumeData.education.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Education</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            {resumeData.education.map((edu, i) => (
+              <div key={edu.id || i} className="flex gap-3 mb-3">
+                <div className="text-gray-400 text-xs w-20 shrink-0 pt-0.5">{edu.duration}</div>
+                <div>
+                  {edu.degree && <div className="font-bold text-gray-900">{edu.degree}</div>}
+                  {edu.institution && <div className="text-gray-600">{edu.institution}</div>}
+                  {edu.gpa && <div className="text-gray-500 mt-0.5">{edu.gpa}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {validSkills.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Skills</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            <div className="space-y-1.5">
+              {validSkills.map((skill, i) => {
+                const fillPct = 70 + (i % 3) * 10;
+                return (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="text-gray-700 w-28 shrink-0">{skill}</span>
+                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ backgroundColor: activeColor, width: fillPct + '%' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {resumeData.experience.length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Work History</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            {resumeData.experience.map((exp, i) => (
+              <div key={exp.id || i} className="flex gap-3 mb-3">
+                <div className="text-gray-400 text-xs w-20 shrink-0 pt-0.5">{exp.duration}</div>
+                <div>
+                  {exp.title && <div className="font-bold text-gray-900">{exp.title}</div>}
+                  {exp.company && <div className="text-gray-600">{exp.company}</div>}
+                  {exp.description && <p className="text-gray-600 mt-0.5 whitespace-pre-line">{exp.description}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {resumeData.achievements.filter(Boolean).length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Accomplishments</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            <ul className="space-y-0.5">{resumeData.achievements.filter(Boolean).map((a, i) => <li key={i} className="text-gray-700">&bull; {a}</li>)}</ul>
+          </div>
+        )}
+        {resumeData.certifications.filter(Boolean).length > 0 && (
+          <div className="mb-4">
+            <h2 className="font-bold text-xs tracking-widest uppercase mb-1" style={{ color: activeColor }}>Certifications</h2>
+            <div className="h-0.5 w-full mb-2" style={{ backgroundColor: activeColor }} />
+            <ul className="space-y-0.5">{resumeData.certifications.filter(Boolean).map((cert, i) => <li key={i} className="text-gray-700">&bull; {cert}</li>)}</ul>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -930,12 +1057,8 @@ const ResumeBuilder: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Resume Builder
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Create a professional resume that stands out and gets you noticed
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Resume Builder</h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Create a professional resume that stands out and gets you noticed</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -949,24 +1072,15 @@ const ResumeBuilder: React.FC = () => {
             {/* Template Selection */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose Template</h3>
-              
               <div className="grid grid-cols-2 gap-3 mb-6">
                 {templates.map((template) => (
                   <button
                     key={template.id}
                     onClick={() => updateTemplateConfig('selectedTemplate', template.id)}
-                    className={`p-3 rounded-lg border-2 transition-all duration-200 ${
-                      templateConfig.selectedTemplate === template.id
-                        ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
+                    className={'p-3 rounded-lg border-2 transition-all duration-200 ' + (templateConfig.selectedTemplate === template.id ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50')}
                   >
                     <div className="flex items-center space-x-2">
-                      <div className={`p-1 rounded ${
-                        templateConfig.selectedTemplate === template.id
-                          ? 'bg-primary-100 text-primary-600'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
+                      <div className={'p-1 rounded ' + (templateConfig.selectedTemplate === template.id ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 text-gray-600')}>
                         {template.icon}
                       </div>
                       <div className="text-left">
@@ -979,69 +1093,24 @@ const ResumeBuilder: React.FC = () => {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Template Customization</h4>
-                
-                {/* Layout Options */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Layout Style</label>
-                  <select
-                    value={templateConfig.layout}
-                    onChange={(e) => updateTemplateConfig('layout', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  >
-                    {layoutOptions.map(option => (
-                      <option key={option.id} value={option.id}>
-                        {option.name} - {option.description}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Color Scheme */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Color Scheme</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {colorSchemes.map(scheme => (
-                      <button
-                        key={scheme.id}
-                        onClick={() => updateTemplateConfig('colorScheme', scheme.id)}
-                        className={`p-2 rounded-lg border-2 transition-all ${
-                          templateConfig.colorScheme === scheme.id
-                            ? 'border-primary-500'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <div className="flex space-x-1">
-                            {scheme.colors.map((color, index) => (
-                              <div
-                                key={index}
-                                className="w-3 h-3 rounded"
-                                style={{ backgroundColor: color }}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-xs font-medium">{scheme.name}</span>
+                <h4 className="text-sm font-medium text-gray-700 mb-3">Color Scheme</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {colorSchemes.map(scheme => (
+                    <button
+                      key={scheme.id}
+                      onClick={() => updateTemplateConfig('colorScheme', scheme.id)}
+                      className={'p-2 rounded-lg border-2 transition-all ' + (templateConfig.colorScheme === scheme.id ? 'border-primary-500' : 'border-gray-200 hover:border-gray-300')}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          {scheme.colors.map((color, index) => (
+                            <div key={index} className="w-3 h-3 rounded" style={{ backgroundColor: color }} />
+                          ))}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Font Style */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Font Style</label>
-                  <select
-                    value={templateConfig.fontStyle}
-                    onChange={(e) => updateTemplateConfig('fontStyle', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  >
-                    {fontStyles.map(font => (
-                      <option key={font.id} value={font.id}>
-                        {font.name} - {font.description}
-                      </option>
-                    ))}
-                  </select>
+                        <span className="text-xs font-medium">{scheme.name}</span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1049,8 +1118,6 @@ const ResumeBuilder: React.FC = () => {
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              
-              {/* AI Enhancement Style Selector */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">AI Enhancement Style</label>
                 <select
@@ -1064,80 +1131,11 @@ const ResumeBuilder: React.FC = () => {
                   <option value="technical">Technical</option>
                 </select>
               </div>
-              
               <div className="space-y-3">
-                <Button
-                  variant="primary"
-                  fullWidth
-                  loading={loading}
-                  onClick={handleSaveResume}
-                  icon={<Save className="h-5 w-5" />}
-                >
-                  Save Resume
-                </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={handleDownloadResume}
-                  icon={<Download className="h-5 w-5" />}
-                >
-                  Download PDF
-                </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={handlePreviewResume}
-                  icon={<Eye className="h-5 w-5" />}
-                >
-                  Preview
-                </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={() => {
-                    const preview = generateTemplatePreview();
-                    addNotification({
-                      type: 'info',
-                      title: 'Template Preview',
-                      message: `Template: ${preview.name}, Color: ${preview.color}`
-                    });
-                  }}
-                  icon={<Layout className="h-5 w-5" />}
-                >
-                  Preview Template
-                </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={handleShareResume}
-                  icon={<Share2 className="h-5 w-5" />}
-                >
-                  Share
-                </Button>
-                <Button
-                  variant="outline"
-                  fullWidth
-                  onClick={handleUploadResume}
-                  icon={<Upload className="h-5 w-5" />}
-                >
-                  Import Resume
-                </Button>
-                <Button
-                  variant="secondary"
-                  fullWidth
-                  onClick={handleAIEnhance}
-                  icon={<Sparkles className="h-5 w-5" />}
-                >
-                  AI Enhance
-                </Button>
-                <Button
-                  variant={showAISuggestions ? "primary" : "outline"}
-                  fullWidth
-                  onClick={handleAISuggestions}
-                  icon={<CheckCircle className="h-5 w-5" />}
-                >
-                  {showAISuggestions ? 'AI Suggestions ON' : 'AI Suggestions'}
-                </Button>
+                <Button variant="primary" fullWidth loading={loading} onClick={handleSaveResume} icon={<Save className="h-5 w-5" />}>Save Resume</Button>
+                <Button variant="outline" fullWidth onClick={handleDownloadResume} icon={<Download className="h-5 w-5" />}>Download PDF</Button>
+                <Button variant="outline" fullWidth onClick={handleShareResume} icon={<Share2 className="h-5 w-5" />}>Share</Button>
+                <Button variant="secondary" fullWidth onClick={handleAIEnhance} icon={<Sparkles className="h-5 w-5" />}>AI Enhance</Button>
               </div>
             </div>
 
@@ -1146,13 +1144,7 @@ const ResumeBuilder: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Sections</h3>
               <div className="space-y-2">
                 {['experience', 'education', 'skills', 'projects', 'certifications'].map((type) => (
-                  <Button
-                    key={type}
-                    variant="ghost"
-                    fullWidth
-                    onClick={() => handleAddSection(type)}
-                    icon={<Plus className="h-4 w-4" />}
-                  >
+                  <Button key={type} variant="ghost" fullWidth onClick={() => handleAddSection(type)} icon={<Plus className="h-4 w-4" />}>
                     Add {type.charAt(0).toUpperCase() + type.slice(1)}
                   </Button>
                 ))}
@@ -1171,110 +1163,55 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  icon={<Edit className="h-4 w-4" />}
-                >
-                  Edit
-                </Button>
+                <Button variant="ghost" size="sm" icon={<Edit className="h-4 w-4" />}>Edit</Button>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                   <div className="relative">
                     <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={resumeData.personal.name}
-                      onChange={(e) => handleUpdatePersonal('name', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="Enter your full name"
-                    />
+                    <input type="text" value={resumeData.personal.name} onChange={(e) => handleUpdatePersonal('name', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your full name" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="email"
-                      value={resumeData.personal.email}
-                      onChange={(e) => handleUpdatePersonal('email', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="Enter your email"
-                    />
+                    <input type="email" value={resumeData.personal.email} onChange={(e) => handleUpdatePersonal('email', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your email" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="tel"
-                      value={resumeData.personal.phone}
-                      onChange={(e) => handleUpdatePersonal('phone', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="Enter your phone number"
-                    />
+                    <input type="tel" value={resumeData.personal.phone} onChange={(e) => handleUpdatePersonal('phone', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your phone number" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={resumeData.personal.location}
-                      onChange={(e) => handleUpdatePersonal('location', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="Enter your location"
-                    />
+                    <input type="text" value={resumeData.personal.location} onChange={(e) => handleUpdatePersonal('location', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your location" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
                   <div className="relative">
                     <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="url"
-                      value={resumeData.personal.linkedin}
-                      onChange={(e) => handleUpdatePersonal('linkedin', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="linkedin.com/in/yourprofile"
-                    />
+                    <input type="url" value={resumeData.personal.linkedin} onChange={(e) => handleUpdatePersonal('linkedin', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="linkedin.com/in/yourprofile" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">GitHub</label>
                   <div className="relative">
                     <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="url"
-                      value={resumeData.personal.github}
-                      onChange={(e) => handleUpdatePersonal('github', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="github.com/yourusername"
-                    />
+                    <input type="url" value={resumeData.personal.github} onChange={(e) => handleUpdatePersonal('github', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="github.com/yourusername" />
                   </div>
                 </div>
               </div>
-
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Professional Summary</label>
-                <textarea
-                  value={resumeData.summary}
-                  onChange={(e) => handleUpdateData('summary', e.target.value)}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                  placeholder="Write a brief professional summary..."
-                />
+                <textarea value={resumeData.summary} onChange={(e) => handleUpdateData('summary', e.target.value)} rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Write a brief professional summary..." />
               </div>
             </div>
 
@@ -1282,85 +1219,38 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
-                <Button
-                  variant="outline"
-                  onClick={addExperience}
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Experience
-                </Button>
+                <Button variant="outline" onClick={addExperience} icon={<Plus className="h-4 w-4" />}>Add Experience</Button>
               </div>
-
               <div className="space-y-4">
                 {resumeData.experience.map((exp, index) => (
                   <div key={exp.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-medium text-gray-900">Experience #{index + 1}</h4>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeExperience(index)}
-                        icon={<Trash2 className="h-4 w-4" />}
-                      >
-                        Remove
-                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => removeExperience(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
-                        <input
-                          type="text"
-                          value={exp.title}
-                          onChange={(e) => handleUpdateExperience(index, 'title', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Frontend Developer"
-                        />
+                        <input type="text" value={exp.title} onChange={(e) => handleUpdateExperience(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Frontend Developer" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-                        <input
-                          type="text"
-                          value={exp.company}
-                          onChange={(e) => handleUpdateExperience(index, 'company', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Tech Company Inc."
-                        />
+                        <input type="text" value={exp.company} onChange={(e) => handleUpdateExperience(index, 'company', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Tech Company Inc." />
                       </div>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <input
-                          type="text"
-                          value={exp.location}
-                          onChange={(e) => handleUpdateExperience(index, 'location', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Mumbai, India"
-                        />
+                        <input type="text" value={exp.location} onChange={(e) => handleUpdateExperience(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Mumbai, India" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                        <input
-                          type="text"
-                          value={exp.duration}
-                          onChange={(e) => handleUpdateExperience(index, 'duration', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Jan 2022 - Present"
-                        />
+                        <input type="text" value={exp.duration} onChange={(e) => handleUpdateExperience(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Jan 2022 - Present" />
                       </div>
                     </div>
-                    
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                      <textarea
-                        value={exp.description}
-                        onChange={(e) => handleUpdateExperience(index, 'description', e.target.value)}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                        placeholder="Describe your responsibilities and achievements..."
-                      />
+                      <textarea value={exp.description} onChange={(e) => handleUpdateExperience(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Describe your responsibilities and achievements..." />
                     </div>
                   </div>
                 ))}
@@ -1371,83 +1261,37 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Education</h3>
-                <Button
-                  variant="outline"
-                  onClick={addEducation}
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Education
-                </Button>
+                <Button variant="outline" onClick={addEducation} icon={<Plus className="h-4 w-4" />}>Add Education</Button>
               </div>
-
               <div className="space-y-4">
                 {resumeData.education.map((edu, index) => (
                   <div key={edu.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-medium text-gray-900">Education #{index + 1}</h4>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeEducation(index)}
-                        icon={<Trash2 className="h-4 w-4" />}
-                      >
-                        Remove
-                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => removeEducation(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Degree</label>
-                        <input
-                          type="text"
-                          value={edu.degree}
-                          onChange={(e) => handleUpdateEducation(index, 'degree', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Master in Computer Science and Engineering"
-                        />
+                        <input type="text" value={edu.degree} onChange={(e) => handleUpdateEducation(index, 'degree', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Master in Computer Science" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Institution</label>
-                        <input
-                          type="text"
-                          value={edu.institution}
-                          onChange={(e) => handleUpdateEducation(index, 'institution', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., XYZ University"
-                        />
+                        <input type="text" value={edu.institution} onChange={(e) => handleUpdateEducation(index, 'institution', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., XYZ University" />
                       </div>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <input
-                          type="text"
-                          value={edu.location}
-                          onChange={(e) => handleUpdateEducation(index, 'location', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Mumbai, India"
-                        />
+                        <input type="text" value={edu.location} onChange={(e) => handleUpdateEducation(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Mumbai, India" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                        <input
-                          type="text"
-                          value={edu.duration}
-                          onChange={(e) => handleUpdateEducation(index, 'duration', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Dec 2018"
-                        />
+                        <input type="text" value={edu.duration} onChange={(e) => handleUpdateEducation(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Dec 2018" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">GPA</label>
-                        <input
-                          type="text"
-                          value={edu.gpa}
-                          onChange={(e) => handleUpdateEducation(index, 'gpa', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., Specialization: Software Engineering & Data Structure"
-                        />
+                        <label className="block text-sm font-medium text-gray-700 mb-2">GPA / Notes</label>
+                        <input type="text" value={edu.gpa} onChange={(e) => handleUpdateEducation(index, 'gpa', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., GPA 3.8 / Specialization" />
                       </div>
                     </div>
                   </div>
@@ -1455,53 +1299,24 @@ const ResumeBuilder: React.FC = () => {
               </div>
             </div>
 
-            {/* Skills */}
+            {/* Skills - flat list */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
+                <Button variant="outline" onClick={addSkill} icon={<Plus className="h-4 w-4" />}>Add Skill</Button>
               </div>
-
-              <div className="space-y-6">
-                {Object.entries(resumeData.skills).map(([skillType, skills]) => (
-                  <div key={skillType}>
-                    <div className="flex items-center justify-between mb-3">
-                      <label className="block text-sm font-medium text-gray-700">
-                        {skillType.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                      </label>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addSkillToCategory(skillType as keyof typeof resumeData.skills)}
-                        icon={<Plus className="h-4 w-4" />}
-                      >
-                        Add
-                      </Button>
+              <div className="space-y-2">
+                {resumeData.skills.map((skill, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <div className="flex-1">
+                      <input type="text" value={skill} onChange={(e) => updateSkill(index, e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., JavaScript, React, Python..." />
                     </div>
-                    {skills.map((skill, index) => (
-                      <div key={`${skillType}-${index}`} className="flex items-center space-x-4 mb-2">
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={skill}
-                            onChange={(e) => updateSkillInCategory(skillType as keyof typeof resumeData.skills, index, e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                            placeholder={`e.g., ${skillType === 'programmingLanguages' ? 'JavaScript' : skillType === 'frontEndTechnologies' ? 'React.js' : 'VS Code'}`}
-                          />
-                        </div>
-                        <div className="flex items-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeSkill(skillType as keyof typeof resumeData.skills, index)}
-                            icon={<Trash2 className="h-4 w-4" />}
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                    <Button variant="ghost" size="sm" onClick={() => removeSkill(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
+                {resumeData.skills.length === 0 && (
+                  <p className="text-gray-400 text-sm">No skills added yet. Click &quot;+ Add Skill&quot; to get started.</p>
+                )}
               </div>
             </div>
 
@@ -1509,73 +1324,32 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
-                <Button
-                  variant="outline"
-                  onClick={addProject}
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Project
-                </Button>
+                <Button variant="outline" onClick={addProject} icon={<Plus className="h-4 w-4" />}>Add Project</Button>
               </div>
-
               <div className="space-y-4">
                 {resumeData.projects.map((project, index) => (
                   <div key={project.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-medium text-gray-900">Project #{index + 1}</h4>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeProject(index)}
-                        icon={<Trash2 className="h-4 w-4" />}
-                      >
-                        Remove
-                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => removeProject(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
-                        <input
-                          type="text"
-                          value={project.title}
-                          onChange={(e) => handleUpdateProjects(index, 'title', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., E-commerce Platform"
-                        />
+                        <input type="text" value={project.title} onChange={(e) => handleUpdateProjects(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., E-commerce Platform" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Project Link</label>
-                        <input
-                          type="url"
-                          value={project.link}
-                          onChange={(e) => handleUpdateProjects(index, 'link', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                          placeholder="e.g., github.com/username/ecommerce"
-                        />
+                        <input type="url" value={project.link} onChange={(e) => handleUpdateProjects(index, 'link', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., github.com/username/project" />
                       </div>
                     </div>
-                    
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                      <textarea
-                        value={project.description}
-                        onChange={(e) => handleUpdateProjects(index, 'description', e.target.value)}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                        placeholder="Describe your project..."
-                      />
+                      <textarea value={project.description} onChange={(e) => handleUpdateProjects(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Describe your project..." />
                     </div>
-                    
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Technologies Used</label>
-                      <input
-                        type="text"
-                        value={Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies}
-                        onChange={(e) => handleUpdateProjects(index, 'technologies', e.target.value.split(',').map(tech => tech.trim()))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        placeholder="e.g., React, Node.js, MongoDB (comma separated)"
-                      />
+                      <input type="text" value={Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies} onChange={(e) => handleUpdateProjects(index, 'technologies', e.target.value.split(',').map(tech => tech.trim()))} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., React, Node.js, MongoDB (comma separated)" />
                     </div>
                   </div>
                 ))}
@@ -1586,52 +1360,15 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Certifications</h3>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setResumeData(prev => ({
-                      ...prev,
-                      certifications: [...(prev.certifications || []), '']
-                    }));
-                  }}
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Certification
-                </Button>
+                <Button variant="outline" onClick={() => { setResumeData(prev => ({ ...prev, certifications: [...(prev.certifications || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Certification</Button>
               </div>
-
               <div className="space-y-4">
                 {(resumeData.certifications || []).map((cert, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <div className="flex-1">
-                      <input
-                        type="text"
-                        value={cert}
-                        onChange={(e) => {
-                          setResumeData(prev => ({
-                            ...prev,
-                            certifications: prev.certifications.map((c, i) => 
-                              i === index ? e.target.value : c
-                            )
-                          }));
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        placeholder="e.g., Certified Web Developer - JavaScript Full Stack (2020)"
-                      />
+                      <input type="text" value={cert} onChange={(e) => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.map((c, i) => i === index ? e.target.value : c) })); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Certified Web Developer - JavaScript Full Stack (2020)" />
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setResumeData(prev => ({
-                          ...prev,
-                          certifications: prev.certifications.filter((_, i) => i !== index)
-                        }));
-                      }}
-                      icon={<Trash2 className="h-4 w-4" />}
-                    >
-                      Remove
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
               </div>
@@ -1641,99 +1378,43 @@ const ResumeBuilder: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setResumeData(prev => ({
-                      ...prev,
-                      achievements: [...(prev.achievements || []), '']
-                    }));
-                  }}
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Achievement
-                </Button>
+                <Button variant="outline" onClick={() => { setResumeData(prev => ({ ...prev, achievements: [...(prev.achievements || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Achievement</Button>
               </div>
-
               <div className="space-y-4">
                 {(resumeData.achievements || []).map((achievement, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <div className="flex-1">
-                      <input
-                        type="text"
-                        value={achievement}
-                        onChange={(e) => {
-                          setResumeData(prev => ({
-                            ...prev,
-                            achievements: prev.achievements.map((a, i) => 
-                              i === index ? e.target.value : a
-                            )
-                          }));
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        placeholder="e.g., Led development team of 5 developers"
-                      />
+                      <input type="text" value={achievement} onChange={(e) => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.map((a, i) => i === index ? e.target.value : a) })); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Led development team of 5 developers" />
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setResumeData(prev => ({
-                          ...prev,
-                          achievements: prev.achievements.filter((_, i) => i !== index)
-                        }));
-                      }}
-                      icon={<Trash2 className="h-4 w-4" />}
-                    >
-                      Remove
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
               </div>
             </div>
           </motion.div>
         </div>
-      </div>
 
-      {/* Template Preview */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Template Preview</h3>
-        
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-          <div 
-            className="h-16 rounded-t-lg flex items-center px-4 mb-4"
-            style={{ backgroundColor: generateTemplatePreview().color }}
-          >
-            <div className="text-white font-bold text-lg">
-              {resumeData.personal.name || 'Your Name'}
+        {/* Live Resume Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-8"
+        >
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Live Preview &mdash; {templateConfig.selectedTemplate === 'classic' ? 'Classic' : 'Modern'} Template
+              </h3>
+              <Button variant="outline" onClick={handleDownloadResume} icon={<Download className="h-4 w-4" />} size="sm">Download PDF</Button>
+            </div>
+            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-inner">
+              <div className="overflow-y-auto max-h-[900px]">
+                {templateConfig.selectedTemplate === 'classic' ? <ClassicPreview /> : <ModernPreview />}
+              </div>
             </div>
           </div>
-          
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: generateTemplatePreview().color }}></div>
-              <span className="text-sm font-medium">Professional Summary</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: generateTemplatePreview().color }}></div>
-              <span className="text-sm font-medium">Work Experience</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: generateTemplatePreview().color }}></div>
-              <span className="text-sm font-medium">Education</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: generateTemplatePreview().color }}></div>
-              <span className="text-sm font-medium">Skills</span>
-            </div>
-          </div>
-          
-          <div className="mt-4 text-center">
-            <span className="text-xs text-gray-500">
-              {generateTemplatePreview().name} Template
-            </span>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
