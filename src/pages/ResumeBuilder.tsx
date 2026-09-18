@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import jsPDF from 'jspdf';
 import { 
@@ -47,6 +47,9 @@ interface ResumeSection {
 }
 
 const ResumeBuilder: React.FC = () => {
+  const { user } = useAuth();
+  const { addNotification } = useNotifications();
+
   const [activeTemplate, setActiveTemplate] = useState('modern');
   const [enhancementStyle, setEnhancementStyle] = useState('professional');
   const [showAISuggestions, setShowAISuggestions] = useState(false);
@@ -63,13 +66,13 @@ const ResumeBuilder: React.FC = () => {
   });
   const [resumeData, setResumeData] = useState({
     personal: {
-      name: 'Your Name',
-      email: 'your.email@example.com',
-      phone: '(123) 456-789',
-      location: 'City, Country',
-      linkedin: 'linkedin.com/in/your-profile',
-      github: 'github.com/yourusername',
-      portfolio: 'yourportfolio.com'
+      name: user?.name || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      location: user?.location || '',
+      linkedin: user?.linkedin || '',
+      github: user?.githubUsername ? `github.com/${user.githubUsername}` : '',
+      portfolio: user?.portfolio || ''
     },
     summary: 'Results-driven JavaScript Developer with expertise in modern front-end frameworks and a proven track record of delivering high-performance web applications. Skilled in React.js, Vue.js, and Node.js with experience in responsive design and cross-browser compatibility.',
     experience: [
@@ -121,6 +124,24 @@ const ResumeBuilder: React.FC = () => {
       'Organized company hackathons'
     ]
   });
+
+  useEffect(() => {
+    if (user) {
+      setResumeData(prev => ({
+        ...prev,
+        personal: {
+          name: prev.personal.name || user.name || '',
+          email: prev.personal.email || user.email || '',
+          phone: prev.personal.phone || user.phone || '',
+          location: prev.personal.location || user.location || '',
+          linkedin: prev.personal.linkedin || user.linkedin || '',
+          github: prev.personal.github || (user.githubUsername ? `github.com/${user.githubUsername}` : ''),
+          portfolio: prev.personal.portfolio || user.portfolio || ''
+        }
+      }));
+    }
+  }, [user]);
+
   const [sections, setSections] = useState<ResumeSection[]>([
     { id: '1', type: 'personal', title: 'Personal Information', content: {}, isExpanded: true },
     { id: '2', type: 'experience', title: 'Work Experience', content: {}, isExpanded: true },
@@ -129,9 +150,6 @@ const ResumeBuilder: React.FC = () => {
     { id: '5', type: 'projects', title: 'Projects', content: {}, isExpanded: true }
   ]);
   const [loading, setLoading] = useState(false);
-
-  const { user } = useAuth();
-  const { addNotification } = useNotifications();
 
   const templates = [
     { id: 'graphic', name: 'Graphic', icon: <Layout className="h-6 w-6" />, description: 'Contemporary design with visual elements' },
@@ -651,8 +669,20 @@ const ResumeBuilder: React.FC = () => {
     }));
   };
 
-  const generateTemplatePreview = () => {
-    const selectedTemplate = templates.find(t => t.id === templateConfig.selectedTemplate);
+  const hexToRgb = (hex: string) => {
+    const cleanHex = hex.replace('#', '');
+    const bigint = parseInt(cleanHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
+  };
+
+  const getActiveColorHex = () => {
+    const selectedScheme = colorSchemes.find(s => s.id === templateConfig.colorScheme);
+    if (selectedScheme && selectedScheme.colors.length > 0) {
+      return selectedScheme.colors[0];
+    }
     const templateColors: { [key: string]: string } = {
       'graphic': '#3498db',
       'corporate': '#2c3e50',
@@ -667,137 +697,32 @@ const ResumeBuilder: React.FC = () => {
       'timeless': '#95a5a6',
       'plain': '#6c757d'
     };
+    return templateColors[templateConfig.selectedTemplate] || '#2563eb';
+  };
+
+  const generateTemplatePreview = () => {
+    const selectedTemplate = templates.find(t => t.id === templateConfig.selectedTemplate);
+    const activeColor = getActiveColorHex();
 
     return {
       template: selectedTemplate,
-      color: templateColors[templateConfig.selectedTemplate] || '#6c757d',
+      color: activeColor,
       name: selectedTemplate?.name || 'Plain'
     };
   };
 
   const applyTemplateToPDF = (doc: any) => {
-    const template = templateConfig.selectedTemplate;
-    
-    // Apply template-specific styling
-    switch (template) {
-      case 'graphic':
-        doc.setFillColor(52, 152, 219);
-        doc.rect(0, 0, 210, 30, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(24);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 20);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'corporate':
-        doc.setFillColor(44, 62, 80);
-        doc.rect(0, 0, 210, 25, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(20);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 17);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'social':
-        doc.setFillColor(155, 89, 182);
-        doc.rect(0, 0, 210, 28, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(22);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 19);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'tim':
-        doc.setFillColor(46, 204, 113);
-        doc.rect(0, 0, 210, 26, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(21);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 18);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'mark':
-        doc.setFillColor(231, 76, 60);
-        doc.rect(0, 0, 210, 32, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(26);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 22);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'shelah':
-        doc.setFillColor(142, 68, 173);
-        doc.rect(0, 0, 210, 30, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(24);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 20);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'kim':
-        doc.setFillColor(241, 196, 15);
-        doc.rect(0, 0, 210, 29, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(23);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 20);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'moon':
-        doc.setFillColor(52, 73, 94);
-        doc.rect(0, 0, 210, 31, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(25);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 21);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'max':
-        doc.setFillColor(230, 126, 34);
-        doc.rect(0, 0, 210, 33, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(27);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 23);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'lana':
-        doc.setFillColor(233, 30, 99);
-        doc.rect(0, 0, 210, 27, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(22);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 18);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'timeless':
-        doc.setFillColor(149, 165, 166);
-        doc.rect(0, 0, 210, 34, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(28);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 24);
-        doc.setTextColor(0, 0, 0);
-        break;
-        
-      case 'plain':
-      default:
-        doc.setFontSize(24);
-        doc.setFont('helvetica', 'bold');
-        doc.text(resumeData.personal.name, 20, 20);
-        break;
-    }
-    
+    const activeColorHex = getActiveColorHex();
+    const { r, g, b } = hexToRgb(activeColorHex);
+
+    doc.setFillColor(r, g, b);
+    doc.rect(0, 0, 210, 28, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text(resumeData.personal.name || 'Student Name', 20, 18);
+    doc.setTextColor(0, 0, 0);
+
     return doc;
   };
 

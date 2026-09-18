@@ -13,10 +13,10 @@ const Footer: React.FC = () => {
               <div className="p-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg">
                 <Briefcase className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold">FresherJobs</span>
+              <span className="text-xl font-bold">InternIQ</span>
             </div>
             <p className="text-gray-300 text-sm">
-              Empowering freshers with smarter job and internship discovery. 
+              Empowering freshers with smarter job and internship discovery.
               Your career journey starts here.
             </p>
             <div className="flex space-x-4">
@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2025 FresherJobs. All rights reserved.
+            © 2026 InternIQ. All rights reserved.
           </p>
         </div>
       </div>

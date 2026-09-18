@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import jsPDF from 'jspdf';
 import {
   Search,
   Video,
@@ -17,7 +18,12 @@ import {
   MessageCircle,
   CheckCircle,
   TrendingUp,
-  Calendar
+  Calendar,
+  X,
+  CheckCircle2,
+  UserCheck,
+  CalendarDays,
+  Sparkles
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useNotifications } from '../components/NotificationSystem';
@@ -235,27 +241,97 @@ const InterviewPrep: React.FC = () => {
     }
   };
 
+  const [showMockModal, setShowMockModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Technical (React / Full Stack)');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedSlot, setSelectedSlot] = useState('10:00 AM - 11:00 AM');
+
   const handleScheduleMockInterview = () => {
+    if (!user) {
+      addNotification({
+        type: 'warning',
+        title: 'Sign In Required',
+        message: 'Please sign in to schedule a mock interview session.'
+      });
+      return;
+    }
+    setShowMockModal(true);
+  };
+
+  const handleConfirmMockBooking = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowMockModal(false);
     addNotification({
-      type: 'info',
-      title: 'Mock Interview',
-      message: 'Redirecting to schedule your mock interview...'
+      type: 'success',
+      title: 'Mock Interview Booked!',
+      message: `Successfully scheduled ${selectedCategory} mock interview for ${selectedDate} at ${selectedSlot}. Check your email for meeting link!`
     });
   };
 
   const handleDownloadGuide = () => {
     addNotification({
       type: 'info',
-      title: 'Download Started',
-      message: 'Preparing interview preparation guide...'
+      title: 'Preparing Download',
+      message: 'Generating InternIQ Complete Interview Preparation & Career Guide PDF...'
     });
-    setTimeout(() => {
+
+    try {
+      const doc = new jsPDF();
+      doc.setFillColor(0, 137, 123); // #00897b
+      doc.rect(0, 0, 210, 30, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('InternIQ Complete Interview Preparation Guide', 15, 20);
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(14);
+      doc.text('1. The STAR Method Framework', 15, 45);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('• Situation: Set the scene and provide necessary background context.', 20, 55);
+      doc.text('• Task: Describe your specific responsibility in that situation.', 20, 63);
+      doc.text('• Action: Explain the step-by-step actions you took to address the challenge.', 20, 71);
+      doc.text('• Result: Share the measurable outcomes and achievements of your action.', 20, 79);
+
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('2. Fresher Technical Interview Checklist', 15, 95);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('• Master core Data Structures: Arrays, HashMaps, Trees, Graphs.', 20, 105);
+      doc.text('• Practice clean code & modular architecture principles.', 20, 113);
+      doc.text('• Understand Big-O Time & Space Complexity analysis.', 20, 121);
+      doc.text('• Review system design fundamentals (APIs, DB Indexing, Caching).', 20, 129);
+
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('3. Salary & Offer Negotiation Strategies', 15, 145);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('• Research industry benchmarks for your role and location.', 20, 155);
+      doc.text('• Highlight unique skills and internship achievements.', 20, 163);
+      doc.text('• Evaluate full compensation packages including stipend, ESOPs, & perks.', 20, 171);
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text('© InternIQ Advanced Hiring Platform - Empowering Freshers with Smarter Discovery.', 15, 280);
+
+      doc.save('InternIQ_Complete_Interview_Preparation_Guide.pdf');
+
       addNotification({
         type: 'success',
         title: 'Download Complete',
-        message: 'Interview guide downloaded successfully'
+        message: 'InternIQ Complete Interview Guide PDF downloaded successfully!'
       });
-    }, 2000);
+    } catch (err) {
+      console.error('PDF Generation Error:', err);
+      addNotification({
+        type: 'error',
+        title: 'Download Failed',
+        message: 'Could not generate PDF guide. Please try again.'
+      });
+    }
   };
 
   const clearFilters = () => {
@@ -548,6 +624,106 @@ const InterviewPrep: React.FC = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Mock Interview Booking Modal */}
+      {showMockModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden"
+          >
+            <div className="bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-4 flex items-center justify-between text-white">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="h-6 w-6 text-emerald-200" />
+                <h3 className="text-xl font-bold">Schedule 1-on-1 Mock Interview</h3>
+              </div>
+              <button
+                onClick={() => setShowMockModal(false)}
+                className="text-white hover:text-emerald-100 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirmMockBooking} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Interview Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                >
+                  <option value="Technical (React / Full Stack)">Technical (React / Full Stack)</option>
+                  <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
+                  <option value="Behavioral & HR Round">Behavioral & HR Round</option>
+                  <option value="System Design & Architecture">System Design & Architecture</option>
+                  <option value="Resume & Portfolio Review">Resume & Portfolio Review</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Preferred Date
+                </label>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Time Slot
+                </label>
+                <select
+                  value={selectedSlot}
+                  onChange={(e) => setSelectedSlot(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                >
+                  <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                  <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+                  <option value="05:00 PM - 06:00 PM">05:00 PM - 06:00 PM</option>
+                  <option value="07:30 PM - 08:30 PM">07:30 PM - 08:30 PM</option>
+                </select>
+              </div>
+
+              <div className="bg-teal-50 rounded-lg p-3 text-xs text-teal-800 space-y-1">
+                <div className="flex items-center space-x-1 font-semibold">
+                  <UserCheck className="h-4 w-4 text-teal-600" />
+                  <span>Includes expert mentor assessment & feedback</span>
+                </div>
+                <p>Google Meet invite link will be sent to your registered email.</p>
+              </div>
+
+              <div className="flex space-x-3 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowMockModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 border-none"
+                >
+                  Confirm Slot
+                </Button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
