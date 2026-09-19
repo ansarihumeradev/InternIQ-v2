@@ -31,11 +31,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   const { login, register, resetPassword, loading, error, clearError, checkEmailExists } = useAuth();
 
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+
   // Clear errors when modal opens/closes or switches modes
   useEffect(() => {
     if (isOpen) {
       clearError();
       setFormErrors({});
+      setTouchedFields({});
       setSuccessMessage('');
       setEmailExists(null);
       setIsCheckingEmail(false);
@@ -52,33 +55,54 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen, clearError]);
 
+  const validateField = (name: string, value: string, currentFormData = formData) => {
+    let error = '';
+    if (name === 'email') {
+      if (!value.trim()) {
+        error = 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        error = 'Please enter a valid email address';
+      }
+    } else if (name === 'password') {
+      if (!value) {
+        error = 'Password is required';
+      } else if (value.length < 8) {
+        error = 'Password must be at least 8 characters';
+      }
+    } else if (name === 'confirmPassword' && !isLogin) {
+      if (value !== currentFormData.password) {
+        error = 'Passwords do not match';
+      }
+    } else if (name === 'name' && !isLogin) {
+      if (!value.trim()) {
+        error = 'Name is required';
+      }
+    } else if (name === 'phone' && !isLogin && value) {
+      if (!/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
+        error = 'Please enter a valid phone number';
+      }
+    }
+    return error;
+  };
+
   const validateForm = () => {
     const errors: Record<string, string> = {};
 
-    if (!formData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
-    }
+    const emailError = validateField('email', formData.email);
+    if (emailError) errors.email = emailError;
 
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-    }
+    const passwordError = validateField('password', formData.password);
+    if (passwordError) errors.password = passwordError;
 
     if (!isLogin) {
-      if (!formData.name.trim()) {
-        errors.name = 'Name is required';
-      }
+      const nameError = validateField('name', formData.name);
+      if (nameError) errors.name = nameError;
 
-      if (formData.password !== formData.confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match';
-      }
+      const confirmPasswordError = validateField('confirmPassword', formData.confirmPassword);
+      if (confirmPasswordError) errors.confirmPassword = confirmPasswordError;
 
-      if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/\s/g, ''))) {
-        errors.phone = 'Please enter a valid phone number';
-      }
+      const phoneError = validateField('phone', formData.phone);
+      if (phoneError) errors.phone = phoneError;
     }
 
     setFormErrors(errors);
@@ -86,8 +110,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleEmailCheck = async () => {
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-      setFormErrors({ email: 'Please enter a valid email address' });
+    setTouchedFields(prev => ({ ...prev, email: true }));
+    const emailError = validateField('email', formData.email);
+    if (emailError) {
+      setFormErrors(prev => ({ ...prev, email: emailError }));
       return;
     }
 
@@ -120,6 +146,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     console.log('Form submitted:', { isLogin, formData: { ...formData, password: '***' } });
     
+    // Mark relevant fields as touched on submit
+    setTouchedFields({
+      email: true,
+      password: true,
+      confirmPassword: true,
+      name: true,
+      phone: true
+    });
+
     if (!validateForm()) {
       console.log('Form validation failed:', formErrors);
       return;
@@ -172,18 +207,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       phone: ''
     });
     setFormErrors({});
+    setTouchedFields({});
     setEmailExists(null);
     setIsCheckingEmail(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
     
-    // Clear error for this field when user starts typing
-    if (formErrors[name]) {
-      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    // If field has already been touched, update error dynamically as user types
+    if (touchedFields[name]) {
+      const err = validateField(name, value, updatedFormData);
+      setFormErrors(prev => ({ ...prev, [name]: err }));
     }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+    const err = validateField(name, value);
+    setFormErrors(prev => ({ ...prev, [name]: err }));
   };
 
   const handleBackToEmailCheck = () => {
@@ -191,6 +236,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setIsCheckingEmail(false);
     setFormData(prev => ({ ...prev, password: '', confirmPassword: '', name: '' }));
     setFormErrors({});
+    setTouchedFields({});
     clearError();
   };
 
@@ -267,6 +313,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Enter your email address"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       disabled={isCheckingEmail}
@@ -306,6 +353,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Enter your password"
                       className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -383,6 +431,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Enter your full name"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -407,6 +456,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Create a password"
                       className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -438,6 +488,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="Confirm your password"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -462,6 +513,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       name="location"
                       value={formData.location}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       placeholder="City, Country"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
