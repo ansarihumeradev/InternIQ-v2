@@ -24,13 +24,14 @@ export interface InternshipListing {
   createdAt: string;
   deadline: string;
   matchScore?: number;
+  applicantCount?: number;
 }
 
 export interface Application {
   id: string;
   listingId: string;
   studentId: string;
-  status: 'applied' | 'shortlisted' | 'rejected' | 'selected';
+  status: 'applied' | 'shortlisted' | 'interviewed' | 'rejected' | 'selected';
   coverLetter: string;
   resumeUrl?: string;
   appliedAt: string;
@@ -880,41 +881,78 @@ export class InternshipService {
    * Fetch listings created by recruiter for recruiter dashboard
    */
   public static async fetchRecruiterListings(recruiterId: string): Promise<InternshipListing[]> {
-    const { data, error } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('recruiter_id', recruiterId)
-      .order('created_at', { ascending: false });
+    let dbListings: InternshipListing[] = [];
+    try {
+      const { data, error } = await supabase
+        .from('listings')
+        .select(`
+          *,
+          applications (id, status)
+        `)
+        .eq('recruiter_id', recruiterId)
+        .order('created_at', { ascending: false });
 
-    if (error || !data) {
-      console.error('Error fetching recruiter listings:', error);
-      return [];
+      if (!error && data) {
+        dbListings = data.map((item: any) => ({
+          id: item.id,
+          recruiterId: item.recruiter_id,
+          companyName: item.company_name,
+          title: item.title,
+          type: item.type,
+          location: item.location,
+          stipend: item.stipend,
+          stipendAmount: Number(item.stipend_amount),
+          duration: item.duration,
+          description: item.description,
+          requirements: item.requirements || [],
+          skills: item.skills || [],
+          benefits: item.benefits || [],
+          tags: item.tags || [],
+          remote: item.remote,
+          urgent: item.urgent,
+          education: item.education,
+          experience: item.experience,
+          companyLogo: item.company_logo,
+          status: item.status,
+          createdAt: item.created_at,
+          deadline: item.deadline,
+          applicantCount: Array.isArray(item.applications) ? item.applications.length : 0
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching recruiter listings:', err);
     }
 
-    return data.map(item => ({
-      id: item.id,
-      recruiterId: item.recruiter_id,
-      companyName: item.company_name,
-      title: item.title,
-      type: item.type,
-      location: item.location,
-      stipend: item.stipend,
-      stipendAmount: Number(item.stipend_amount),
-      duration: item.duration,
-      description: item.description,
-      requirements: item.requirements || [],
-      skills: item.skills || [],
-      benefits: item.benefits || [],
-      tags: item.tags || [],
-      remote: item.remote,
-      urgent: item.urgent,
-      education: item.education,
-      experience: item.experience,
-      companyLogo: item.company_logo,
-      status: item.status,
-      createdAt: item.created_at,
-      deadline: item.deadline
-    }));
+    // Merge with local storage custom listings if any
+    let customListings: InternshipListing[] = [];
+    try {
+      const raw = localStorage.getItem('interniq_custom_listings');
+      if (raw) {
+        const all: InternshipListing[] = JSON.parse(raw);
+        customListings = all.filter(l => l.recruiterId === recruiterId);
+      }
+    } catch (e) {}
+
+    // Attach local applicant counts if necessary
+    let localApps: Application[] = [];
+    try {
+      const rawApps = localStorage.getItem('interniq_all_applications');
+      if (rawApps) localApps = JSON.parse(rawApps);
+    } catch (e) {}
+
+    const map = new Map<string, InternshipListing>();
+    for (const l of customListings) {
+      const apps = localApps.filter(a => a.listingId === l.id);
+      map.set(l.id, { ...l, applicantCount: apps.length });
+    }
+    for (const l of dbListings) {
+      // Check if there are also local apps for this listing
+      const localCount = localApps.filter(a => a.listingId === l.id).length;
+      const count = Math.max(l.applicantCount || 0, localCount);
+      map.set(l.id, { ...l, applicantCount: count });
+    }
+
+    return Array.from(map.values());
   }
 
   /**
@@ -982,32 +1020,116 @@ export class InternshipService {
   }
 
   /**
-   * Update application status (Recruiter action: applied / shortlisted / rejected / selected)
+   * Update application status (Recruiter action: applied / shortlisted / interviewed / rejected / selected)
    */
-  public static async updateApplicationStatus(applicationId: string, status: 'applied' | 'shortlisted' | 'rejected' | 'selected'): Promise<void> {
-    const { error } = await supabase
-      .from('applications')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', applicationId);
+  public static async updateApplicationStatus(
+    applicationId: string, 
+    status: 'applied' | 'shortlisted' | 'interviewed' | 'rejected' | 'selected'
+  ): Promise<void> {
+    // Try Supabase update
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', applicationId);
 
-    if (error) {
-      console.error('Error updating application status:', error);
-      throw new Error(error.message);
+      if (error) {
+        console.warn('Supabase update application status note:', error.message);
+      }
+    } catch (e) {
+      console.warn('Supabase application update exception:', e);
     }
+
+    // Also update local storage fallback if application exists locally
+    try {
+      const raw = localStorage.getItem('interniq_all_applications');
+      if (raw) {
+        const all: Application[] = JSON.parse(raw);
+        const updated = all.map(a => a.id === applicationId ? { ...a, status, updatedAt: new Date().toISOString() } : a);
+        localStorage.setItem('interniq_all_applications', JSON.stringify(updated));
+      }
+    } catch (e) {}
   }
 
   /**
-   * Delete or flag listing (Admin / Recruiter action)
+   * Update existing internship listing (Recruiter action)
+   */
+  public static async updateListing(listingId: string, updates: Partial<InternshipListing>): Promise<void> {
+    const payload: any = {};
+    if (updates.title !== undefined) payload.title = updates.title;
+    if (updates.companyName !== undefined) payload.company_name = updates.companyName;
+    if (updates.location !== undefined) payload.location = updates.location;
+    if (updates.stipend !== undefined) payload.stipend = updates.stipend;
+    if (updates.stipendAmount !== undefined) payload.stipend_amount = updates.stipendAmount;
+    if (updates.duration !== undefined) payload.duration = updates.duration;
+    if (updates.description !== undefined) payload.description = updates.description;
+    if (updates.skills !== undefined) payload.skills = updates.skills;
+    if (updates.requirements !== undefined) payload.requirements = updates.requirements;
+    if (updates.status !== undefined) payload.status = updates.status;
+
+    try {
+      const { error } = await supabase
+        .from('listings')
+        .update(payload)
+        .eq('id', listingId);
+
+      if (error) {
+        console.warn('Supabase update listing note:', error.message);
+      }
+    } catch (e) {}
+
+    // Update local storage custom listings if present
+    try {
+      const raw = localStorage.getItem('interniq_custom_listings');
+      if (raw) {
+        const all: InternshipListing[] = JSON.parse(raw);
+        const updated = all.map(l => l.id === listingId ? { ...l, ...updates } : l);
+        localStorage.setItem('interniq_custom_listings', JSON.stringify(updated));
+      }
+    } catch (e) {}
+  }
+
+  /**
+   * Toggle or update listing status (active / closed / flagged)
    */
   public static async updateListingStatus(listingId: string, status: 'active' | 'closed' | 'flagged'): Promise<void> {
-    const { error } = await supabase
-      .from('listings')
-      .update({ status })
-      .eq('id', listingId);
+    await this.updateListing(listingId, { status });
+  }
 
-    if (error) {
-      console.error('Error updating listing status:', error);
-      throw new Error(error.message);
+  /**
+   * Fetch Real Counts for Recruiter Top Stats Row
+   */
+  public static async fetchRecruiterStats(recruiterId: string): Promise<{
+    activeListings: number;
+    totalApplicants: number;
+    shortlistedCandidates: number;
+    positionsFilled: number;
+  }> {
+    const listings = await this.fetchRecruiterListings(recruiterId);
+    const activeListings = listings.filter(l => l.status === 'active').length;
+
+    let totalApplicants = 0;
+    let shortlistedCandidates = 0;
+    let positionsFilled = 0;
+
+    for (const listing of listings) {
+      const apps = await this.fetchApplicationsForListing(listing.id);
+      totalApplicants += apps.length;
+      for (const app of apps) {
+        if (app.status === 'shortlisted' || app.status === 'interviewed') {
+          shortlistedCandidates++;
+        } else if (app.status === 'selected') {
+          positionsFilled++;
+        }
+      }
     }
+
+    return {
+      activeListings,
+      totalApplicants,
+      shortlistedCandidates,
+      positionsFilled
+    };
   }
 }
+
