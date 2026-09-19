@@ -393,18 +393,19 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen iq-bg py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Banner Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold text-indigo-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="bg-white rounded-panel p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-iq-sage/20 via-iq-lavender/10 to-transparent rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
+          <div className="space-y-2 relative z-10">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-iq-lavender/30 rounded-tag text-xs font-semibold text-iq-navy">
+              <ShieldCheck className="w-3.5 h-3.5 text-iq-teal" />
               <span>Role: {user?.role?.toUpperCase() || 'STUDENT'}</span>
             </div>
-            <h1 className="text-3xl font-black">Welcome back, {user?.name}!</h1>
-            <p className="text-slate-300 text-xs sm:text-sm">
+            <h1 className="text-3xl font-black text-iq-navy">Welcome back, {user?.name}!</h1>
+            <p className="text-iq-muted text-xs sm:text-sm">
               {user?.role === 'recruiter' 
                 ? 'Manage your posted internships, track hiring stats, and review top candidates.'
                 : 'Track your submitted applications and monitor hiring status in real time.'}
@@ -428,7 +429,7 @@ const Dashboard: React.FC = () => {
                 });
                 setShowPostModal(true);
               }}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 font-bold text-xs rounded-xl hover:shadow-lg transition-all flex items-center space-x-2 shadow-indigo-300 flex-shrink-0 cursor-pointer"
+              className="px-6 py-3 bg-iq-teal text-white font-bold text-xs rounded-btn hover:bg-iq-navy transition-all flex items-center space-x-2 flex-shrink-0 cursor-pointer relative z-10"
             >
               <Plus className="w-4 h-4" />
               <span>Post New Internship</span>
@@ -442,64 +443,64 @@ const Dashboard: React.FC = () => {
             
             {/* 1. TOP STATS ROW */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center justify-between hover:shadow-lg transition-all">
+              <div className="bg-white rounded-card p-6 shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Listings</p>
-                  <h3 className="text-3xl font-black text-slate-900 mt-1">{recruiterStats.activeListings}</h3>
-                  <p className="text-[11px] text-emerald-600 font-medium mt-1">Live opportunities</p>
+                  <p className="text-xs font-semibold text-iq-muted uppercase tracking-wider">Active Listings</p>
+                  <h3 className="text-3xl font-black text-iq-navy mt-1">{recruiterStats.activeListings}</h3>
+                  <p className="text-[11px] text-iq-teal font-medium mt-1">Live opportunities</p>
                 </div>
-                <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-iq-sage/20 text-iq-teal rounded-xl flex items-center justify-center">
                   <Briefcase className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center justify-between hover:shadow-lg transition-all">
+              <div className="bg-white rounded-card p-6 shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Applicants</p>
-                  <h3 className="text-3xl font-black text-slate-900 mt-1">{recruiterStats.totalApplicants}</h3>
-                  <p className="text-[11px] text-blue-600 font-medium mt-1">Across all postings</p>
+                  <p className="text-xs font-semibold text-iq-muted uppercase tracking-wider">Total Applicants</p>
+                  <h3 className="text-3xl font-black text-iq-navy mt-1">{recruiterStats.totalApplicants}</h3>
+                  <p className="text-[11px] text-iq-blue font-medium mt-1">Across all postings</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-iq-blue/20 text-iq-navy rounded-xl flex items-center justify-center">
                   <Users className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center justify-between hover:shadow-lg transition-all">
+              <div className="bg-white rounded-card p-6 shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Shortlisted</p>
-                  <h3 className="text-3xl font-black text-slate-900 mt-1">{recruiterStats.shortlistedCandidates}</h3>
-                  <p className="text-[11px] text-amber-600 font-medium mt-1">Interview & Review</p>
+                  <p className="text-xs font-semibold text-iq-muted uppercase tracking-wider">Shortlisted</p>
+                  <h3 className="text-3xl font-black text-iq-navy mt-1">{recruiterStats.shortlistedCandidates}</h3>
+                  <p className="text-[11px] text-amber-700 font-medium mt-1">Interview & Review</p>
                 </div>
-                <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-iq-butter/40 text-amber-700 rounded-xl flex items-center justify-center">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center justify-between hover:shadow-lg transition-all">
+              <div className="bg-white rounded-card p-6 shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-all">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Positions Filled</p>
-                  <h3 className="text-3xl font-black text-slate-900 mt-1">{recruiterStats.positionsFilled}</h3>
-                  <p className="text-[11px] text-emerald-600 font-medium mt-1">Selected candidates</p>
+                  <p className="text-xs font-semibold text-iq-muted uppercase tracking-wider">Positions Filled</p>
+                  <h3 className="text-3xl font-black text-iq-navy mt-1">{recruiterStats.positionsFilled}</h3>
+                  <p className="text-[11px] text-iq-green font-medium mt-1">Selected candidates</p>
                 </div>
-                <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-iq-mint/30 text-iq-green rounded-xl flex items-center justify-center">
                   <Award className="w-6 h-6" />
                 </div>
               </div>
             </div>
 
             {/* 2. COMPANY PROFILE CARD */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="bg-white rounded-panel p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-center space-x-4">
                 <div className="relative group">
                   {companyLogo ? (
                     <img src={companyLogo} alt="Company Logo" className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-sm" />
                   ) : (
-                    <div className="w-16 h-16 bg-gradient-to-tr from-slate-800 to-indigo-900 text-white font-black text-2xl rounded-2xl flex items-center justify-center shadow-md">
+                    <div className="w-16 h-16 bg-iq-lavender/30 text-iq-navy font-black text-2xl rounded-2xl flex items-center justify-center shadow-md">
                       {companyName ? companyName.charAt(0).toUpperCase() : 'C'}
                     </div>
                   )}
                   <label 
-                    className="absolute -bottom-1 -right-1 p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow cursor-pointer transition-transform hover:scale-110 flex items-center justify-center"
+                    className="absolute -bottom-1 -right-1 p-1.5 bg-iq-teal hover:bg-iq-navy text-white rounded-full shadow cursor-pointer transition-transform hover:scale-110 flex items-center justify-center"
                     title="Upload company logo (2MB max)"
                   >
                     <Upload className="w-3.5 h-3.5" />
@@ -515,12 +516,12 @@ const Dashboard: React.FC = () => {
 
                 <div className="space-y-1">
                   <div className="flex items-center space-x-3">
-                    <h2 className="text-xl font-black text-slate-900">{companyName || 'Your Company Name'}</h2>
-                    <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-extrabold uppercase rounded-full border border-indigo-100">
+                    <h2 className="text-xl font-black text-iq-navy">{companyName || 'Your Company Name'}</h2>
+                    <span className="px-2.5 py-0.5 bg-iq-lavender/30 text-iq-navy text-[10px] font-extrabold uppercase rounded-tag border border-slate-100">
                       Verified Recruiter
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+                  <p className="text-xs text-iq-muted max-w-2xl leading-relaxed">
                     {companyDescription || 'No company description added yet. Click edit to add details about your company mission and hiring culture.'}
                   </p>
                 </div>
@@ -528,7 +529,7 @@ const Dashboard: React.FC = () => {
 
               <button
                 onClick={() => setShowCompanyModal(true)}
-                className="px-4 py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 transition-all flex items-center space-x-2 flex-shrink-0 cursor-pointer"
+                className="px-4 py-2 bg-slate-100 text-iq-navy font-bold text-xs rounded-btn hover:bg-slate-200 transition-all flex items-center space-x-2 flex-shrink-0 cursor-pointer"
               >
                 <Edit className="w-3.5 h-3.5" />
                 <span>Edit Company Profile</span>
@@ -536,24 +537,24 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* 3. MY POSTINGS SECTION */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-5">
+            <div className="bg-white rounded-panel p-6 shadow-sm border border-slate-100 space-y-5">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
-                  <h2 className="font-black text-slate-900 text-lg flex items-center">
-                    <Building className="w-5 h-5 mr-2 text-indigo-600" /> My Internship Postings
+                  <h2 className="font-black text-iq-navy text-lg flex items-center">
+                    <Building className="w-5 h-5 mr-2 text-iq-teal" /> My Internship Postings
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Manage active listings, track applicant counts, edit details, or toggle status.</p>
+                  <p className="text-xs text-iq-muted mt-0.5">Manage active listings, track applicant counts, edit details, or toggle status.</p>
                 </div>
 
-                <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
+                <span className="text-xs font-bold text-iq-navy bg-iq-lavender/30 px-3 py-1 rounded-tag border border-slate-100">
                   {recruiterListings.length} Total Listings
                 </span>
               </div>
 
               {recruiterListings.length === 0 ? (
-                <div className="py-12 text-center text-xs text-slate-500 border border-dashed border-slate-200 rounded-xl space-y-3">
+                <div className="py-12 text-center text-xs text-iq-muted border border-dashed border-slate-200 rounded-card space-y-3">
                   <Building className="w-10 h-10 text-slate-300 mx-auto" />
-                  <p className="font-semibold text-slate-700">You haven't posted any internships yet.</p>
+                  <p className="font-semibold text-iq-navy">You haven't posted any internships yet.</p>
                   <button
                     onClick={() => {
                       setEditingListing(null);
@@ -570,7 +571,7 @@ const Dashboard: React.FC = () => {
                       });
                       setShowPostModal(true);
                     }}
-                    className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow hover:bg-indigo-700 cursor-pointer"
+                    className="px-4 py-2 bg-iq-teal text-white font-bold text-xs rounded-btn hover:bg-iq-navy cursor-pointer"
                   >
                     Create First Posting
                   </button>
@@ -579,7 +580,7 @@ const Dashboard: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="border-b border-slate-200 bg-slate-50/70 text-slate-500 font-bold uppercase text-[10px]">
+                      <tr className="border-b border-slate-200 bg-iq-bg text-iq-muted font-bold uppercase text-[10px]">
                         <th className="py-3 px-4">Internship Title</th>
                         <th className="py-3 px-4">Company</th>
                         <th className="py-3 px-4">Status</th>
@@ -594,38 +595,38 @@ const Dashboard: React.FC = () => {
                         return (
                           <tr
                             key={listing.id}
-                            className={`hover:bg-slate-50/80 transition-colors ${isSelected ? 'bg-indigo-50/40 font-medium' : ''}`}
+                            className={`hover:bg-slate-50/80 transition-colors ${isSelected ? 'bg-iq-lavender/20 font-medium' : ''}`}
                           >
                             <td className="py-3.5 px-4">
                               <div>
-                                <span className="font-bold text-slate-900 text-xs block">{listing.title}</span>
-                                <span className="text-[11px] text-slate-500">{listing.location} • {listing.stipend}</span>
+                                <span className="font-bold text-iq-navy text-xs block">{listing.title}</span>
+                                <span className="text-[11px] text-iq-muted">{listing.location} • {listing.stipend}</span>
                               </div>
                             </td>
-                            <td className="py-3.5 px-4 text-slate-700 font-semibold">{listing.companyName}</td>
+                            <td className="py-3.5 px-4 text-iq-navy font-semibold">{listing.companyName}</td>
                             <td className="py-3.5 px-4">
-                              <span className={`px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-full ${
+                              <span className={`px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-tag ${
                                 listing.status === 'active'
-                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                  : 'bg-slate-200 text-slate-700'
+                                  ? 'bg-iq-mint/40 text-iq-green border border-iq-mint/60'
+                                  : 'bg-slate-100 text-iq-muted'
                               }`}>
                                 {listing.status}
                               </span>
                             </td>
                             <td className="py-3.5 px-4 text-center">
-                              <span className="inline-flex items-center px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full font-bold text-xs">
+                              <span className="inline-flex items-center px-2.5 py-1 bg-iq-lavender/30 text-iq-navy rounded-tag font-bold text-xs">
                                 <Users className="w-3 h-3 mr-1" />
                                 {listing.applicantCount || 0}
                               </span>
                             </td>
-                            <td className="py-3.5 px-4 text-slate-500">
+                            <td className="py-3.5 px-4 text-iq-muted">
                               {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString() : 'Recently'}
                             </td>
                             <td className="py-3.5 px-4 text-right">
                               <div className="inline-flex items-center space-x-2">
                                 <button
                                   onClick={() => handleOpenEditModal(listing)}
-                                  className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] rounded-lg transition-colors flex items-center space-x-1 cursor-pointer"
+                                  className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-iq-navy font-semibold text-[11px] rounded-btn transition-colors flex items-center space-x-1 cursor-pointer"
                                   title="Edit posting"
                                 >
                                   <Edit className="w-3 h-3" />
@@ -633,10 +634,10 @@ const Dashboard: React.FC = () => {
                                 </button>
                                 <button
                                   onClick={() => handleToggleListingStatus(listing)}
-                                  className={`px-2.5 py-1 font-semibold text-[11px] rounded-lg transition-colors cursor-pointer ${
+                                  className={`px-2.5 py-1 font-semibold text-[11px] rounded-btn transition-colors cursor-pointer ${
                                     listing.status === 'active'
-                                      ? 'bg-amber-50 hover:bg-amber-100 text-amber-800'
-                                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800'
+                                      ? 'bg-iq-butter/30 hover:bg-iq-butter/50 text-amber-800'
+                                      : 'bg-iq-mint/30 hover:bg-iq-mint/50 text-iq-green'
                                   }`}
                                 >
                                   {listing.status === 'active' ? 'Close Listing' : 'Reopen'}
@@ -647,10 +648,10 @@ const Dashboard: React.FC = () => {
                                     const pipelineEl = document.getElementById('applicant-pipeline-section');
                                     if (pipelineEl) pipelineEl.scrollIntoView({ behavior: 'smooth' });
                                   }}
-                                  className={`px-3 py-1 font-bold text-[11px] rounded-lg transition-colors flex items-center space-x-1 cursor-pointer ${
+                                  className={`px-3 py-1 font-bold text-[11px] rounded-btn transition-colors flex items-center space-x-1 cursor-pointer ${
                                     isSelected
-                                      ? 'bg-indigo-600 text-white shadow-sm'
-                                      : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+                                      ? 'bg-iq-teal text-white shadow-sm'
+                                      : 'bg-iq-lavender/30 text-iq-navy hover:bg-iq-lavender/50'
                                   }`}
                                 >
                                   <span>View Applicants</span>
@@ -668,16 +669,16 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* 4. APPLICANT PIPELINE SECTION */}
-            <div id="applicant-pipeline-section" className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-5">
+            <div id="applicant-pipeline-section" className="bg-white rounded-panel p-6 shadow-sm border border-slate-100 space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-3">
                 <div>
                   <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-indigo-600" />
-                    <h2 className="font-black text-slate-900 text-lg">
+                    <Users className="w-5 h-5 text-iq-teal" />
+                    <h2 className="font-black text-iq-navy text-lg">
                       Applicant Pipeline {selectedListingForApplicants ? `— ${selectedListingForApplicants.title}` : ''}
                     </h2>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-iq-muted mt-0.5">
                     Review student applications, read cover letters, view resumes, and update hiring pipeline status.
                   </p>
                 </div>
@@ -688,10 +689,10 @@ const Dashboard: React.FC = () => {
                     <button
                       key={st}
                       onClick={() => setApplicantFilter(st)}
-                      className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-tag capitalize font-semibold transition-all cursor-pointer ${
                         applicantFilter === st
-                          ? 'bg-indigo-600 text-white shadow-sm'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          ? 'bg-iq-teal text-white shadow-sm'
+                          : 'bg-slate-100 text-iq-muted hover:bg-slate-200'
                       }`}
                     >
                       {st}
@@ -701,48 +702,48 @@ const Dashboard: React.FC = () => {
               </div>
 
               {!selectedListingForApplicants ? (
-                <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                <div className="py-16 text-center text-xs text-iq-muted space-y-2">
                   <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
-                  <p className="font-semibold text-slate-700">Select an internship posting above to view its applicant pipeline.</p>
+                  <p className="font-semibold text-iq-navy">Select an internship posting above to view its applicant pipeline.</p>
                 </div>
               ) : applicantsForListing.filter(a => applicantFilter === 'all' || a.status === applicantFilter).length === 0 ? (
-                <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                <div className="py-16 text-center text-xs text-iq-muted space-y-2">
                   <Users className="w-10 h-10 text-slate-300 mx-auto" />
-                  <p className="font-semibold text-slate-700">No applications match the "{applicantFilter}" filter for this listing.</p>
+                  <p className="font-semibold text-iq-navy">No applications match the "{applicantFilter}" filter for this listing.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {applicantsForListing
                     .filter(a => applicantFilter === 'all' || a.status === applicantFilter)
                     .map(app => (
-                      <div key={app.id} className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-4 hover:shadow-sm transition-all">
+                      <div key={app.id} className="p-5 bg-white border border-slate-200/80 rounded-card space-y-4 hover:shadow-md transition-all">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="flex items-center space-x-3.5">
-                            <div className="w-11 h-11 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-xl font-extrabold flex items-center justify-center text-base shadow-sm">
+                            <div className="w-11 h-11 bg-iq-lavender/30 text-iq-navy border border-iq-lavender/40 rounded-xl font-extrabold flex items-center justify-center text-base shadow-sm">
                               {app.student?.name ? app.student.name.charAt(0).toUpperCase() : 'S'}
                             </div>
                             <div>
-                              <h3 className="font-bold text-slate-900 text-sm">{app.student?.name || 'Student Candidate'}</h3>
-                              <p className="text-xs text-slate-500">{app.student?.email} {app.student?.phone ? `• ${app.student.phone}` : ''}</p>
+                              <h3 className="font-bold text-iq-navy text-sm">{app.student?.name || 'Student Candidate'}</h3>
+                              <p className="text-xs text-iq-muted">{app.student?.email} {app.student?.phone ? `• ${app.student.phone}` : ''}</p>
                             </div>
                           </div>
 
                           {/* Status Dropdown */}
                           <div className="flex items-center space-x-2">
-                            <span className="text-[11px] font-bold text-slate-500">Pipeline Status:</span>
+                            <span className="text-[11px] font-bold text-iq-muted">Pipeline Status:</span>
                             <select
                               value={app.status}
                               onChange={(e) => handleUpdateApplicantStatus(app.id, e.target.value as any)}
-                              className={`px-3 py-1.5 rounded-xl text-xs font-bold border focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer ${
+                              className={`px-3 py-1.5 rounded-tag text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-iq-teal cursor-pointer ${
                                 app.status === 'selected'
-                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  ? 'bg-iq-mint/30 text-iq-navy border-iq-mint/50'
                                   : app.status === 'shortlisted'
-                                  ? 'bg-indigo-100 text-indigo-800 border-indigo-300'
+                                  ? 'bg-iq-sage/30 text-iq-navy border-iq-sage/50'
                                   : app.status === 'interviewed'
-                                  ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                  ? 'bg-iq-butter/40 text-iq-navy border-iq-butter/50'
                                   : app.status === 'rejected'
-                                  ? 'bg-rose-100 text-rose-800 border-rose-300'
-                                  : 'bg-slate-200 text-slate-700 border-slate-300'
+                                  ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                  : 'bg-slate-100 text-iq-navy border-slate-200'
                               }`}
                             >
                               <option value="applied">Applied</option>
@@ -756,8 +757,8 @@ const Dashboard: React.FC = () => {
 
                         {/* Cover Letter / Why-Hire Text */}
                         {app.coverLetter && (
-                          <div className="p-3.5 bg-white rounded-xl border border-slate-200/60 text-xs text-slate-700 space-y-1">
-                            <span className="text-[10px] font-extrabold uppercase text-slate-400 block tracking-wider">Cover Letter / Why Hire:</span>
+                          <div className="p-3.5 bg-iq-bg rounded-card border border-slate-200/60 text-xs text-iq-navy space-y-1">
+                            <span className="text-[10px] font-extrabold uppercase text-iq-muted block tracking-wider">Cover Letter / Why Hire:</span>
                             <p className="leading-relaxed">"{app.coverLetter}"</p>
                           </div>
                         )}
@@ -765,10 +766,10 @@ const Dashboard: React.FC = () => {
                         {/* Student Skills */}
                         {app.student?.skills && app.student.skills.length > 0 && (
                           <div className="flex items-center space-x-2">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">Skills:</span>
+                            <span className="text-[10px] font-bold text-iq-muted uppercase">Skills:</span>
                             <div className="flex flex-wrap gap-1">
                               {app.student.skills.map(sk => (
-                                <span key={sk} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-semibold rounded-md">
+                                <span key={sk} className="px-2.5 py-0.5 bg-iq-sage/20 text-iq-navy border border-iq-sage/30 text-[10px] font-medium rounded-tag">
                                   {sk}
                                 </span>
                               ))}
@@ -778,7 +779,7 @@ const Dashboard: React.FC = () => {
 
                         {/* Footer Info & Resume Link */}
                         <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
-                          <span className="text-slate-400 text-[11px]">
+                          <span className="text-iq-muted text-[11px]">
                             Applied on: {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recently'}
                           </span>
 
@@ -786,13 +787,13 @@ const Dashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => openResume(app.resumeUrl!, app.student?.name || 'Applicant')}
-                              className="text-indigo-600 font-bold hover:underline flex items-center space-x-1.5 hover:text-indigo-800 transition-colors cursor-pointer"
+                              className="text-iq-teal font-semibold hover:underline flex items-center space-x-1.5 transition-colors cursor-pointer"
                             >
                               <FileText className="w-4 h-4" />
                               <span>View Resume PDF</span>
                             </button>
                           ) : (
-                            <span className="text-slate-400 text-[11px] italic">No resume attached</span>
+                            <span className="text-iq-muted text-[11px] italic">No resume attached</span>
                           )}
                         </div>
                       </div>
@@ -806,18 +807,18 @@ const Dashboard: React.FC = () => {
           /* STUDENT DASHBOARD */
           <div className="space-y-6">
             {/* Student Navigation Tabs */}
-            <div className="flex border-b border-slate-200 space-x-4">
+            <div className="flex border-b border-slate-200/80 space-x-4">
               <button
                 onClick={() => setStudentTab('applications')}
                 className={`pb-3 text-sm font-bold flex items-center space-x-2 transition-all border-b-2 cursor-pointer ${
                   studentTab === 'applications'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-iq-teal text-iq-teal'
+                    : 'border-transparent text-iq-muted hover:text-iq-navy'
                 }`}
               >
                 <Briefcase className="w-4 h-4" />
                 <span>My Applications</span>
-                <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                <span className="bg-iq-sage/20 text-iq-navy px-2 py-0.5 rounded-full text-xs font-semibold">
                   {studentApplications.length}
                 </span>
               </button>
@@ -826,13 +827,13 @@ const Dashboard: React.FC = () => {
                 onClick={() => setStudentTab('saved')}
                 className={`pb-3 text-sm font-bold flex items-center space-x-2 transition-all border-b-2 cursor-pointer ${
                   studentTab === 'saved'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-iq-teal text-iq-teal'
+                    : 'border-transparent text-iq-muted hover:text-iq-navy'
                 }`}
               >
                 <Bookmark className="w-4 h-4" />
                 <span>Saved Items</span>
-                <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                <span className="bg-iq-lavender/30 text-iq-navy px-2 py-0.5 rounded-full text-xs font-semibold">
                   {savedItems.length}
                 </span>
               </button>
@@ -841,52 +842,52 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {studentTab === 'applications' ? (
                 /* Applied Internships */
-                <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+                <div className="md:col-span-2 bg-white rounded-panel p-6 shadow-sm border border-slate-200/80 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-base">My Submitted Applications</h3>
-                      <p className="text-xs text-slate-500">Track application status and responses from recruiters.</p>
+                      <h3 className="font-extrabold text-iq-navy text-base">My Submitted Applications</h3>
+                      <p className="text-xs text-iq-muted">Track application status and responses from recruiters.</p>
                     </div>
-                    <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
+                    <span className="text-xs font-bold bg-iq-sage/20 text-iq-navy border border-iq-sage/30 px-3 py-1 rounded-full">
                       {studentApplications.length} Applications
                     </span>
                   </div>
 
                   {studentApplications.length === 0 ? (
-                    <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                    <div className="py-16 text-center text-xs text-iq-muted space-y-2">
                       <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
                       <p>You haven't submitted any internship applications yet.</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       {studentApplications.map(app => (
-                        <div key={app.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                        <div key={app.id} className="p-4 bg-iq-bg border border-slate-200/80 rounded-card space-y-3">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="font-bold text-slate-900 text-sm">
+                              <h4 className="font-bold text-iq-navy text-sm">
                                 {app.listing?.title || 'Internship Title'}
                               </h4>
-                              <p className="text-xs text-slate-500">{app.listing?.companyName} • {app.listing?.location}</p>
+                              <p className="text-xs text-iq-muted">{app.listing?.companyName} • {app.listing?.location}</p>
                             </div>
 
-                            <span className={`px-3 py-1 text-xs font-black uppercase rounded-full ${
+                            <span className={`px-3 py-1 text-xs font-bold uppercase rounded-tag ${
                               app.status === 'selected'
-                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                ? 'bg-iq-mint/30 text-iq-navy border border-iq-mint/50'
                                 : app.status === 'shortlisted'
-                                ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
+                                ? 'bg-iq-sage/30 text-iq-navy border border-iq-sage/50'
                                 : app.status === 'interviewed'
-                                ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                ? 'bg-iq-butter/40 text-iq-navy border border-iq-butter/50'
                                 : app.status === 'rejected'
-                                ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                                : 'bg-slate-200 text-slate-700'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : 'bg-slate-100 text-iq-navy border border-slate-200'
                             }`}>
                               {app.status}
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
+                          <div className="flex items-center justify-between text-[11px] text-iq-muted pt-2 border-t border-slate-200/60">
                             <span>Applied on: {new Date(app.appliedAt).toLocaleDateString()}</span>
-                            <span className="font-semibold text-slate-700">Stipend: {app.listing?.stipend}</span>
+                            <span className="font-semibold text-iq-navy">Stipend: {app.listing?.stipend}</span>
                           </div>
                         </div>
                       ))}
@@ -895,13 +896,13 @@ const Dashboard: React.FC = () => {
                 </div>
               ) : (
                 /* Saved Items Tab */
-                <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
+                <div className="md:col-span-2 bg-white rounded-panel p-6 shadow-sm border border-slate-200/80 space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-2">
                     <div>
-                      <h3 className="font-extrabold text-slate-900 text-base flex items-center">
-                        <Bookmark className="w-5 h-5 mr-2 text-indigo-600" /> Saved Items & Bookmarks
+                      <h3 className="font-extrabold text-iq-navy text-base flex items-center">
+                        <Bookmark className="w-5 h-5 mr-2 text-iq-teal" /> Saved Items & Bookmarks
                       </h3>
-                      <p className="text-xs text-slate-500">Your saved jobs, internships, companies, and career resources.</p>
+                      <p className="text-xs text-iq-muted">Your saved jobs, internships, companies, and career resources.</p>
                     </div>
 
                     {/* Filter Pills */}
@@ -910,10 +911,10 @@ const Dashboard: React.FC = () => {
                         <button
                           key={type}
                           onClick={() => setSavedFilter(type)}
-                          className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-tag capitalize font-semibold transition-all cursor-pointer ${
                             savedFilter === type
-                              ? 'bg-indigo-600 text-white shadow-sm'
-                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              ? 'bg-iq-teal text-white shadow-sm'
+                              : 'bg-slate-100 text-iq-muted hover:bg-slate-200'
                           }`}
                         >
                           {type}
@@ -923,10 +924,10 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   {savedItems.filter(i => savedFilter === 'all' || i.itemType === savedFilter).length === 0 ? (
-                    <div className="py-16 text-center text-xs text-slate-500 space-y-2">
+                    <div className="py-16 text-center text-xs text-iq-muted space-y-2">
                       <Bookmark className="w-10 h-10 text-slate-300 mx-auto" />
                       <p>No saved items found in this category.</p>
-                      <p className="text-[11px] text-slate-400">Browse Jobs, Internships, or Career Guidance to bookmark items!</p>
+                      <p className="text-[11px] text-iq-muted">Browse Jobs, Internships, or Career Guidance to bookmark items!</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -940,30 +941,30 @@ const Dashboard: React.FC = () => {
                           const stipendOrSalary = data.stipend || data.salary || '';
 
                           return (
-                            <div key={item.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3 hover:shadow-sm transition-all">
+                            <div key={item.id} className="p-4 bg-iq-bg border border-slate-200/80 rounded-card space-y-3 hover:shadow-sm transition-all">
                               <div className="flex items-start justify-between">
                                 <div className="space-y-1">
                                   <div className="flex items-center space-x-2">
-                                    <span className={`px-2 py-0.5 text-[9px] font-extrabold uppercase rounded ${
+                                    <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-tag ${
                                       item.itemType === 'job'
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-iq-blue/20 text-iq-navy border border-iq-blue/30'
                                         : item.itemType === 'internship'
-                                        ? 'bg-amber-100 text-amber-800'
+                                        ? 'bg-iq-butter/30 text-iq-navy border border-iq-butter/40'
                                         : item.itemType === 'company'
-                                        ? 'bg-purple-100 text-purple-800'
-                                        : 'bg-emerald-100 text-emerald-800'
+                                        ? 'bg-iq-lavender/30 text-iq-navy border border-iq-lavender/40'
+                                        : 'bg-iq-mint/30 text-iq-navy border border-iq-mint/40'
                                     }`}>
                                       {item.itemType}
                                     </span>
-                                    <h4 className="font-bold text-slate-900 text-sm">{title}</h4>
+                                    <h4 className="font-bold text-iq-navy text-sm">{title}</h4>
                                   </div>
 
                                   {subtitle && (
-                                    <p className="text-xs text-slate-600 font-medium">{subtitle}</p>
+                                    <p className="text-xs text-iq-muted font-medium">{subtitle}</p>
                                   )}
 
                                   {(locationStr || stipendOrSalary) && (
-                                    <p className="text-[11px] text-slate-500">
+                                    <p className="text-[11px] text-iq-muted">
                                       {locationStr && <span>📍 {locationStr} </span>}
                                       {stipendOrSalary && <span>💰 {stipendOrSalary}</span>}
                                     </p>
@@ -972,7 +973,7 @@ const Dashboard: React.FC = () => {
 
                                 <button
                                   onClick={() => handleRemoveSaved(item.itemId, item.itemType)}
-                                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                                  className="p-1.5 text-iq-muted hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                                   title="Remove from saved"
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -980,7 +981,7 @@ const Dashboard: React.FC = () => {
                               </div>
 
                               <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-200/60">
-                                <span className="text-slate-400">
+                                <span className="text-iq-muted">
                                   Saved: {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Recently'}
                                 </span>
 
@@ -994,7 +995,7 @@ const Dashboard: React.FC = () => {
                                       ? '/companies'
                                       : '/career-guidance'
                                   }
-                                  className="text-indigo-600 font-bold hover:underline inline-flex items-center space-x-1"
+                                  className="text-iq-teal font-semibold hover:underline inline-flex items-center space-x-1"
                                 >
                                   <span>View Page</span>
                                   <ExternalLink className="w-3 h-3" />
@@ -1009,24 +1010,24 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* Student Skill Graph Summary */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 space-y-4">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                  <Award className="w-4 h-4 mr-2 text-indigo-600" /> Skill Graph Summary
+              <div className="bg-white rounded-panel p-6 shadow-sm border border-slate-200/80 space-y-4">
+                <h3 className="font-bold text-iq-navy text-sm flex items-center">
+                  <Award className="w-4 h-4 mr-2 text-iq-teal" /> Skill Graph Summary
                 </h3>
 
                 {studentSkills.length === 0 ? (
-                  <p className="text-xs text-slate-500 py-6 text-center">
+                  <p className="text-xs text-iq-muted py-6 text-center">
                     No skills in your graph yet. Go to Profile to connect GitHub or upload resume.
                   </p>
                 ) : (
                   <div className="space-y-2">
                     {studentSkills.map(sk => (
-                      <div key={sk.id} className="p-2.5 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
+                      <div key={sk.id} className="p-2.5 bg-iq-bg border border-slate-200/60 rounded-card flex items-center justify-between text-xs">
                         <div>
-                          <span className="font-semibold text-slate-800">{sk.skillName || sk.skillId}</span>
-                          <span className="text-[10px] text-slate-400 block capitalize">{sk.source} source</span>
+                          <span className="font-semibold text-iq-navy">{sk.skillName || sk.skillId}</span>
+                          <span className="text-[10px] text-iq-muted block capitalize">{sk.source} source</span>
                         </div>
-                        <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md capitalize">
+                        <span className="text-[10px] font-semibold bg-iq-sage/20 text-iq-navy border border-iq-sage/30 px-2 py-0.5 rounded-tag capitalize">
                           {sk.proficiencyLevel}
                         </span>
                       </div>
@@ -1042,45 +1043,45 @@ const Dashboard: React.FC = () => {
         {/* Edit Company Profile Modal */}
         <AnimatePresence>
           {showCompanyModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-iq-navy/40 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-100 flex flex-col"
+                className="bg-white rounded-panel shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200/80 flex flex-col"
               >
-                <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+                <div className="p-6 bg-iq-navy text-white flex items-center justify-between">
                   <h3 className="text-lg font-bold">Edit Company Profile</h3>
-                  <button onClick={() => setShowCompanyModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
+                  <button onClick={() => setShowCompanyModal(false)} className="text-slate-300 hover:text-white cursor-pointer">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 <form onSubmit={handleSaveCompanyProfile} className="p-6 space-y-4 text-xs">
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Company Name</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Company Name</label>
                     <input
                       type="text"
                       required
                       value={companyName}
                       onChange={e => setCompanyName(e.target.value)}
                       placeholder="e.g. Acme Tech Solutions"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-1 focus:ring-indigo-500"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Company Logo</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Company Logo</label>
                     <div className="flex items-center space-x-3 mb-2">
                       {companyLogo ? (
                         <img src={companyLogo} alt="Logo preview" className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
                       ) : (
-                        <div className="w-12 h-12 bg-slate-200 rounded-xl flex items-center justify-center text-slate-500 font-bold text-sm">
+                        <div className="w-12 h-12 bg-iq-sage/20 border border-iq-sage/30 rounded-xl flex items-center justify-center text-iq-navy font-bold text-sm">
                           {companyName ? companyName.charAt(0).toUpperCase() : 'C'}
                         </div>
                       )}
                       <div className="flex-1">
-                        <label className="px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-bold rounded-lg text-xs cursor-pointer inline-flex items-center space-x-1.5 border border-indigo-200">
+                        <label className="px-3 py-1.5 bg-iq-teal/10 text-iq-teal hover:bg-iq-teal/20 font-semibold rounded-tag text-xs cursor-pointer inline-flex items-center space-x-1.5 border border-iq-teal/30 transition-colors">
                           <Upload className="w-3.5 h-3.5" />
                           <span>{uploadingLogo ? 'Uploading...' : 'Upload Logo File (2MB Max)'}</span>
                           <input 
@@ -1091,7 +1092,7 @@ const Dashboard: React.FC = () => {
                             className="hidden" 
                           />
                         </label>
-                        <p className="text-[10px] text-slate-400 mt-1">PNG, JPG, WEBP, or SVG. Maximum file size: 2MB.</p>
+                        <p className="text-[10px] text-iq-muted mt-1">PNG, JPG, WEBP, or SVG. Maximum file size: 2MB.</p>
                       </div>
                     </div>
 
@@ -1100,18 +1101,18 @@ const Dashboard: React.FC = () => {
                       value={companyLogo}
                       onChange={e => setCompanyLogo(e.target.value)}
                       placeholder="Or enter direct image URL (https://...)"
-                      className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                      className="w-full p-2 bg-iq-bg border border-slate-200 rounded-lg text-xs text-iq-navy"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Company Description & Mission</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Company Description & Mission</label>
                     <textarea
                       rows={4}
                       value={companyDescription}
                       onChange={e => setCompanyDescription(e.target.value)}
                       placeholder="Tell students about your company, culture, and key technology stack..."
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-1 focus:ring-indigo-500 resize-none"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy resize-none"
                     />
                   </div>
 
@@ -1119,14 +1120,14 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setShowCompanyModal(false)}
-                      className="px-4 py-2 font-semibold text-slate-600 hover:text-slate-800 cursor-pointer"
+                      className="px-4 py-2 font-semibold text-iq-muted hover:text-iq-navy rounded-btn transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={savingCompany}
-                      className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md cursor-pointer"
+                      className="px-6 py-2 bg-iq-teal text-white font-semibold rounded-btn hover:bg-iq-green shadow-sm cursor-pointer transition-colors"
                     >
                       {savingCompany ? 'Saving...' : 'Save Profile'}
                     </button>
@@ -1140,115 +1141,115 @@ const Dashboard: React.FC = () => {
         {/* Post / Edit Internship Modal for Recruiters */}
         <AnimatePresence>
           {showPostModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-iq-navy/40 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col"
+                className="bg-white rounded-panel shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200/80 max-h-[90vh] flex flex-col"
               >
-                <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+                <div className="p-6 bg-iq-navy text-white flex items-center justify-between">
                   <h3 className="text-lg font-bold">
                     {editingListing ? 'Edit Internship Listing' : 'Post New Internship Listing'}
                   </h3>
-                  <button onClick={() => setShowPostModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
+                  <button onClick={() => setShowPostModal(false)} className="text-slate-300 hover:text-white cursor-pointer">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 <form onSubmit={handleCreateOrUpdateListing} className="p-6 overflow-y-auto space-y-4 text-xs">
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Internship Title</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Internship Title</label>
                     <input
                       type="text"
                       required
                       value={newListing.title}
                       onChange={e => setNewListing(prev => ({ ...prev, title: e.target.value }))}
                       placeholder="e.g. Frontend Developer Intern"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Company Name</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Company Name</label>
                     <input
                       type="text"
                       required
                       value={newListing.companyName}
                       onChange={e => setNewListing(prev => ({ ...prev, companyName: e.target.value }))}
                       placeholder="e.g. TechCorp Systems"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium text-slate-700 mb-1">Location</label>
+                      <label className="block font-semibold text-iq-navy mb-1">Location</label>
                       <input
                         type="text"
                         value={newListing.location}
                         onChange={e => setNewListing(prev => ({ ...prev, location: e.target.value }))}
                         placeholder="Remote / City"
-                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                        className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                       />
                     </div>
                     <div>
-                      <label className="block font-medium text-slate-700 mb-1">Stipend Text</label>
+                      <label className="block font-semibold text-iq-navy mb-1">Stipend Text</label>
                       <input
                         type="text"
                         value={newListing.stipend}
                         onChange={e => setNewListing(prev => ({ ...prev, stipend: e.target.value }))}
                         placeholder="₹25,000/month"
-                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                        className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Required Skills (Comma separated)</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Required Skills (Comma separated)</label>
                     <input
                       type="text"
                       value={newListing.skills}
                       onChange={e => setNewListing(prev => ({ ...prev, skills: e.target.value }))}
                       placeholder="React, JavaScript, TypeScript, Tailwind CSS"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Role Description</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Role Description</label>
                     <textarea
                       rows={3}
                       value={newListing.description}
                       onChange={e => setNewListing(prev => ({ ...prev, description: e.target.value }))}
                       placeholder="Detailed responsibilities and project description..."
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-700 mb-1">Requirements (One per line)</label>
+                    <label className="block font-semibold text-iq-navy mb-1">Requirements (One per line)</label>
                     <textarea
                       rows={3}
                       value={newListing.requirements}
                       onChange={e => setNewListing(prev => ({ ...prev, requirements: e.target.value }))}
                       placeholder="Solid understanding of React&#10;Familiarity with Tailwind CSS"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full p-2.5 bg-iq-bg border border-slate-200 rounded-xl focus:ring-1 focus:ring-iq-teal text-iq-navy resize-none"
                     />
                   </div>
 
-                  <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between pt-4">
+                  <div className="p-4 bg-iq-bg border-t border-slate-100 flex items-center justify-between pt-4 rounded-b-panel">
                     <button
                       type="button"
                       onClick={() => setShowPostModal(false)}
-                      className="px-4 py-2 font-semibold text-slate-600 hover:text-slate-800 cursor-pointer"
+                      className="px-4 py-2 font-semibold text-iq-muted hover:text-iq-navy rounded-btn transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={posting}
-                      className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md cursor-pointer"
+                      className="px-6 py-2 bg-iq-teal text-white font-semibold rounded-btn hover:bg-iq-green shadow-sm cursor-pointer transition-colors"
                     >
                       {posting ? 'Saving...' : (editingListing ? 'Update Internship' : 'Publish Internship')}
                     </button>

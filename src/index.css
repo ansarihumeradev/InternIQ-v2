@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── IQ Watercolor Utilities ─────────────────────────────── */
+
+.iq-watercolor {
+  background-image: url('/watercolor-hero.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.iq-watercolor-soft {
+  background-image: url('/watercolor-hero.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.45;
+}
+
+.iq-wash-sage {
+  background-color: #cfe9db;
+}
+
+.iq-wash-blue {
+  background-color: #dcebfa;
+}
+
+.iq-wash-lavender {
+  background-color: #ece6f8;
+}
+
+.iq-wash-mint {
+  background-color: #e2f5ec;
+}
+
+.iq-wash-butter {
+  background-color: #fbf1cc;
+}
+
+.iq-blob-filter {
+  filter: url('#watercolor-filter');
+}

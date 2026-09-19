@@ -842,10 +842,10 @@ const ResumeBuilder: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Please sign in to use the resume builder</h2>
-          <p className="text-gray-600">You need to be logged in to access this feature.</p>
+          <h2 className="text-2xl font-semibold text-slate-800 mb-4">Please sign in to use the resume builder</h2>
+          <p className="text-slate-500">You need to be logged in to access this feature.</p>
         </div>
       </div>
     );
@@ -1050,15 +1050,15 @@ const ResumeBuilder: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Resume Builder</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Create a professional resume that stands out and gets you noticed</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Resume Builder</h1>
+          <p className="text-xl text-slate-500 max-w-2xl mx-auto">Create a professional resume that stands out and gets you noticed</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1070,36 +1070,36 @@ const ResumeBuilder: React.FC = () => {
             className="lg:col-span-1 space-y-6"
           >
             {/* Template Selection */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose Template</h3>
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
+              <h3 className="text-lg font-semibold text-slate-800 mb-4">Choose Template</h3>
               <div className="grid grid-cols-2 gap-3 mb-6">
                 {templates.map((template) => (
                   <button
                     key={template.id}
                     onClick={() => updateTemplateConfig('selectedTemplate', template.id)}
-                    className={'p-3 rounded-lg border-2 transition-all duration-200 ' + (templateConfig.selectedTemplate === template.id ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50')}
+                    className={'p-3 rounded-xl border transition-all duration-200 ' + (templateConfig.selectedTemplate === template.id ? 'border-teal-500 bg-teal-50 text-teal-700 shadow-sm' : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50')}
                   >
                     <div className="flex items-center space-x-2">
-                      <div className={'p-1 rounded ' + (templateConfig.selectedTemplate === template.id ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 text-gray-600')}>
+                      <div className={'p-1 rounded ' + (templateConfig.selectedTemplate === template.id ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-slate-600')}>
                         {template.icon}
                       </div>
                       <div className="text-left">
                         <div className="font-medium text-sm">{template.name}</div>
-                        <div className="text-xs text-gray-500">{template.description}</div>
+                        <div className="text-xs text-slate-500">{template.description}</div>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <div className="border-t pt-4">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Color Scheme</h4>
+              <div className="border-t border-slate-100 pt-4">
+                <h4 className="text-sm font-medium text-slate-700 mb-3">Color Scheme</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {colorSchemes.map(scheme => (
                     <button
                       key={scheme.id}
                       onClick={() => updateTemplateConfig('colorScheme', scheme.id)}
-                      className={'p-2 rounded-lg border-2 transition-all ' + (templateConfig.colorScheme === scheme.id ? 'border-primary-500' : 'border-gray-200 hover:border-gray-300')}
+                      className={'p-2 rounded-xl border transition-all ' + (templateConfig.colorScheme === scheme.id ? 'border-teal-500 shadow-sm bg-slate-50' : 'border-slate-200 hover:border-teal-300')}
                     >
                       <div className="flex items-center space-x-2">
                         <div className="flex space-x-1">
@@ -1107,7 +1107,7 @@ const ResumeBuilder: React.FC = () => {
                             <div key={index} className="w-3 h-3 rounded" style={{ backgroundColor: color }} />
                           ))}
                         </div>
-                        <span className="text-xs font-medium">{scheme.name}</span>
+                        <span className="text-xs font-medium text-slate-700">{scheme.name}</span>
                       </div>
                     </button>
                   ))}
@@ -1116,14 +1116,14 @@ const ResumeBuilder: React.FC = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
+              <h3 className="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h3>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">AI Enhancement Style</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">AI Enhancement Style</label>
                 <select
                   value={enhancementStyle}
                   onChange={(e) => setEnhancementStyle(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-700"
                 >
                   <option value="professional">Professional</option>
                   <option value="creative">Creative</option>
@@ -1132,19 +1132,19 @@ const ResumeBuilder: React.FC = () => {
                 </select>
               </div>
               <div className="space-y-3">
-                <Button variant="primary" fullWidth loading={loading} onClick={handleSaveResume} icon={<Save className="h-5 w-5" />}>Save Resume</Button>
-                <Button variant="outline" fullWidth onClick={handleDownloadResume} icon={<Download className="h-5 w-5" />}>Download PDF</Button>
-                <Button variant="outline" fullWidth onClick={handleShareResume} icon={<Share2 className="h-5 w-5" />}>Share</Button>
-                <Button variant="secondary" fullWidth onClick={handleAIEnhance} icon={<Sparkles className="h-5 w-5" />}>AI Enhance</Button>
+                <Button variant="ghost" className="bg-teal-600 hover:bg-teal-700 text-white rounded-btn" fullWidth loading={loading} onClick={handleSaveResume} icon={<Save className="h-5 w-5" />}>Save Resume</Button>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" fullWidth onClick={handleDownloadResume} icon={<Download className="h-5 w-5" />}>Download PDF</Button>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" fullWidth onClick={handleShareResume} icon={<Share2 className="h-5 w-5" />}>Share</Button>
+                <Button variant="ghost" className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 text-white rounded-btn border-none" fullWidth onClick={handleAIEnhance} icon={<Sparkles className="h-5 w-5" />}>AI Enhance</Button>
               </div>
             </div>
 
             {/* Add Sections */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Sections</h3>
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
+              <h3 className="text-lg font-semibold text-slate-800 mb-4">Add Sections</h3>
               <div className="space-y-2">
                 {['experience', 'education', 'skills', 'projects', 'certifications'].map((type) => (
-                  <Button key={type} variant="ghost" fullWidth onClick={() => handleAddSection(type)} icon={<Plus className="h-4 w-4" />}>
+                  <Button key={type} variant="ghost" className="text-teal-600 hover:bg-teal-50 justify-start" fullWidth onClick={() => handleAddSection(type)} icon={<Plus className="h-4 w-4" />}>
                     Add {type.charAt(0).toUpperCase() + type.slice(1)}
                   </Button>
                 ))}
@@ -1160,97 +1160,97 @@ const ResumeBuilder: React.FC = () => {
             className="lg:col-span-2 space-y-6"
           >
             {/* Personal Information */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
-                <Button variant="ghost" size="sm" icon={<Edit className="h-4 w-4" />}>Edit</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Personal Information</h3>
+                <Button variant="ghost" className="text-slate-500 hover:bg-slate-50" size="sm" icon={<Edit className="h-4 w-4" />}>Edit</Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
                   <div className="relative">
-                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="text" value={resumeData.personal.name} onChange={(e) => handleUpdatePersonal('name', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your full name" />
+                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="text" value={resumeData.personal.name} onChange={(e) => handleUpdatePersonal('name', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="Enter your full name" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="email" value={resumeData.personal.email} onChange={(e) => handleUpdatePersonal('email', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your email" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="email" value={resumeData.personal.email} onChange={(e) => handleUpdatePersonal('email', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="Enter your email" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Phone</label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="tel" value={resumeData.personal.phone} onChange={(e) => handleUpdatePersonal('phone', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your phone number" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="tel" value={resumeData.personal.phone} onChange={(e) => handleUpdatePersonal('phone', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="Enter your phone number" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="text" value={resumeData.personal.location} onChange={(e) => handleUpdatePersonal('location', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter your location" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="text" value={resumeData.personal.location} onChange={(e) => handleUpdatePersonal('location', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="Enter your location" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">LinkedIn</label>
                   <div className="relative">
-                    <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="url" value={resumeData.personal.linkedin} onChange={(e) => handleUpdatePersonal('linkedin', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="linkedin.com/in/yourprofile" />
+                    <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="url" value={resumeData.personal.linkedin} onChange={(e) => handleUpdatePersonal('linkedin', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="linkedin.com/in/yourprofile" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">GitHub</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">GitHub</label>
                   <div className="relative">
-                    <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input type="url" value={resumeData.personal.github} onChange={(e) => handleUpdatePersonal('github', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="github.com/yourusername" />
+                    <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <input type="url" value={resumeData.personal.github} onChange={(e) => handleUpdatePersonal('github', e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="github.com/yourusername" />
                   </div>
                 </div>
               </div>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Professional Summary</label>
-                <textarea value={resumeData.summary} onChange={(e) => handleUpdateData('summary', e.target.value)} rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Write a brief professional summary..." />
+                <label className="block text-sm font-medium text-slate-700 mb-2">Professional Summary</label>
+                <textarea value={resumeData.summary} onChange={(e) => handleUpdateData('summary', e.target.value)} rows={4} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none bg-slate-50/50 text-slate-800" placeholder="Write a brief professional summary..." />
               </div>
             </div>
 
             {/* Work Experience */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
-                <Button variant="outline" onClick={addExperience} icon={<Plus className="h-4 w-4" />}>Add Experience</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Work Experience</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={addExperience} icon={<Plus className="h-4 w-4" />}>Add Experience</Button>
               </div>
               <div className="space-y-4">
                 {resumeData.experience.map((exp, index) => (
-                  <div key={exp.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={exp.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/30">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-medium text-gray-900">Experience #{index + 1}</h4>
-                      <Button variant="ghost" size="sm" onClick={() => removeExperience(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                      <h4 className="font-medium text-slate-800">Experience #{index + 1}</h4>
+                      <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => removeExperience(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
-                        <input type="text" value={exp.title} onChange={(e) => handleUpdateExperience(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Frontend Developer" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Job Title</label>
+                        <input type="text" value={exp.title} onChange={(e) => handleUpdateExperience(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Frontend Developer" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-                        <input type="text" value={exp.company} onChange={(e) => handleUpdateExperience(index, 'company', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Tech Company Inc." />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Company</label>
+                        <input type="text" value={exp.company} onChange={(e) => handleUpdateExperience(index, 'company', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Tech Company Inc." />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <input type="text" value={exp.location} onChange={(e) => handleUpdateExperience(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Mumbai, India" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
+                        <input type="text" value={exp.location} onChange={(e) => handleUpdateExperience(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Mumbai, India" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                        <input type="text" value={exp.duration} onChange={(e) => handleUpdateExperience(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Jan 2022 - Present" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Duration</label>
+                        <input type="text" value={exp.duration} onChange={(e) => handleUpdateExperience(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Jan 2022 - Present" />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                      <textarea value={exp.description} onChange={(e) => handleUpdateExperience(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Describe your responsibilities and achievements..." />
+                      <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                      <textarea value={exp.description} onChange={(e) => handleUpdateExperience(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none bg-white text-slate-800" placeholder="Describe your responsibilities and achievements..." />
                     </div>
                   </div>
                 ))}
@@ -1258,40 +1258,40 @@ const ResumeBuilder: React.FC = () => {
             </div>
 
             {/* Education */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Education</h3>
-                <Button variant="outline" onClick={addEducation} icon={<Plus className="h-4 w-4" />}>Add Education</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Education</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={addEducation} icon={<Plus className="h-4 w-4" />}>Add Education</Button>
               </div>
               <div className="space-y-4">
                 {resumeData.education.map((edu, index) => (
-                  <div key={edu.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={edu.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/30">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-medium text-gray-900">Education #{index + 1}</h4>
-                      <Button variant="ghost" size="sm" onClick={() => removeEducation(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                      <h4 className="font-medium text-slate-800">Education #{index + 1}</h4>
+                      <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => removeEducation(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Degree</label>
-                        <input type="text" value={edu.degree} onChange={(e) => handleUpdateEducation(index, 'degree', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Master in Computer Science" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Degree</label>
+                        <input type="text" value={edu.degree} onChange={(e) => handleUpdateEducation(index, 'degree', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Master in Computer Science" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Institution</label>
-                        <input type="text" value={edu.institution} onChange={(e) => handleUpdateEducation(index, 'institution', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., XYZ University" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Institution</label>
+                        <input type="text" value={edu.institution} onChange={(e) => handleUpdateEducation(index, 'institution', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., XYZ University" />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <input type="text" value={edu.location} onChange={(e) => handleUpdateEducation(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Mumbai, India" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
+                        <input type="text" value={edu.location} onChange={(e) => handleUpdateEducation(index, 'location', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Mumbai, India" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                        <input type="text" value={edu.duration} onChange={(e) => handleUpdateEducation(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Dec 2018" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Duration</label>
+                        <input type="text" value={edu.duration} onChange={(e) => handleUpdateEducation(index, 'duration', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., Dec 2018" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">GPA / Notes</label>
-                        <input type="text" value={edu.gpa} onChange={(e) => handleUpdateEducation(index, 'gpa', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., GPA 3.8 / Specialization" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">GPA / Notes</label>
+                        <input type="text" value={edu.gpa} onChange={(e) => handleUpdateEducation(index, 'gpa', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., GPA 3.8 / Specialization" />
                       </div>
                     </div>
                   </div>
@@ -1300,56 +1300,56 @@ const ResumeBuilder: React.FC = () => {
             </div>
 
             {/* Skills - flat list */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
-                <Button variant="outline" onClick={addSkill} icon={<Plus className="h-4 w-4" />}>Add Skill</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Skills</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={addSkill} icon={<Plus className="h-4 w-4" />}>Add Skill</Button>
               </div>
               <div className="space-y-2">
                 {resumeData.skills.map((skill, index) => (
                   <div key={index} className="flex items-center space-x-3">
                     <div className="flex-1">
-                      <input type="text" value={skill} onChange={(e) => updateSkill(index, e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., JavaScript, React, Python..." />
+                      <input type="text" value={skill} onChange={(e) => updateSkill(index, e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="e.g., JavaScript, React, Python..." />
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => removeSkill(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                    <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => removeSkill(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
                 {resumeData.skills.length === 0 && (
-                  <p className="text-gray-400 text-sm">No skills added yet. Click &quot;+ Add Skill&quot; to get started.</p>
+                  <p className="text-slate-400 text-sm">No skills added yet. Click &quot;+ Add Skill&quot; to get started.</p>
                 )}
               </div>
             </div>
 
             {/* Projects */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
-                <Button variant="outline" onClick={addProject} icon={<Plus className="h-4 w-4" />}>Add Project</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Projects</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={addProject} icon={<Plus className="h-4 w-4" />}>Add Project</Button>
               </div>
               <div className="space-y-4">
                 {resumeData.projects.map((project, index) => (
-                  <div key={project.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={project.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/30">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-medium text-gray-900">Project #{index + 1}</h4>
-                      <Button variant="ghost" size="sm" onClick={() => removeProject(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                      <h4 className="font-medium text-slate-800">Project #{index + 1}</h4>
+                      <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => removeProject(index)} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
-                        <input type="text" value={project.title} onChange={(e) => handleUpdateProjects(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., E-commerce Platform" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Project Title</label>
+                        <input type="text" value={project.title} onChange={(e) => handleUpdateProjects(index, 'title', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., E-commerce Platform" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Project Link</label>
-                        <input type="url" value={project.link} onChange={(e) => handleUpdateProjects(index, 'link', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., github.com/username/project" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Project Link</label>
+                        <input type="url" value={project.link} onChange={(e) => handleUpdateProjects(index, 'link', e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., github.com/username/project" />
                       </div>
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                      <textarea value={project.description} onChange={(e) => handleUpdateProjects(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Describe your project..." />
+                      <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                      <textarea value={project.description} onChange={(e) => handleUpdateProjects(index, 'description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none bg-white text-slate-800" placeholder="Describe your project..." />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Technologies Used</label>
-                      <input type="text" value={Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies} onChange={(e) => handleUpdateProjects(index, 'technologies', e.target.value.split(',').map(tech => tech.trim()))} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., React, Node.js, MongoDB (comma separated)" />
+                      <label className="block text-sm font-medium text-slate-700 mb-2">Technologies Used</label>
+                      <input type="text" value={Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies} onChange={(e) => handleUpdateProjects(index, 'technologies', e.target.value.split(',').map(tech => tech.trim()))} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white text-slate-800" placeholder="e.g., React, Node.js, MongoDB (comma separated)" />
                     </div>
                   </div>
                 ))}
@@ -1357,36 +1357,36 @@ const ResumeBuilder: React.FC = () => {
             </div>
 
             {/* Certifications */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Certifications</h3>
-                <Button variant="outline" onClick={() => { setResumeData(prev => ({ ...prev, certifications: [...(prev.certifications || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Certification</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Certifications</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={() => { setResumeData(prev => ({ ...prev, certifications: [...(prev.certifications || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Certification</Button>
               </div>
               <div className="space-y-4">
                 {(resumeData.certifications || []).map((cert, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <div className="flex-1">
-                      <input type="text" value={cert} onChange={(e) => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.map((c, i) => i === index ? e.target.value : c) })); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Certified Web Developer - JavaScript Full Stack (2020)" />
+                      <input type="text" value={cert} onChange={(e) => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.map((c, i) => i === index ? e.target.value : c) })); }} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="e.g., Certified Web Developer - JavaScript Full Stack (2020)" />
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                    <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, certifications: prev.certifications.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Achievements */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
-                <Button variant="outline" onClick={() => { setResumeData(prev => ({ ...prev, achievements: [...(prev.achievements || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Achievement</Button>
+                <h3 className="text-lg font-semibold text-slate-800">Achievements</h3>
+                <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={() => { setResumeData(prev => ({ ...prev, achievements: [...(prev.achievements || []), ''] })); }} icon={<Plus className="h-4 w-4" />}>Add Achievement</Button>
               </div>
               <div className="space-y-4">
                 {(resumeData.achievements || []).map((achievement, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <div className="flex-1">
-                      <input type="text" value={achievement} onChange={(e) => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.map((a, i) => i === index ? e.target.value : a) })); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="e.g., Led development team of 5 developers" />
+                      <input type="text" value={achievement} onChange={(e) => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.map((a, i) => i === index ? e.target.value : a) })); }} className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-50/50 text-slate-800" placeholder="e.g., Led development team of 5 developers" />
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
+                    <Button variant="ghost" className="text-red-500 hover:bg-red-50" size="sm" onClick={() => { setResumeData(prev => ({ ...prev, achievements: prev.achievements.filter((_, i) => i !== index) })); }} icon={<Trash2 className="h-4 w-4" />}>Remove</Button>
                   </div>
                 ))}
               </div>
@@ -1401,15 +1401,15 @@ const ResumeBuilder: React.FC = () => {
           transition={{ delay: 0.3 }}
           className="mt-8"
         >
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white rounded-card shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-slate-800">
                 Live Preview &mdash; {templateConfig.selectedTemplate === 'classic' ? 'Classic' : 'Modern'} Template
               </h3>
-              <Button variant="outline" onClick={handleDownloadResume} icon={<Download className="h-4 w-4" />} size="sm">Download PDF</Button>
+              <Button variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn" onClick={handleDownloadResume} icon={<Download className="h-4 w-4" />} size="sm">Download PDF</Button>
             </div>
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-inner">
-              <div className="overflow-y-auto max-h-[900px]">
+            <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="overflow-y-auto max-h-[900px] bg-white">
                 {templateConfig.selectedTemplate === 'classic' ? <ClassicPreview /> : <ModernPreview />}
               </div>
             </div>

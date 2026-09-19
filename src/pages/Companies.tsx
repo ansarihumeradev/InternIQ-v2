@@ -308,15 +308,13 @@ const Companies: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8">
+    <div className="min-h-screen bg-iq-bg py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <div className="bg-iq-surface rounded-card p-8 sm:p-10 border border-iq-sage/40 shadow-nav text-center mb-12 relative overflow-hidden iq-watercolor">
+          <h1 className="text-3xl md:text-5xl font-bold text-iq-navy mb-4">
             Discover Amazing Companies
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="text-lg md:text-xl text-iq-muted max-w-2xl mx-auto mb-8">
             Find companies that match your values and career goals
           </p>
           
@@ -326,37 +324,37 @@ const Companies: React.FC = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-4"
+              className="bg-iq-mint/60 border border-iq-sage/40 rounded-panel p-4 shadow-sm"
             >
-              <div className="text-2xl font-bold">{companies.length}</div>
-              <div className="text-sm opacity-90">Total Companies</div>
+              <div className="text-2xl font-bold text-iq-teal">{companies.length}</div>
+              <div className="text-xs font-semibold text-iq-muted">Total Companies</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4"
+              className="bg-iq-lavender/60 border border-iq-sage/40 rounded-panel p-4 shadow-sm"
             >
-              <div className="text-2xl font-bold">{getIndustries().length}</div>
-              <div className="text-sm opacity-90">Industries</div>
+              <div className="text-2xl font-bold text-iq-teal">{getIndustries().length}</div>
+              <div className="text-xs font-semibold text-iq-muted">Industries</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-4"
+              className="bg-iq-blue/60 border border-iq-sage/40 rounded-panel p-4 shadow-sm"
             >
-              <div className="text-2xl font-bold">{sortedCompanies.reduce((sum, c) => sum + c.employees, 0)}</div>
-              <div className="text-sm opacity-90">Open Positions</div>
+              <div className="text-2xl font-bold text-iq-teal">{sortedCompanies.reduce((sum, c) => sum + c.employees, 0)}</div>
+              <div className="text-xs font-semibold text-iq-muted">Open Positions</div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl p-4"
+              className="bg-iq-butter/60 border border-iq-sage/40 rounded-panel p-4 shadow-sm"
             >
-              <div className="text-2xl font-bold">{getTrendingCompanies().length}</div>
-              <div className="text-sm opacity-90">Trending</div>
+              <div className="text-2xl font-bold text-iq-teal">{getTrendingCompanies().length}</div>
+              <div className="text-xs font-semibold text-iq-muted">Trending</div>
             </motion.div>
           </div>
         </div>
@@ -371,15 +369,15 @@ const Companies: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <TrendingUp className="h-6 w-6 text-orange-500" />
-                <h2 className="text-2xl font-bold text-gray-900">Trending Companies</h2>
-                <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full text-sm font-medium">
+                <TrendingUp className="h-6 w-6 text-iq-green" />
+                <h2 className="text-2xl font-bold text-iq-navy">Trending Companies</h2>
+                <span className="bg-iq-butter text-iq-navy border border-iq-butter/50 px-2.5 py-0.5 rounded-full text-xs font-bold">
                   Hot
                 </span>
               </div>
               <button
                 onClick={() => setShowTrending(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-iq-faint hover:text-iq-navy p-1 transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -392,24 +390,24 @@ const Companies: React.FC = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  className="bg-iq-surface border border-iq-sage/30 rounded-card p-4 hover:shadow-nav hover:border-iq-teal/30 transition-all duration-300 cursor-pointer"
                   onClick={() => handleViewCompany(company)}
                 >
                   <div className="flex items-center space-x-3">
                     <img
                       src={company.logo}
                       alt={company.name}
-                      className="w-12 h-12 rounded-lg object-cover"
+                      className="w-12 h-12 rounded-panel object-cover border border-iq-sage/20 bg-iq-bg p-1"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=FF6B35&color=fff&size=48&font-size=0.4&bold=true`;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0e8a85&color=fff&size=48&font-size=0.4&bold=true`;
                       }}
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 truncate">{company.name}</h3>
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                        <span>{company.ratings.overall}</span>
+                      <h3 className="font-bold text-iq-navy truncate">{company.name}</h3>
+                      <div className="flex items-center space-x-2 text-xs text-iq-muted">
+                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                        <span className="font-semibold text-iq-navy">{company.ratings.overall}</span>
                         <span>({company.ratings.totalReviews} reviews)</span>
                       </div>
                     </div>
@@ -429,26 +427,26 @@ const Companies: React.FC = () => {
             className="mb-8"
           >
             <div className="flex items-center space-x-3 mb-4">
-              <Clock className="h-5 w-5 text-blue-500" />
-              <h3 className="text-lg font-semibold text-gray-900">Recently Viewed</h3>
+              <Clock className="h-5 w-5 text-iq-teal" />
+              <h3 className="text-lg font-bold text-iq-navy">Recently Viewed</h3>
             </div>
             <div className="flex space-x-3 overflow-x-auto pb-2">
               {getRecentlyViewedCompanies().map((company) => (
                 <div
                   key={company.id}
-                  className="flex-shrink-0 bg-blue-50 border border-blue-200 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition-colors"
+                  className="flex-shrink-0 bg-iq-surface border border-iq-sage/30 rounded-panel p-3 cursor-pointer hover:border-iq-teal/40 transition-all"
                   onClick={() => handleViewCompany(company)}
                 >
                   <img
                     src={company.logo}
                     alt={company.name}
-                    className="w-10 h-10 rounded-lg object-cover mb-2"
+                    className="w-10 h-10 rounded-panel object-cover mb-2 border border-iq-sage/20 bg-iq-bg p-0.5"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=3B82F6&color=fff&size=40&font-size=0.4&bold=true`;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0e8a85&color=fff&size=40&font-size=0.4&bold=true`;
                     }}
                   />
-                  <div className="text-sm font-medium text-gray-900 truncate w-20">{company.name}</div>
+                  <div className="text-xs font-semibold text-iq-navy truncate w-20">{company.name}</div>
                 </div>
               ))}
             </div>
@@ -459,17 +457,17 @@ const Companies: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl shadow-lg p-6 mb-8"
+          className="bg-iq-surface rounded-card shadow-nav border border-iq-sage/30 p-6 mb-8"
         >
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-iq-faint" />
               <input
                 type="text"
                 placeholder="Search companies, industries, or keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-11 pr-4 py-3 bg-iq-bg border border-iq-sage/60 rounded-panel focus:ring-2 focus:ring-iq-teal focus:border-iq-teal focus:bg-white text-sm text-iq-navy placeholder:text-iq-faint transition-all"
               />
             </div>
 
@@ -477,7 +475,7 @@ const Companies: React.FC = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="px-4 py-3 bg-iq-bg border border-iq-sage/60 rounded-panel focus:ring-2 focus:ring-iq-teal focus:border-iq-teal focus:bg-white text-sm text-iq-navy transition-all"
               >
                 <option value="rating">Sort by Rating</option>
                 <option value="reviews">Sort by Reviews</option>
@@ -485,13 +483,13 @@ const Companies: React.FC = () => {
                 <option value="founded">Sort by Founded Year</option>
               </select>
 
-              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+              <div className="flex border border-iq-sage/60 rounded-panel overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`px-3 py-3 transition-colors ${
                     viewMode === 'grid' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                      ? 'bg-iq-teal text-white' 
+                      : 'bg-iq-bg text-iq-navy hover:bg-iq-tealsoft/30'
                   }`}
                 >
                   <Grid className="h-5 w-5" />
@@ -500,21 +498,22 @@ const Companies: React.FC = () => {
                   onClick={() => setViewMode('list')}
                   className={`px-3 py-3 transition-colors ${
                     viewMode === 'list' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                      ? 'bg-iq-teal text-white' 
+                      : 'bg-iq-bg text-iq-navy hover:bg-iq-tealsoft/30'
                   }`}
                 >
                   <List className="h-5 w-5" />
                 </button>
               </div>
 
-              <Button
-                variant="secondary"
+              <button
+                type="button"
                 onClick={() => setShowFilters(!showFilters)}
-                icon={<Building className="h-5 w-5" />}
+                className="px-4 py-3 bg-iq-bg border border-iq-sage/60 rounded-btn font-semibold text-sm text-iq-navy hover:bg-iq-tealsoft/30 transition-all flex items-center space-x-2"
               >
-                Filters
-              </Button>
+                <Building className="h-5 w-5 text-iq-teal" />
+                <span>Filters</span>
+              </button>
             </div>
           </div>
 
@@ -523,12 +522,12 @@ const Companies: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               transition={{ duration: 0.3 }}
-              className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="mt-4 pt-4 border-t border-iq-sage/30 grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               <select
                 value={industryFilter}
                 onChange={(e) => setIndustryFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="px-4 py-2 bg-iq-bg border border-iq-sage/60 rounded-panel focus:ring-2 focus:ring-iq-teal focus:border-iq-teal focus:bg-white text-sm text-iq-navy transition-all"
               >
                 <option value="">All Industries</option>
                 {getIndustries().map(industry => (
@@ -539,7 +538,7 @@ const Companies: React.FC = () => {
               <select
                 value={sizeFilter}
                 onChange={(e) => setSizeFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="px-4 py-2 bg-iq-bg border border-iq-sage/60 rounded-panel focus:ring-2 focus:ring-iq-teal focus:border-iq-teal focus:bg-white text-sm text-iq-navy transition-all"
               >
                 <option value="">All Company Sizes</option>
                 {getSizes().map(size => (
@@ -551,17 +550,16 @@ const Companies: React.FC = () => {
         </motion.div>
 
         <div className="flex justify-between items-center mb-6">
-          <p className="text-gray-600">
-            Found <span className="font-semibold text-primary-600">{filteredCompanies.length}</span> companies
+          <p className="text-iq-muted text-sm font-medium">
+            Found <span className="font-bold text-iq-teal">{filteredCompanies.length}</span> companies
           </p>
           {(searchTerm || industryFilter || sizeFilter) && (
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={clearFilters}
+              className="px-3 py-1.5 bg-iq-bg border border-iq-sage/60 text-iq-navy hover:bg-iq-tealsoft/30 text-xs font-semibold rounded-btn transition-colors"
             >
               Clear Filters
-            </Button>
+            </button>
           )}
         </div>
 
@@ -575,7 +573,7 @@ const Companies: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer ${
+              className={`bg-iq-surface rounded-card border border-iq-sage/30 shadow-nav hover:shadow-cta hover:border-iq-teal/30 transition-all duration-300 overflow-hidden group cursor-pointer ${
                 viewMode === 'list' ? 'flex items-center p-6' : ''
               }`}
               onClick={() => handleViewCompany(company)}
@@ -586,87 +584,90 @@ const Companies: React.FC = () => {
                     <img
                       src={company.logo}
                       alt={company.name}
-                      className="w-16 h-16 rounded-lg object-cover border-2 border-gray-100"
+                      className="w-16 h-16 rounded-panel object-cover border border-iq-sage/20 bg-iq-bg p-1"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=4285F4&color=fff&size=64&font-size=0.4&bold=true`;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0e8a85&color=fff&size=64&font-size=0.4&bold=true`;
                       }}
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                      <h3 className="text-lg font-bold text-iq-navy group-hover:text-iq-teal transition-colors">
                         {company.name}
                       </h3>
-                      <div className="flex items-center space-x-2 text-sm text-gray-600 mb-1">
-                        <Building className="h-4 w-4" />
+                      <div className="flex items-center space-x-2 text-xs text-iq-muted mb-1 font-medium">
+                        <Building className="h-4 w-4 text-iq-teal" />
                         <span>{company.industry}</span>
                       </div>
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
+                      <div className="flex items-center space-x-2 text-xs text-iq-muted">
+                        <MapPin className="h-4 w-4 text-iq-teal" />
                         <span>{company.headquarters}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1">
-                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                        <span className="font-medium">{company.ratings.overall}</span>
-                        <span className="text-gray-500">({company.ratings.totalReviews})</span>
+                  <div className="space-y-3 mb-4 bg-iq-bg p-3 rounded-panel border border-iq-sage/20">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-1 font-semibold text-iq-navy">
+                        <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                        <span>{company.ratings.overall}</span>
+                        <span className="text-iq-muted font-normal">({company.ratings.totalReviews})</span>
                       </div>
-                      <span className="text-sm text-gray-500">Founded {company.founded}</span>
+                      <span className="text-iq-muted">Founded {company.founded}</span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">{company.size}</span>
-                      <span className="text-primary-600 font-medium">{company.employees} open positions</span>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-iq-muted">{company.size}</span>
+                      <span className="text-iq-green font-bold">{company.employees} open positions</span>
                     </div>
                   </div>
 
-                  <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                  <p className="text-iq-muted text-xs line-clamp-2 mb-4 leading-relaxed">
                     {company.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {company.benefits.slice(0, 3).map((benefit) => (
-                      <span
-                        key={benefit}
-                        className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-full"
-                      >
-                        {benefit}
-                      </span>
-                    ))}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {company.benefits.slice(0, 3).map((benefit, idx) => {
+                      const bgColors = ['bg-iq-mint text-iq-navy', 'bg-iq-blue text-iq-navy', 'bg-iq-lavender text-iq-navy', 'bg-iq-butter text-iq-navy'];
+                      return (
+                        <span
+                          key={benefit}
+                          className={`px-2.5 py-1 text-[11px] font-medium rounded-tag ${bgColors[idx % bgColors.length]}`}
+                        >
+                          {benefit}
+                        </span>
+                      );
+                    })}
                     {company.benefits.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-iq-bg border border-iq-sage/40 text-iq-faint text-[10px] font-medium rounded-tag">
                         +{company.benefits.length - 3} more
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <Button
+                  <div className="flex items-center justify-between pt-4 border-t border-iq-sage/30">
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleBookmark(company.id);
                       }}
-                      variant={bookmarkedCompanies.has(company.id) ? "outline" : "secondary"}
-                      size="sm"
-                      className="flex items-center"
+                      className={`px-3 py-2 rounded-btn font-semibold text-xs transition-all flex items-center ${
+                        bookmarkedCompanies.has(company.id)
+                          ? 'bg-iq-butter border border-iq-butter/60 text-iq-navy shadow-sm'
+                          : 'bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30'
+                      }`}
                     >
-                      <Heart className="h-4 w-4 mr-2" fill={bookmarkedCompanies.has(company.id) ? 'currentColor' : 'none'} />
+                      <Heart className="h-4 w-4 mr-1.5" fill={bookmarkedCompanies.has(company.id) ? 'currentColor' : 'none'} />
                       {bookmarkedCompanies.has(company.id) ? 'Saved' : 'Save'}
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleViewJobs(company);
                       }}
-                      variant="primary"
-                      size="sm"
-                      className="flex items-center"
+                      className="px-4 py-2 bg-iq-teal text-white hover:bg-iq-tealdark shadow-cta rounded-btn font-bold text-xs flex items-center transition-all"
                     >
-                      <ExternalLink className="h-4 w-4 mr-2" />
+                      <ExternalLink className="h-4 w-4 mr-1.5" />
                       View Jobs
-                    </Button>
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -675,79 +676,82 @@ const Companies: React.FC = () => {
                   <img
                     src={company.logo}
                     alt={company.name}
-                    className="w-16 h-16 rounded-lg object-cover border-2 border-gray-100 mr-6"
+                    className="w-16 h-16 rounded-panel object-cover border border-iq-sage/20 bg-iq-bg p-1 mr-6"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=4285F4&color=fff&size=64&font-size=0.4&bold=true`;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(company.name)}&background=0e8a85&color=fff&size=64&font-size=0.4&bold=true`;
                     }}
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                      <h3 className="text-lg font-bold text-iq-navy group-hover:text-iq-teal transition-colors">
                         {company.name}
                       </h3>
-                      <div className="flex items-center space-x-4 text-sm">
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                          <span className="font-medium">{company.ratings.overall}</span>
-                          <span className="text-gray-500">({company.ratings.totalReviews})</span>
+                      <div className="flex items-center space-x-4 text-xs">
+                        <div className="flex items-center space-x-1 font-semibold text-iq-navy">
+                          <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                          <span>{company.ratings.overall}</span>
+                          <span className="text-iq-muted font-normal">({company.ratings.totalReviews})</span>
                         </div>
-                        <span className="text-primary-600 font-medium">{company.employees} positions</span>
+                        <span className="text-iq-green font-bold">{company.employees} positions</span>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                    <div className="flex items-center space-x-4 text-xs text-iq-muted mb-2 font-medium">
                       <div className="flex items-center space-x-1">
-                        <Building className="h-4 w-4" />
+                        <Building className="h-4 w-4 text-iq-teal" />
                         <span>{company.industry}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4 text-iq-teal" />
                         <span>{company.headquarters}</span>
                       </div>
                       <span>{company.size}</span>
                       <span>Founded {company.founded}</span>
                     </div>
-                    <p className="text-gray-600 text-sm line-clamp-1 mb-3">
+                    <p className="text-iq-muted text-xs line-clamp-1 mb-3">
                       {company.description}
                     </p>
                     <div className="flex items-center space-x-3">
                       <div className="flex flex-wrap gap-1">
-                        {company.benefits.slice(0, 2).map((benefit) => (
-                          <span
-                            key={benefit}
-                            className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-full"
-                          >
-                            {benefit}
-                          </span>
-                        ))}
+                        {company.benefits.slice(0, 2).map((benefit, idx) => {
+                          const bgColors = ['bg-iq-mint text-iq-navy', 'bg-iq-blue text-iq-navy'];
+                          return (
+                            <span
+                              key={benefit}
+                              className={`px-2 py-0.5 text-[11px] font-medium rounded-tag ${bgColors[idx % bgColors.length]}`}
+                            >
+                              {benefit}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 ml-6">
-                    <Button
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleBookmark(company.id);
                       }}
-                      variant={bookmarkedCompanies.has(company.id) ? "outline" : "secondary"}
-                      size="sm"
-                      className="flex items-center"
+                      className={`px-3 py-2 rounded-btn font-semibold text-xs transition-all flex items-center ${
+                        bookmarkedCompanies.has(company.id)
+                          ? 'bg-iq-butter border border-iq-butter/60 text-iq-navy shadow-sm'
+                          : 'bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30'
+                      }`}
                     >
-                      <Heart className="h-4 w-4 mr-2" fill={bookmarkedCompanies.has(company.id) ? 'currentColor' : 'none'} />
+                      <Heart className="h-4 w-4 mr-1.5" fill={bookmarkedCompanies.has(company.id) ? 'currentColor' : 'none'} />
                       {bookmarkedCompanies.has(company.id) ? 'Saved' : 'Save'}
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleViewJobs(company);
                       }}
-                      variant="primary"
-                      size="sm"
-                      className="flex items-center"
+                      className="px-4 py-2 bg-iq-teal text-white hover:bg-iq-tealdark shadow-cta rounded-btn font-bold text-xs flex items-center transition-all"
                     >
-                      <ExternalLink className="h-4 w-4 mr-2" />
+                      <ExternalLink className="h-4 w-4 mr-1.5" />
                       View Jobs
-                    </Button>
+                    </button>
                   </div>
                 </>
               )}
@@ -759,62 +763,62 @@ const Companies: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-16"
+            className="text-center py-16 bg-iq-surface rounded-card border border-iq-sage/30 shadow-nav mt-6"
           >
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Building className="h-12 w-12 text-gray-400" />
+            <div className="w-20 h-20 bg-iq-bg border border-iq-sage/30 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Building className="h-10 w-10 text-iq-faint" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">No companies found</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl font-bold text-iq-navy mb-2">No companies found</h3>
+            <p className="text-iq-muted text-sm mb-6">
               Try adjusting your search criteria or filters
             </p>
-            <Button
-              variant="primary"
+            <button
               onClick={clearFilters}
+              className="px-6 py-3 bg-iq-teal text-white font-bold text-sm rounded-btn hover:bg-iq-tealdark shadow-cta transition-all"
             >
               Clear All Filters
-            </Button>
+            </button>
           </motion.div>
         )}
       </div>
 
       {/* Company Details Modal */}
       {showCompanyModal && selectedCompany && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-iq-navy/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-iq-surface rounded-card shadow-cta max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-iq-sage/30"
           >
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-iq-sage/30 bg-iq-surface">
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-4">
                   <img
                     src={selectedCompany.logo}
                     alt={selectedCompany.name}
-                    className="w-20 h-20 rounded-lg object-cover bg-gray-100"
+                    className="w-20 h-20 rounded-panel object-cover bg-iq-bg border border-iq-sage/20 p-1"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedCompany.name)}&background=4285F4&color=fff&size=80&font-size=0.4&bold=true`;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedCompany.name)}&background=0e8a85&color=fff&size=80&font-size=0.4&bold=true`;
                     }}
                   />
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-1">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-iq-navy mb-1">
                       {selectedCompany.name}
                     </h2>
-                    <p className="text-xl text-gray-600 mb-2">{selectedCompany.industry}</p>
-                    <div className="flex items-center space-x-6 text-sm text-gray-500">
+                    <p className="text-lg font-semibold text-iq-muted mb-2">{selectedCompany.industry}</p>
+                    <div className="flex items-center space-x-6 text-xs text-iq-muted font-medium">
                       <span className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
+                        <MapPin className="h-4 w-4 mr-1 text-iq-teal" />
                         {selectedCompany.headquarters}
                       </span>
                       <span className="flex items-center">
-                        <Users className="h-4 w-4 mr-1" />
+                        <Users className="h-4 w-4 mr-1 text-iq-teal" />
                         {selectedCompany.size}
                       </span>
                       <span className="flex items-center">
-                        <Award className="h-4 w-4 mr-1" />
+                        <Award className="h-4 w-4 mr-1 text-iq-teal" />
                         Founded {selectedCompany.founded}
                       </span>
                     </div>
@@ -822,7 +826,7 @@ const Companies: React.FC = () => {
                 </div>
                 <button
                   onClick={closeCompanyModal}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 text-iq-faint hover:text-iq-navy hover:bg-iq-bg rounded-panel transition-colors"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -833,34 +837,34 @@ const Companies: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Company Overview</h3>
-                    <p className="text-gray-700 leading-relaxed">
+                    <h3 className="text-base font-bold text-iq-navy mb-2">Company Overview</h3>
+                    <p className="text-iq-muted text-sm leading-relaxed">
                       {selectedCompany.description}
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Company Rating</h3>
+                    <h3 className="text-base font-bold text-iq-navy mb-2">Company Rating</h3>
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center">
-                        <Star className="h-6 w-6 text-yellow-500 fill-current" />
-                        <span className="text-2xl font-bold ml-2">{selectedCompany.ratings.overall}</span>
+                        <Star className="h-6 w-6 text-amber-400 fill-amber-400" />
+                        <span className="text-2xl font-bold text-iq-navy ml-2">{selectedCompany.ratings.overall}</span>
                       </div>
-                      <div className="text-gray-600">
-                        <div className="font-medium">{selectedCompany.ratings.totalReviews} reviews</div>
-                        <div className="text-sm">Based on employee feedback</div>
+                      <div className="text-iq-muted text-xs">
+                        <div className="font-bold text-iq-navy">{selectedCompany.ratings.totalReviews} reviews</div>
+                        <div>Based on employee feedback</div>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Career Opportunities</h3>
-                    <div className="bg-primary-50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-primary-600 mb-1">
+                    <h3 className="text-base font-bold text-iq-navy mb-2">Career Opportunities</h3>
+                    <div className="bg-iq-tealsoft/50 border border-iq-sage/40 rounded-panel p-4">
+                      <div className="text-2xl font-bold text-iq-teal mb-1">
                         {selectedCompany.employees}
                       </div>
-                      <div className="text-primary-700 font-medium">Open Positions</div>
-                      <div className="text-sm text-primary-600 mt-2">
+                      <div className="text-iq-navy font-semibold text-sm">Open Positions</div>
+                      <div className="text-xs text-iq-muted mt-1">
                         Great time to join this growing company!
                       </div>
                     </div>
@@ -868,15 +872,15 @@ const Companies: React.FC = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Employee Benefits</h3>
+                  <h3 className="text-base font-bold text-iq-navy mb-2">Employee Benefits</h3>
                   <div className="grid grid-cols-1 gap-2">
                     {selectedCompany.benefits.map((benefit) => (
                       <div
                         key={benefit}
-                        className="flex items-center space-x-2 p-3 bg-green-50 rounded-lg"
+                        className="flex items-center space-x-2.5 p-3 bg-iq-mint/50 border border-iq-mint rounded-panel"
                       >
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700">{benefit}</span>
+                        <div className="w-2 h-2 bg-iq-green rounded-full flex-shrink-0"></div>
+                        <span className="text-iq-navy text-xs font-semibold">{benefit}</span>
                       </div>
                     ))}
                   </div>
@@ -884,67 +888,60 @@ const Companies: React.FC = () => {
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Quick Actions</h3>
+                <h3 className="text-base font-bold text-iq-navy mb-2">Quick Actions</h3>
                 <div className="flex flex-wrap gap-3">
-                  <Button
+                  <button
                     onClick={() => handleBookmark(selectedCompany.id)}
-                    variant={bookmarkedCompanies.has(selectedCompany.id) ? "outline" : "secondary"}
-                    size="sm"
-                    className="flex items-center"
+                    className={`px-4 py-2 rounded-btn font-semibold text-xs transition-all flex items-center ${
+                      bookmarkedCompanies.has(selectedCompany.id)
+                        ? 'bg-iq-butter border border-iq-butter/60 text-iq-navy shadow-sm'
+                        : 'bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30'
+                    }`}
                   >
                     <Heart className="h-4 w-4 mr-2" fill={bookmarkedCompanies.has(selectedCompany.id) ? 'currentColor' : 'none'} />
                     {bookmarkedCompanies.has(selectedCompany.id) ? 'Saved' : 'Save Company'}
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => handleShare(selectedCompany)}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center"
+                    className="px-4 py-2 bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30 rounded-btn font-semibold text-xs flex items-center transition-all"
                   >
-                    <Share2 className="h-4 w-4 mr-2" />
+                    <Share2 className="h-4 w-4 mr-2 text-iq-teal" />
                     Share
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => handleViewJobs(selectedCompany)}
-                    variant="primary"
-                    size="sm"
-                    className="flex items-center"
+                    className="px-4 py-2 bg-iq-teal text-white hover:bg-iq-tealdark shadow-cta rounded-btn font-bold text-xs flex items-center transition-all"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View All Jobs
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => window.open(selectedCompany.website, '_blank')}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center"
+                    className="px-4 py-2 bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30 rounded-btn font-semibold text-xs flex items-center transition-all"
                   >
-                    <Globe className="h-4 w-4 mr-2" />
+                    <Globe className="h-4 w-4 mr-2 text-iq-teal" />
                     Visit Website
-                  </Button>
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                <div className="text-sm text-gray-500">
+              <div className="flex items-center justify-between pt-6 border-t border-iq-sage/30">
+                <div className="text-xs text-iq-faint">
                   Last updated: {new Date().toLocaleDateString()}
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Button
+                  <button
                     onClick={closeCompanyModal}
-                    variant="outline"
-                    size="sm"
+                    className="px-4 py-2 bg-iq-bg border border-iq-sage/50 text-iq-navy hover:bg-iq-tealsoft/30 rounded-btn font-semibold text-xs transition-all"
                   >
                     Close
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => handleViewJobs(selectedCompany)}
-                    variant="primary"
-                    size="sm"
-                    className="flex items-center"
+                    className="px-6 py-2 bg-iq-teal text-white hover:bg-iq-tealdark shadow-cta rounded-btn font-bold text-xs flex items-center transition-all"
                   >
                     Apply Now
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

@@ -310,9 +310,9 @@ const Home: React.FC = () => {
 
   if (user?.role === 'recruiter') {
     return (
-      <div className="overflow-hidden">
+      <div className="overflow-hidden bg-iq-bg">
         {/* Recruiter Hero Section */}
-        <section className="relative min-h-[85vh] flex items-center bg-gradient-to-b from-slate-50 via-white to-slate-50">
+        <section className="relative min-h-[85vh] flex items-center iq-watercolor">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="text-center">
               <motion.div
@@ -320,17 +320,17 @@ const Home: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-bold text-indigo-700 mb-6">
-                  <Shield className="w-3.5 h-3.5 text-indigo-600" />
+                <div className="inline-flex items-center space-x-2 px-3 py-1 bg-iq-tealsoft border border-iq-sage rounded-full text-xs font-bold text-iq-teal mb-6">
+                  <Shield className="w-3.5 h-3.5 text-iq-teal" />
                   <span>Recruiter Portal • Hire Pre-Screened Fresher Talent</span>
                 </div>
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-iq-navy mb-6">
                   Hire the Next Generation of{' '}
-                  <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  <span className="font-brush text-iq-teal">
                     Top Talent
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl text-iq-muted mb-8 max-w-4xl mx-auto leading-relaxed">
                   Post internships, review pre-screened applications with verified Skill Graphs, 
                   and fast-track entry-level hiring with zero friction.
                 </p>
@@ -344,16 +344,16 @@ const Home: React.FC = () => {
               >
                 <Link
                   to="/dashboard?action=post"
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center shadow-lg shadow-indigo-200"
+                  className="bg-iq-teal text-white px-8 py-4 rounded-btn font-bold text-lg hover:bg-iq-tealdark hover:shadow-cta hover:scale-105 transition-all duration-200 flex items-center justify-center"
                 >
                   <Rocket className="mr-2 h-5 w-5" />
                   Post an Internship
                 </Link>
                 <Link
                   to="/dashboard"
-                  className="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg border-2 border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+                  className="bg-iq-surface text-iq-navy px-8 py-4 rounded-btn font-bold text-lg border-2 border-iq-sage hover:border-iq-teal hover:shadow-nav transition-all duration-200 flex items-center justify-center"
                 >
-                  <Users className="mr-2 h-5 w-5 text-indigo-600" />
+                  <Users className="mr-2 h-5 w-5 text-iq-teal" />
                   View Applicant Pipeline
                 </Link>
               </motion.div>
@@ -366,11 +366,11 @@ const Home: React.FC = () => {
                 className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8"
               >
                 {recruiterStats.map((stat, index) => (
-                  <div key={index} className="text-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="text-3xl md:text-4xl font-extrabold text-indigo-600 mb-2">
+                  <div key={index} className="text-center p-6 bg-iq-surface/80 backdrop-blur-sm rounded-card border border-iq-sage/40 shadow-nav">
+                    <div className="text-3xl md:text-4xl font-extrabold text-iq-teal mb-2">
                       {stat.number}
                     </div>
-                    <div className="text-gray-600 font-medium text-sm">{stat.label}</div>
+                    <div className="text-iq-muted font-medium text-sm">{stat.label}</div>
                   </div>
                 ))}
               </motion.div>
@@ -379,7 +379,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Recruiter Features Section */}
-        <section className="py-20 bg-white border-t border-slate-100">
+        <section className="py-20 bg-iq-surface border-t border-iq-sage/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -387,10 +387,10 @@ const Home: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
                 Built to Streamline Fresher Hiring
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-iq-muted max-w-3xl mx-auto">
                 Everything you need to source, evaluate, and hire ambitious early-career talent with confidence
               </p>
             </motion.div>
@@ -402,13 +402,13 @@ const Home: React.FC = () => {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  className="text-center p-6 rounded-card bg-iq-bg border border-iq-sage/30 hover:shadow-nav hover:scale-105 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-md">
+                  <div className="w-16 h-16 bg-iq-teal rounded-panel flex items-center justify-center mx-auto mb-4 text-white">
                     <feat.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{feat.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{feat.description}</p>
+                  <h3 className="text-lg font-semibold text-iq-navy mb-2">{feat.title}</h3>
+                  <p className="text-iq-muted text-sm leading-relaxed">{feat.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -416,58 +416,58 @@ const Home: React.FC = () => {
         </section>
 
         {/* Recruiter Quick Management Row */}
-        <section className="py-20 bg-slate-50">
+        <section className="py-20 bg-iq-bg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="bg-iq-surface p-8 rounded-card border border-iq-sage/30 shadow-nav space-y-4 flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-iq-mint text-iq-teal rounded-panel flex items-center justify-center mb-4">
                     <Briefcase className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">Manage Your Listings</h3>
-                  <p className="text-slate-600 text-sm mt-2">
+                  <h3 className="text-xl font-bold text-iq-navy">Manage Your Listings</h3>
+                  <p className="text-iq-muted text-sm mt-2">
                     Review your currently open and closed internship postings, edit requirements, and track applicant volume.
                   </p>
                 </div>
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-800"
+                  className="inline-flex items-center text-sm font-bold text-iq-teal hover:text-iq-tealdark"
                 >
                   Go to Listings <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="bg-iq-surface p-8 rounded-card border border-iq-sage/30 shadow-nav space-y-4 flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-iq-lavender text-iq-teal rounded-panel flex items-center justify-center mb-4">
                     <Users className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">Candidate Pipeline</h3>
-                  <p className="text-slate-600 text-sm mt-2">
+                  <h3 className="text-xl font-bold text-iq-navy">Candidate Pipeline</h3>
+                  <p className="text-iq-muted text-sm mt-2">
                     Screen applicants by stage (Applied, Shortlisted, Interviewed, Selected) and view submitted resumes directly.
                   </p>
                 </div>
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center text-sm font-bold text-purple-600 hover:text-purple-800"
+                  className="inline-flex items-center text-sm font-bold text-iq-teal hover:text-iq-tealdark"
                 >
                   Review Candidates <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="bg-iq-surface p-8 rounded-card border border-iq-sage/30 shadow-nav space-y-4 flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-iq-blue text-iq-teal rounded-panel flex items-center justify-center mb-4">
                     <Building className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">Company Brand & Profile</h3>
-                  <p className="text-slate-600 text-sm mt-2">
+                  <h3 className="text-xl font-bold text-iq-navy">Company Brand & Profile</h3>
+                  <p className="text-iq-muted text-sm mt-2">
                     Update your company description, website URL, and logo to attract high-intent candidates.
                   </p>
                 </div>
                 <Link
                   to="/profile"
-                  className="inline-flex items-center text-sm font-bold text-emerald-600 hover:text-emerald-800"
+                  className="inline-flex items-center text-sm font-bold text-iq-green hover:text-iq-tealdark"
                 >
                   Edit Company Profile <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
@@ -477,25 +477,25 @@ const Home: React.FC = () => {
         </section>
 
         {/* Recruiter CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white">
+        <section className="py-20 bg-iq-navy text-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <h2 className="text-3xl md:text-5xl font-black">
               Ready to Build Your High-Performing Team?
             </h2>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+            <p className="text-lg text-iq-faint max-w-2xl mx-auto">
               Post an internship in under 2 minutes and connect with qualified freshers who match your skill criteria.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link
                 to="/dashboard?action=post"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition-all inline-flex items-center justify-center"
+                className="bg-iq-teal hover:bg-iq-tealdark text-white px-8 py-4 rounded-btn font-bold text-lg shadow-cta hover:scale-105 transition-all inline-flex items-center justify-center"
               >
                 Post an Internship Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
               <Link
                 to="/dashboard"
-                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all inline-flex items-center justify-center"
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 rounded-btn font-bold text-lg transition-all inline-flex items-center justify-center"
               >
                 Open Recruiter Dashboard
               </Link>
@@ -508,9 +508,23 @@ const Home: React.FC = () => {
 
   // STUDENT VIEW (UNCHANGED)
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden bg-iq-bg">
+      <style>{`
+        /* Override old navbar logo gradients with IQ colors since we cannot modify Header.tsx */
+        header .from-indigo-600.via-purple-600.to-pink-600 {
+          background: #0f1b3d !important; /* iq-navy */
+        }
+        header .bg-clip-text.from-indigo-600.via-purple-600.to-pink-600 {
+          background: none !important;
+          color: #0f1b3d !important;
+          -webkit-text-fill-color: #0f1b3d !important;
+        }
+        header .from-indigo-600.via-purple-600.to-pink-600 svg {
+          color: #0e8a85 !important; /* iq-teal */
+        }
+      `}</style>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center">
+      <section className="relative min-h-screen flex items-center iq-watercolor">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <motion.div
@@ -518,15 +532,15 @@ const Home: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-iq-navy mb-6">
                 Empowering{' '}
-                <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+                <span className="font-hand text-iq-green">
                   Freshers
                 </span>
                 <br />
                 Smarter Discovery
               </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto">
+              <p className="text-xl md:text-2xl text-iq-muted mb-8 max-w-4xl mx-auto">
                 Connect with relevant opportunities through AI-powered matching, personalized career guidance, 
                 and comprehensive support for building your professional presence.
               </p>
@@ -540,14 +554,14 @@ const Home: React.FC = () => {
             >
               <Link
                 to="/internships"
-                className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center"
+                className="bg-iq-teal text-white px-8 py-4 rounded-btn font-semibold text-lg hover:bg-iq-tealdark hover:shadow-cta hover:scale-105 transition-all duration-200 flex items-center justify-center"
               >
                 <Search className="mr-2 h-5 w-5" />
                 Explore Internships
               </Link>
               <Link
                 to="/career-guidance"
-                className="bg-white text-gray-900 px-8 py-4 rounded-lg font-medium text-lg border-2 border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+                className="bg-iq-surface text-iq-teal px-8 py-4 rounded-btn font-semibold text-lg border-2 border-iq-teal/30 hover:border-iq-teal hover:shadow-nav transition-all duration-200 flex items-center justify-center"
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Get Career Guidance
@@ -559,14 +573,16 @@ const Home: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20"
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
             >
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
+                <div key={index} className={`text-center p-5 rounded-card border border-iq-sage/40 shadow-nav backdrop-blur-sm ${
+                  index === 0 ? 'bg-iq-mint/60' : index === 1 ? 'bg-iq-lavender/50' : index === 2 ? 'bg-iq-blue/50' : 'bg-iq-butter/50'
+                }`}>
+                  <div className="text-3xl md:text-4xl font-bold text-iq-teal mb-2">
                     {stat.number}
                   </div>
-                  <div className="text-gray-600 font-medium">{stat.label}</div>
+                  <div className="text-iq-muted font-medium">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -575,18 +591,18 @@ const Home: React.FC = () => {
 
         {/* Floating Elements */}
         <div className="absolute top-20 left-10 animate-bounce-subtle">
-          <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full opacity-20"></div>
+          <div className="w-16 h-16 bg-iq-sage rounded-full opacity-30"></div>
         </div>
         <div className="absolute top-40 right-20 animate-bounce-subtle" style={{ animationDelay: '1s' }}>
-          <div className="w-12 h-12 bg-gradient-to-r from-secondary-500 to-primary-500 rounded-full opacity-30"></div>
+          <div className="w-12 h-12 bg-iq-blue rounded-full opacity-40"></div>
         </div>
         <div className="absolute bottom-40 left-20 animate-bounce-subtle" style={{ animationDelay: '2s' }}>
-          <div className="w-20 h-20 bg-gradient-to-r from-accent-500 to-secondary-500 rounded-full opacity-15"></div>
+          <div className="w-20 h-20 bg-iq-lavender rounded-full opacity-30"></div>
         </div>
       </section>
 
       {/* Core Services */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-iq-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -594,10 +610,10 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
               Complete Career Support Ecosystem
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-iq-muted max-w-3xl mx-auto">
               From skill matching to interview preparation, we provide everything you need to launch your career successfully
             </p>
           </motion.div>
@@ -610,14 +626,14 @@ const Home: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => navigate(service.link)}
-                className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-100 hover:shadow-xl hover:scale-105 transition-all duration-300 group cursor-pointer"
+                className="bg-iq-surface p-6 rounded-card border border-iq-sage/30 hover:shadow-nav hover:scale-105 transition-all duration-300 group cursor-pointer"
               >
-                <div className="w-14 h-14 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 bg-iq-teal rounded-panel flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <service.icon className="h-7 w-7 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h3>
-                <p className="text-gray-600 mb-4">{service.description}</p>
-                <div className="flex items-center text-primary-600 font-medium group-hover:text-accent-600 transition-colors">
+                <h3 className="text-xl font-semibold text-iq-navy mb-2">{service.title}</h3>
+                <p className="text-iq-muted mb-4">{service.description}</p>
+                <div className="flex items-center text-iq-teal font-medium group-hover:text-iq-green transition-colors">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </div>
               </motion.div>
@@ -627,7 +643,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-primary-50 to-accent-50">
+      <section className="py-20 bg-iq-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -635,10 +651,10 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
               Why Choose FresherJobs?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-iq-muted max-w-3xl mx-auto">
               We understand the unique challenges freshers face and provide comprehensive solutions for career success
             </p>
           </motion.div>
@@ -650,13 +666,13 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center p-6 rounded-2xl bg-white border border-gray-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
+                className="text-center p-6 rounded-card bg-iq-surface border border-iq-sage/30 hover:shadow-nav hover:scale-105 transition-all duration-300"
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-iq-teal rounded-panel flex items-center justify-center mx-auto mb-4">
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-iq-navy mb-2">{feature.title}</h3>
+                <p className="text-iq-muted text-sm">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -664,7 +680,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Trending Jobs Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-iq-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -673,15 +689,15 @@ const Home: React.FC = () => {
             className="text-center mb-16"
           >
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <TrendingIcon className="h-8 w-8 text-orange-500" />
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <TrendingIcon className="h-8 w-8 text-iq-green" />
+              <h2 className="text-3xl md:text-4xl font-bold text-iq-navy">
                 Trending Opportunities
               </h2>
-              <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-iq-butter text-iq-navy px-3 py-1 rounded-full text-sm font-medium">
                 Hot
               </span>
             </div>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-iq-muted max-w-3xl mx-auto">
               Discover the most popular and urgent job opportunities right now
             </p>
           </motion.div>
@@ -694,40 +710,40 @@ const Home: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => navigate('/internships')}
-                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 cursor-pointer group"
+                className="bg-iq-surface border border-iq-sage/30 rounded-card p-6 hover:shadow-nav hover:border-iq-teal/30 transition-all duration-300 cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-4">
                   <img
                     src={job.logo}
                     alt={job.company}
-                    className="w-12 h-12 rounded-lg object-cover"
+                    className="w-12 h-12 rounded-panel object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company)}&background=4285F4&color=fff&size=48&font-size=0.4&bold=true`;
                     }}
                   />
                   {job.urgent && (
-                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-iq-danger/10 text-iq-danger px-2 py-1 rounded-tag text-xs font-medium">
                       Urgent
                     </span>
                   )}
                 </div>
                 
-                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                <h3 className="font-semibold text-iq-navy mb-2 group-hover:text-iq-teal transition-colors">
                   {job.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">{job.company}</p>
+                <p className="text-sm text-iq-muted mb-3">{job.company}</p>
                 
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-500">
+                  <div className="flex items-center text-sm text-iq-faint">
                     <MapPin className="h-4 w-4 mr-1" />
                     {job.location}
                   </div>
-                  <div className="flex items-center text-sm text-gray-500">
+                  <div className="flex items-center text-sm text-iq-faint">
                     <DollarSign className="h-4 w-4 mr-1" />
                     {job.salary}
                   </div>
-                  <div className="flex items-center text-sm text-gray-500">
+                  <div className="flex items-center text-sm text-iq-faint">
                     <Clock className="h-4 w-4 mr-1" />
                     {job.posted}
                   </div>
@@ -737,29 +753,28 @@ const Home: React.FC = () => {
                   {job.skills.slice(0, 2).map((skill) => (
                     <span
                       key={skill}
-                      className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-full"
+                      className="px-2 py-1 bg-iq-mint text-iq-navy text-xs rounded-tag"
                     >
                       {skill}
                     </span>
                   ))}
                   {job.skills.length > 2 && (
-                    <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-iq-blue text-iq-faint text-xs rounded-tag">
                       +{job.skills.length - 2}
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">{job.type}</span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="flex items-center"
+                  <span className="text-xs text-iq-faint">{job.type}</span>
+                  <button
+                    type="button"
+                    className="flex items-center px-3 py-2 text-sm font-medium bg-iq-navy text-white hover:bg-iq-teal rounded-tag transition-all duration-200"
                     onClick={() => navigate('/internships')}
                   >
                     Apply Now
                     <ArrowRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -773,7 +788,7 @@ const Home: React.FC = () => {
           >
             <Link
               to="/internships"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all duration-200"
+              className="inline-flex items-center px-6 py-3 bg-iq-teal text-white rounded-btn font-medium hover:bg-iq-tealdark hover:shadow-cta hover:scale-105 transition-all duration-200"
             >
               View All Internships
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -783,7 +798,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Skill Categories Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-20 bg-iq-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -791,10 +806,10 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
               Explore Skills & Technologies
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-iq-muted max-w-3xl mx-auto">
               Discover in-demand skills and technologies that can boost your career
             </p>
           </motion.div>
@@ -806,19 +821,19 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 cursor-pointer group"
+                className="bg-iq-surface border border-iq-sage/30 rounded-card p-6 hover:shadow-nav hover:border-iq-teal/30 transition-all duration-300 cursor-pointer group"
               >
-                <div className={`w-14 h-14 ${category.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-14 h-14 ${category.color} rounded-panel flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <category.icon className="h-7 w-7 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{category.name}</h3>
+                <h3 className="text-lg font-semibold text-iq-navy mb-3">{category.name}</h3>
                 <div className="space-y-2">
                   {category.skills.map((skill) => (
                     <div
                       key={skill}
-                      className="flex items-center text-sm text-gray-600 hover:text-primary-600 transition-colors"
+                      className="flex items-center text-sm text-iq-muted hover:text-iq-teal transition-colors"
                     >
-                      <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 mr-2 text-iq-green" />
                       {skill}
                     </div>
                   ))}
@@ -830,7 +845,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-20 bg-iq-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -838,10 +853,10 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
               Success Stories
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-iq-muted max-w-2xl mx-auto">
               Hear from freshers who transformed their careers with our comprehensive support
             </p>
           </motion.div>
@@ -853,17 +868,17 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-xl transition-all duration-300"
+                className="bg-iq-surface p-8 rounded-card border border-iq-sage/30 hover:shadow-nav transition-all duration-300"
               >
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
+                <p className="text-iq-muted mb-6 italic">"{testimonial.content}"</p>
                 <div>
-                  <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                  <h4 className="font-semibold text-iq-navy">{testimonial.name}</h4>
+                  <p className="text-sm text-iq-faint">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}
@@ -872,7 +887,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary-600 to-accent-600">
+      <section className="py-20 bg-iq-navy">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -882,20 +897,20 @@ const Home: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Ready to Transform Your Career Journey?
             </h2>
-            <p className="text-xl text-primary-100 mb-8">
+            <p className="text-xl text-iq-faint mb-8">
               Join thousands of freshers who found success with personalized guidance and smart matching
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/internships"
-                className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200 inline-flex items-center justify-center"
+                className="bg-iq-teal text-white px-8 py-4 rounded-btn font-semibold text-lg hover:bg-iq-tealdark hover:shadow-cta hover:scale-105 transition-all duration-200 inline-flex items-center justify-center"
               >
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
               <Link
                 to="/career-guidance"
-                className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-200 inline-flex items-center justify-center"
+                className="bg-transparent border-2 border-white/30 text-white px-8 py-4 rounded-btn font-semibold text-lg hover:bg-white hover:text-iq-navy transition-all duration-200 inline-flex items-center justify-center"
               >
                 Get Free Consultation
                 <MessageCircle className="ml-2 h-5 w-5" />

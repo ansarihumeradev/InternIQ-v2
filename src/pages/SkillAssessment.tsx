@@ -566,27 +566,27 @@ const SkillAssessment: React.FC = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Hero Banner */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+        <div className="bg-white rounded-card border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-8 sm:p-12 relative overflow-hidden">
           <div className="relative z-10 max-w-3xl space-y-4">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold text-indigo-200 backdrop-blur-md">
-              <Award className="w-4 h-4 text-emerald-400" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-teal-50 border border-teal-100 rounded-full text-xs font-semibold text-teal-700">
+              <Award className="w-4 h-4 text-teal-500" />
               <span>Verified Skill Certification</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight">
-              Skill Assessment & Certifications
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-800">
+              Skill Assessment &amp; Certifications
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
               Validate your technical competencies with industry-aligned interactive assessments. Earn verified badges that sync directly to your profile and match with top tech employers.
             </p>
           </div>
 
-          <div className="absolute right-[-20px] bottom-[-20px] opacity-10 hidden lg:block">
-            <Trophy className="w-80 h-80 text-white" />
+          <div className="absolute right-[-20px] bottom-[-20px] opacity-5 hidden lg:block">
+            <Trophy className="w-80 h-80 text-teal-600" />
           </div>
         </div>
 
         {/* Search & Category Filter Controls */}
-        <div className="bg-white rounded-2xl p-6 shadow-md border border-slate-200/80 space-y-4">
+        <div className="bg-white rounded-card p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 space-y-4">
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             
             {/* Search Input */}
@@ -597,7 +597,7 @@ const SkillAssessment: React.FC = () => {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Search assessments (e.g., React, Python, SQL, Figma)..."
-                className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-700"
               />
               {searchTerm && (
                 <button onClick={() => setSearchTerm('')} className="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
@@ -612,10 +612,10 @@ const SkillAssessment: React.FC = () => {
                 <button
                   key={cat}
                   onClick={() => setCategoryFilter(cat === 'All' ? '' : cat)}
-                  className={`px-3 py-2 rounded-xl transition-all flex-shrink-0 ${
+                  className={`px-3 py-2 rounded-tag transition-all flex-shrink-0 ${
                     (cat === 'All' && !categoryFilter) || categoryFilter === cat
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-teal-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-teal-50 hover:text-teal-700'
                   }`}
                 >
                   {cat}
@@ -637,21 +637,21 @@ const SkillAssessment: React.FC = () => {
                 key={item.id}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                className="bg-white rounded-card border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.14)] transition-all duration-300 flex flex-col justify-between overflow-hidden group"
               >
                 <div className="p-6 space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 bg-teal-50 border border-teal-100 rounded-xl flex items-center justify-center text-teal-600 group-hover:scale-105 transition-transform">
                       <IconComp className="w-6 h-6" />
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className={`px-2.5 py-0.5 text-[10px] font-extrabold uppercase rounded-full ${
+                      <span className={`px-2.5 py-0.5 text-[10px] font-extrabold uppercase rounded-tag ${
                         item.difficulty === 'Beginner'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-teal-50 text-teal-700 border border-teal-100'
                           : item.difficulty === 'Intermediate'
-                          ? 'bg-indigo-100 text-indigo-800'
-                          : 'bg-amber-100 text-amber-800'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-100'
+                          : 'bg-red-50 text-red-600 border border-red-100'
                       }`}>
                         {item.difficulty}
                       </span>
@@ -659,7 +659,7 @@ const SkillAssessment: React.FC = () => {
                       <button
                         onClick={() => handleBookmark(item)}
                         className={`p-2 rounded-xl border transition-colors ${
-                          isSaved ? 'bg-rose-50 border-rose-200 text-rose-600' : 'border-slate-200 text-slate-400 hover:text-slate-600'
+                          isSaved ? 'bg-rose-50 border-rose-200 text-rose-500' : 'border-slate-200 text-slate-400 hover:text-teal-600 hover:border-teal-200'
                         }`}
                       >
                         <Heart className="w-4 h-4" fill={isSaved ? 'currentColor' : 'none'} />
@@ -668,7 +668,7 @@ const SkillAssessment: React.FC = () => {
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base group-hover:text-indigo-600 transition-colors">
+                    <h3 className="font-bold text-slate-800 text-base group-hover:text-teal-600 transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
@@ -676,7 +676,7 @@ const SkillAssessment: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 pt-2 border-t border-slate-100">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-500 pt-2 border-t border-slate-100">
                     <div className="flex items-center space-x-1.5">
                       <Clock className="w-3.5 h-3.5 text-slate-400" />
                       <span>{item.duration}</span>
@@ -690,7 +690,7 @@ const SkillAssessment: React.FC = () => {
                       <span>{item.rating} rating</span>
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <Target className="w-3.5 h-3.5 text-emerald-500" />
+                      <Target className="w-3.5 h-3.5 text-teal-500" />
                       <span>{item.passPercentage}% Pass Mark</span>
                     </div>
                   </div>
@@ -699,8 +699,8 @@ const SkillAssessment: React.FC = () => {
                 <div className="p-4 bg-slate-50 border-t border-slate-100">
                   <Button
                     onClick={() => startQuiz(item)}
-                    variant="primary"
-                    className="w-full justify-center text-xs py-2.5 shadow-md shadow-indigo-200"
+                    variant="ghost"
+                    className="w-full justify-center text-xs py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-btn"
                   >
                     <Play className="w-3.5 h-3.5 mr-1.5 fill-current" />
                     <span>Take Assessment</span>
@@ -712,11 +712,11 @@ const SkillAssessment: React.FC = () => {
         </div>
 
         {filteredAssessments.length === 0 && (
-          <div className="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 space-y-3">
+          <div className="bg-white rounded-card p-12 text-center border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] space-y-3">
             <HelpCircle className="w-12 h-12 text-slate-300 mx-auto" />
             <h3 className="text-lg font-bold text-slate-800">No Assessments Found</h3>
             <p className="text-xs text-slate-500">Try adjusting your search query or selecting another category.</p>
-            <Button onClick={() => { setSearchTerm(''); setCategoryFilter(''); }} variant="outline" size="sm">
+            <Button onClick={() => { setSearchTerm(''); setCategoryFilter(''); }} variant="ghost" size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-btn">
               Clear Filters
             </Button>
           </div>
@@ -732,18 +732,18 @@ const SkillAssessment: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col"
+              className="bg-white rounded-card shadow-[0_20px_60px_rgb(0,0,0,0.2)] max-w-2xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col"
             >
               {/* Modal Header */}
-              <div className="p-6 bg-slate-900 text-white flex items-center justify-between">
+              <div className="p-6 bg-teal-600 text-white flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-extrabold uppercase bg-indigo-500/30 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+                  <span className="text-[10px] font-extrabold uppercase bg-white/20 text-white px-2.5 py-0.5 rounded-tag border border-white/20">
                     {activeAssessment.category} • {activeAssessment.difficulty}
                   </span>
                   <h3 className="text-lg font-bold mt-1">{activeAssessment.title}</h3>
                 </div>
 
-                <button onClick={closeQuiz} className="text-slate-400 hover:text-white p-1 rounded-lg">
+                <button onClick={closeQuiz} className="text-white/70 hover:text-white p-1 rounded-lg transition-colors">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -756,11 +756,11 @@ const SkillAssessment: React.FC = () => {
                     <div className="space-y-1">
                       <div className="flex justify-between text-[11px] font-semibold text-slate-500">
                         <span>Question {currentQuestionIndex + 1} of {activeAssessment.questions.length}</span>
-                        <span>{Math.round(((currentQuestionIndex + 1) / activeAssessment.questions.length) * 100)}%</span>
+                        <span className="text-teal-600">{Math.round(((currentQuestionIndex + 1) / activeAssessment.questions.length) * 100)}%</span>
                       </div>
                       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-indigo-600 h-full transition-all duration-300"
+                          className="bg-teal-500 h-full transition-all duration-300"
                           style={{ width: `${((currentQuestionIndex + 1) / activeAssessment.questions.length) * 100}%` }}
                         />
                       </div>
@@ -773,7 +773,7 @@ const SkillAssessment: React.FC = () => {
 
                       return (
                         <div className="space-y-4">
-                          <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                          <h4 className="text-sm sm:text-base font-bold text-slate-800 leading-snug">
                             {q.question}
                           </h4>
 
@@ -787,13 +787,13 @@ const SkillAssessment: React.FC = () => {
                                   onClick={() => handleOptionSelect(currentQuestionIndex, optIdx)}
                                   className={`w-full p-3.5 rounded-xl border text-left transition-all flex items-center justify-between font-medium ${
                                     isSelected
-                                      ? 'bg-indigo-50 border-indigo-600 text-indigo-900 shadow-sm'
-                                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                                      ? 'bg-teal-50 border-teal-500 text-teal-900 shadow-sm'
+                                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-teal-200'
                                   }`}
                                 >
                                   <span>{opt}</span>
                                   <div className={`w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold ${
-                                    isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300 text-slate-400'
+                                    isSelected ? 'bg-teal-600 border-teal-600 text-white' : 'border-slate-300 text-slate-400'
                                   }`}>
                                     {String.fromCharCode(65 + optIdx)}
                                   </div>
@@ -818,32 +818,32 @@ const SkillAssessment: React.FC = () => {
                         </div>
 
                         <div className="space-y-2">
-                          <h3 className="text-2xl font-black text-slate-900">
+                          <h3 className="text-2xl font-black text-slate-800">
                             {score.passed ? 'Congratulations! Assessment Passed 🎉' : 'Assessment Completed'}
                           </h3>
-                          <p className="text-slate-600 text-sm">
-                            You scored <span className="font-bold text-indigo-600">{score.percentage}%</span> ({score.correct}/{score.total} correct).
+                          <p className="text-slate-500 text-sm">
+                            You scored <span className="font-bold text-teal-600">{score.percentage}%</span> ({score.correct}/{score.total} correct).
                             Pass score threshold was {activeAssessment.passPercentage}%.
                           </p>
                         </div>
 
                         {score.passed && (
-                          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-800 text-left space-y-1">
+                          <div className="p-4 bg-teal-50 border border-teal-100 rounded-xl text-teal-800 text-left space-y-1">
                             <div className="flex items-center font-bold text-xs">
-                              <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" />
+                              <CheckCircle2 className="w-4 h-4 mr-1.5 text-teal-600" />
                               <span>Verified Skill Badge Added</span>
                             </div>
-                            <p className="text-[11px] text-emerald-700">
+                            <p className="text-[11px] text-teal-700">
                               Your proficiency level for {activeAssessment.title} has been updated in your Skill Graph.
                             </p>
                           </div>
                         )}
 
                         <div className="pt-4 border-t border-slate-100 flex items-center justify-center space-x-3">
-                          <Button onClick={() => startQuiz(activeAssessment)} variant="outline">
+                          <Button onClick={() => startQuiz(activeAssessment)} variant="ghost" className="bg-white border border-teal-600 text-teal-600 hover:bg-teal-50 rounded-btn">
                             <RotateCcw className="w-4 h-4 mr-1.5" /> Retake Test
                           </Button>
-                          <Button onClick={closeQuiz} variant="primary">
+                          <Button onClick={closeQuiz} variant="ghost" className="bg-teal-600 hover:bg-teal-700 text-white rounded-btn">
                             Done
                           </Button>
                         </div>
@@ -859,7 +859,7 @@ const SkillAssessment: React.FC = () => {
                   <button
                     onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                     disabled={currentQuestionIndex === 0}
-                    className="px-4 py-2 font-semibold text-slate-500 hover:text-slate-800 disabled:opacity-40 text-xs"
+                    className="px-4 py-2 font-semibold text-slate-500 hover:text-teal-700 disabled:opacity-40 text-xs transition-colors"
                   >
                     Previous
                   </button>
@@ -868,7 +868,7 @@ const SkillAssessment: React.FC = () => {
                     {currentQuestionIndex < activeAssessment.questions.length - 1 ? (
                       <button
                         onClick={() => setCurrentQuestionIndex(prev => Math.min(activeAssessment.questions.length - 1, prev + 1))}
-                        className="px-5 py-2 bg-indigo-600 text-white font-bold rounded-xl text-xs hover:bg-indigo-700 shadow-md shadow-indigo-200"
+                        className="px-5 py-2 bg-teal-600 text-white font-bold rounded-btn text-xs hover:bg-teal-700 transition-colors"
                       >
                         Next Question
                       </button>
@@ -876,7 +876,7 @@ const SkillAssessment: React.FC = () => {
                       <button
                         onClick={handleSubmitQuiz}
                         disabled={submittingScore}
-                        className="px-6 py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs hover:bg-emerald-700 shadow-md shadow-emerald-200"
+                        className="px-6 py-2 bg-teal-600 text-white font-bold rounded-btn text-xs hover:bg-teal-700 disabled:opacity-50 transition-colors"
                       >
                         {submittingScore ? 'Saving Score...' : 'Submit Assessment'}
                       </button>
