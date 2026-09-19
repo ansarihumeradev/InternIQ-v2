@@ -74,7 +74,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 234,
       author: 'Sarah Johnson',
       image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/career-guidance',
+      url: 'https://www.youtube.com/watch?v=zoGZQatkqKg',
       tags: ['Behavioral', 'STAR Method', 'Confidence'],
       difficulty: 'beginner'
     },
@@ -89,7 +89,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 156,
       author: 'Michael Chen',
       image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/internships',
+      url: 'https://www.freecodecamp.org/news/how-to-prep-for-technical-interviews-guide-for-web-devs',
       tags: ['Algorithms', 'Data Structures', 'System Design'],
       difficulty: 'advanced'
     },
@@ -104,7 +104,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 89,
       author: 'Emily Rodriguez',
       image: 'https://images.pexels.com/photos/590020/pexels-photo-590020.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/dashboard',
+      url: 'https://www.pramp.com',
       tags: ['Practice', 'Feedback', 'Real-time'],
       difficulty: 'intermediate'
     },
@@ -119,7 +119,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 78,
       author: 'David Wilson',
       image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/career-guidance',
+      url: 'https://www.cake.me/resources/interview-guide/interview-body-language-tips',
       tags: ['Communication', 'Body Language', 'Confidence'],
       difficulty: 'beginner'
     },
@@ -134,7 +134,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 112,
       author: 'Lisa Thompson',
       image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/internships',
+      url: 'https://www.youtube.com/watch?v=jDCxSKUeo6U',
       tags: ['Salary', 'Negotiation', 'Benefits'],
       difficulty: 'intermediate'
     },
@@ -149,7 +149,7 @@ const InterviewPrep: React.FC = () => {
       reviews: 167,
       author: 'Alex Kumar',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop',
-      route: '/companies',
+      url: 'https://www.8x8.com/blog/8-ways-to-properly-research-a-company-before-your-interview',
       tags: ['Research', 'Culture', 'Company Knowledge'],
       difficulty: 'beginner'
     }
@@ -234,9 +234,7 @@ const InterviewPrep: React.FC = () => {
       title: 'Opening ' + resource.title,
       message: `Navigating to ${resource.title}`
     });
-    if (resource.route) {
-      navigate(resource.route);
-    } else if (resource.url) {
+    if (resource.url) {
       window.open(resource.url, '_blank');
     }
   };
