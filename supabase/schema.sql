@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   education TEXT DEFAULT '',
   resume_url TEXT DEFAULT '',
   github_username TEXT DEFAULT '',
+  summary TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   last_login TIMESTAMPTZ DEFAULT NOW()
 );
@@ -123,7 +124,7 @@ CREATE TABLE IF NOT EXISTS public.applications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   listing_id UUID NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
   student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-  status TEXT DEFAULT 'applied' CHECK (status IN ('applied', 'shortlisted', 'rejected', 'selected')),
+  status TEXT DEFAULT 'applied' CHECK (status IN ('applied', 'shortlisted', 'interviewed', 'rejected', 'selected')),
   cover_letter TEXT DEFAULT '',
   resume_url TEXT DEFAULT '',
   applied_at TIMESTAMPTZ DEFAULT NOW(),

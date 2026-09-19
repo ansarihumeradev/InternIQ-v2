@@ -282,33 +282,34 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updateProfile = async (userData: Partial<User>) => {
     if (!user) return;
 
+    const payload: Record<string, any> = {};
+    if (userData.name !== undefined) payload.name = userData.name;
+    if (userData.avatar !== undefined) payload.avatar_url = userData.avatar;
+    if (userData.skills !== undefined) payload.skills = userData.skills;
+    if (userData.experience !== undefined) payload.experience = userData.experience;
+    if (userData.location !== undefined) payload.location = userData.location;
+    if (userData.phone !== undefined) payload.phone = userData.phone;
+    if (userData.linkedin !== undefined) payload.linkedin = userData.linkedin;
+    if (userData.portfolio !== undefined) payload.portfolio = userData.portfolio;
+    if (userData.education !== undefined) payload.education = userData.education;
+    if (userData.resumeUrl !== undefined) payload.resume_url = userData.resumeUrl;
+    if (userData.githubUsername !== undefined) payload.github_username = userData.githubUsername;
+    if (userData.summary !== undefined) payload.summary = userData.summary;
+
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({
-        name: userData.name,
-        avatar_url: userData.avatar,
-        skills: userData.skills,
-        experience: userData.experience,
-        location: userData.location,
-        phone: userData.phone,
-        linkedin: userData.linkedin,
-        portfolio: userData.portfolio,
-        education: userData.education,
-        resume_url: userData.resumeUrl,
-        github_username: userData.githubUsername,
-        summary: userData.summary,
-      })
+      .update(payload)
       .eq('id', user.id);
 
     if (updateError) {
       console.error('Error updating profile:', updateError);
       setError(updateError.message);
-      return;
+      throw new Error(updateError.message);
     }
 
     const updatedUser = { ...user, ...userData };
     setUser(updatedUser);
-    console.log('Profile updated:', updatedUser);
+    console.log('Profile updated successfully:', updatedUser);
   };
 
   return (
