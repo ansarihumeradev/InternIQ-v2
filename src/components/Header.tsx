@@ -12,11 +12,21 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const navigation = [
+  const studentNavigation = [
     { name: 'Home', href: '/' },
     { name: 'Internships', href: '/internships' },
     { name: 'Companies', href: '/companies' },
   ];
+
+  const recruiterNavigation = [
+    { name: 'Home', href: '/' },
+    { name: 'My Listings', href: '/dashboard' },
+    { name: 'Post Internship/Job', href: '/dashboard?action=post' },
+    { name: 'Applicants', href: '/dashboard' },
+    { name: 'Companies', href: '/companies' },
+  ];
+
+  const navigation = user?.role === 'recruiter' ? recruiterNavigation : studentNavigation;
 
   const services = [
     { name: 'Career Guidance', href: '/career-guidance', description: 'Get personalized mentorship' },
@@ -79,36 +89,38 @@ const Header: React.FC = () => {
                 </Link>
               ))}
               
-              {/* Services Dropdown */}
-              <div className="relative">
-                <button
-                  onMouseEnter={() => setIsServicesOpen(true)}
-                  onMouseLeave={() => setIsServicesOpen(false)}
-                  className="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all duration-200"
-                >
-                  Services
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                
-                {isServicesOpen && (
-                  <div
+              {/* Services Dropdown (Student Only) */}
+              {user?.role !== 'recruiter' && (
+                <div className="relative">
+                  <button
                     onMouseEnter={() => setIsServicesOpen(true)}
                     onMouseLeave={() => setIsServicesOpen(false)}
-                    className="absolute top-full left-0 mt-1 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+                    className="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all duration-200"
                   >
-                    {services.map((service) => (
-                      <Link
-                        key={service.name}
-                        to={service.href}
-                        className="block px-4 py-3 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="font-medium text-gray-900">{service.name}</div>
-                        <div className="text-sm text-gray-500">{service.description}</div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    Services
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </button>
+                  
+                  {isServicesOpen && (
+                    <div
+                      onMouseEnter={() => setIsServicesOpen(true)}
+                      onMouseLeave={() => setIsServicesOpen(false)}
+                      className="absolute top-full left-0 mt-1 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+                    >
+                      {services.map((service) => (
+                        <Link
+                          key={service.name}
+                          to={service.href}
+                          className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="font-medium text-gray-900">{service.name}</div>
+                          <div className="text-sm text-gray-500">{service.description}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
 
             {/* User Actions */}
@@ -154,13 +166,15 @@ const Header: React.FC = () => {
                       >
                         Dashboard
                       </Link>
-                      <Link
-                        to="/dashboard?tab=saved"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between"
-                      >
-                        <span>Saved Items</span>
-                        <Bookmark className="h-4 w-4 text-indigo-500" />
-                      </Link>
+                      {user.role !== 'recruiter' && (
+                        <Link
+                          to="/dashboard?tab=saved"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between"
+                        >
+                          <span>Saved Items</span>
+                          <Bookmark className="h-4 w-4 text-indigo-500" />
+                        </Link>
+                      )}
                       <button
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
@@ -214,19 +228,21 @@ const Header: React.FC = () => {
                 </Link>
               ))}
               
-              <div className="pt-2 border-t border-gray-200">
-                <div className="text-xs font-medium text-gray-500 px-3 py-2">Services</div>
-                {services.map((service) => (
-                  <Link
-                    key={service.name}
-                    to={service.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors"
-                  >
-                    {service.name}
-                  </Link>
-                ))}
-              </div>
+              {user?.role !== 'recruiter' && (
+                <div className="pt-2 border-t border-gray-200">
+                  <div className="text-xs font-medium text-gray-500 px-3 py-2">Services</div>
+                  {services.map((service) => (
+                    <Link
+                      key={service.name}
+                      to={service.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors"
+                    >
+                      {service.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         )}

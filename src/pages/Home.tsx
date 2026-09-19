@@ -276,6 +276,237 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Recruiter specific stats
+  const recruiterStats = [
+    { number: '15K+', label: 'Verified Freshers' },
+    { number: '92%', label: 'Hiring Match Rate' },
+    { number: '< 48h', label: 'Average Time to Shortlist' },
+    { number: '2.5K+', label: 'Active Openings Filled' }
+  ];
+
+  // Recruiter specific hiring features
+  const recruiterFeatures = [
+    {
+      icon: Users2,
+      title: 'Verified Fresher Talent Pool',
+      description: 'Access pre-assessed candidates with verified skills, GitHub projects, and authenticated resumes.'
+    },
+    {
+      icon: Zap,
+      title: 'Instant Internship Posting',
+      description: 'Publish internships and entry-level positions in minutes and reach top students nationwide.'
+    },
+    {
+      icon: BarChart3,
+      title: 'End-to-End Pipeline Tracking',
+      description: 'Filter applicants, review cover letters, view resumes, and update candidate stages in real time.'
+    },
+    {
+      icon: Target,
+      title: 'Skill Graph Matching',
+      description: 'Let our intelligent Skill Graph algorithm surface candidates matching your specific tech stack.'
+    }
+  ];
+
+  if (user?.role === 'recruiter') {
+    return (
+      <div className="overflow-hidden">
+        {/* Recruiter Hero Section */}
+        <section className="relative min-h-[85vh] flex items-center bg-gradient-to-b from-slate-50 via-white to-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div className="text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="inline-flex items-center space-x-2 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-bold text-indigo-700 mb-6">
+                  <Shield className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Recruiter Portal • Hire Pre-Screened Fresher Talent</span>
+                </div>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+                  Hire the Next Generation of{' '}
+                  <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Top Talent
+                  </span>
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+                  Post internships, review pre-screened applications with verified Skill Graphs, 
+                  and fast-track entry-level hiring with zero friction.
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+              >
+                <Link
+                  to="/dashboard?action=post"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center shadow-lg shadow-indigo-200"
+                >
+                  <Rocket className="mr-2 h-5 w-5" />
+                  Post an Internship
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg border-2 border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+                >
+                  <Users className="mr-2 h-5 w-5 text-indigo-600" />
+                  View Applicant Pipeline
+                </Link>
+              </motion.div>
+
+              {/* Recruiter Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8"
+              >
+                {recruiterStats.map((stat, index) => (
+                  <div key={index} className="text-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-indigo-600 mb-2">
+                      {stat.number}
+                    </div>
+                    <div className="text-gray-600 font-medium text-sm">{stat.label}</div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Recruiter Features Section */}
+        <section className="py-20 bg-white border-t border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Built to Streamline Fresher Hiring
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Everything you need to source, evaluate, and hire ambitious early-career talent with confidence
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {recruiterFeatures.map((feat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-md">
+                    <feat.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{feat.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{feat.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Recruiter Quick Management Row */}
+        <section className="py-20 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                    <Briefcase className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Manage Your Listings</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    Review your currently open and closed internship postings, edit requirements, and track applicant volume.
+                  </p>
+                </div>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-800"
+                >
+                  Go to Listings <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Candidate Pipeline</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    Screen applicants by stage (Applied, Shortlisted, Interviewed, Selected) and view submitted resumes directly.
+                  </p>
+                </div>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center text-sm font-bold text-purple-600 hover:text-purple-800"
+                >
+                  Review Candidates <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                    <Building className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Company Brand & Profile</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    Update your company description, website URL, and logo to attract high-intent candidates.
+                  </p>
+                </div>
+                <Link
+                  to="/profile"
+                  className="inline-flex items-center text-sm font-bold text-emerald-600 hover:text-emerald-800"
+                >
+                  Edit Company Profile <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Recruiter CTA Section */}
+        <section className="py-20 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <h2 className="text-3xl md:text-5xl font-black">
+              Ready to Build Your High-Performing Team?
+            </h2>
+            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+              Post an internship in under 2 minutes and connect with qualified freshers who match your skill criteria.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Link
+                to="/dashboard?action=post"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition-all inline-flex items-center justify-center"
+              >
+                Post an Internship Now
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+              <Link
+                to="/dashboard"
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all inline-flex items-center justify-center"
+              >
+                Open Recruiter Dashboard
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // STUDENT VIEW (UNCHANGED)
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}

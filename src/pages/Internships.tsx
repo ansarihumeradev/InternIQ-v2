@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -35,6 +36,9 @@ import ReviewModal from '../components/ReviewModal';
 import ScamReportModal from '../components/ScamReportModal';
 
 const Internships: React.FC = () => {
+  const { user, isAuthenticated, updateProfile } = useAuth();
+  const { addNotification } = useNotifications();
+
   const [listings, setListings] = useState<InternshipListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -72,13 +76,16 @@ const Internships: React.FC = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
 
-  const { user, isAuthenticated, updateProfile } = useAuth();
-  const { addNotification } = useNotifications();
-
   useEffect(() => {
-    loadListings();
-    loadStudentSkillsAndApplications();
-  }, [user?.id]);
+    if (user?.role !== 'recruiter') {
+      loadListings();
+      loadStudentSkillsAndApplications();
+    }
+  }, [user?.id, user?.role]);
+
+  if (user?.role === 'recruiter') {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const loadStudentSkillsAndApplications = async () => {
     try {

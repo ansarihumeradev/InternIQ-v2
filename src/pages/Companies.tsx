@@ -204,6 +204,10 @@ const Companies: React.FC = () => {
   };
 
   const handleViewJobs = (company: Company) => {
+    if (user?.role === 'recruiter') {
+      alert('Access Restricted: Recruiter accounts cannot apply to jobs or internships. Please switch to or register a student account to apply.');
+      return;
+    }
     // Navigate to internships page with company filter
     window.location.href = `/internships?search=${encodeURIComponent(company.name)}`;
   };

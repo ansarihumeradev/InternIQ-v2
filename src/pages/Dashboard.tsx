@@ -88,6 +88,9 @@ const Dashboard: React.FC = () => {
     if (searchParams.get('tab') === 'saved') {
       setStudentTab('saved');
     }
+    if (searchParams.get('action') === 'post') {
+      setShowPostModal(true);
+    }
   }, []);
 
   useEffect(() => {
