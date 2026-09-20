@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, User, Bell, Menu, X, Briefcase, ChevronDown, Bookmark } from 'lucide-react';
+import { Menu, X, Briefcase, ChevronDown, Bookmark, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import AuthModal from './AuthModal';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -39,19 +38,17 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const handleSignInClick = () => {
-    console.log('Sign In button clicked');
-    setIsAuthModalOpen(true);
-  };
-
-  const handleAuthModalClose = () => {
-    console.log('Auth modal close requested');
-    setIsAuthModalOpen(false);
+    navigate('/login');
   };
 
   const handleLogout = () => {
     console.log('Logout clicked');
     logout();
   };
+
+  if (location.pathname === '/login' || location.pathname === '/signup') {
+    return null;
+  }
 
   return (
     <>
@@ -79,16 +76,15 @@ const Header: React.FC = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`px-3 py-2 rounded-tag text-sm font-medium transition-all duration-200 ${
-                    isActive(item.href)
+                  className={`px-3 py-2 rounded-tag text-sm font-medium transition-all duration-200 ${isActive(item.href)
                       ? 'text-teal-600 bg-teal-50'
                       : 'text-slate-600 hover:text-teal-600 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   {item.name}
                 </Link>
               ))}
-              
+
               {/* Services Dropdown (Student Only) */}
               {user?.role !== 'recruiter' && (
                 <div className="relative">
@@ -100,7 +96,7 @@ const Header: React.FC = () => {
                     Services
                     <ChevronDown className="ml-1 h-4 w-4" />
                   </button>
-                  
+
                   {isServicesOpen && (
                     <div
                       onMouseEnter={() => setIsServicesOpen(true)}
@@ -142,13 +138,12 @@ const Header: React.FC = () => {
                         <span className="text-xs font-bold text-slate-700 leading-tight">
                           {user.name}
                         </span>
-                        <span className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded-md mt-0.5 ${
-                          user.role === 'recruiter' 
-                            ? 'bg-purple-50 text-purple-600' 
+                        <span className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded-md mt-0.5 ${user.role === 'recruiter'
+                            ? 'bg-purple-50 text-purple-600'
                             : user.role === 'admin'
-                            ? 'bg-rose-50 text-rose-600'
-                            : 'bg-teal-50 text-teal-600'
-                        }`}>
+                              ? 'bg-rose-50 text-rose-600'
+                              : 'bg-teal-50 text-teal-600'
+                          }`}>
                           {user.role || 'student'}
                         </span>
                       </div>
@@ -187,7 +182,7 @@ const Header: React.FC = () => {
               ) : (
                 <button
                   onClick={handleSignInClick}
-                  className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 rounded-btn font-medium hover:shadow-md transition-all duration-200"
+                  className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all duration-200"
                 >
                   Sign In
                 </button>
@@ -218,16 +213,15 @@ const Header: React.FC = () => {
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-tag text-sm font-medium transition-colors ${
-                    isActive(item.href)
+                  className={`block px-3 py-2 rounded-tag text-sm font-medium transition-colors ${isActive(item.href)
                       ? 'text-teal-600 bg-teal-50'
                       : 'text-slate-600 hover:text-teal-600 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   {item.name}
                 </Link>
               ))}
-              
+
               {user?.role !== 'recruiter' && (
                 <div className="pt-2 border-t border-slate-100">
                   <div className="text-xs font-medium text-slate-400 px-3 py-2">Services</div>
@@ -248,7 +242,6 @@ const Header: React.FC = () => {
         )}
       </header>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={handleAuthModalClose} />
     </>
   );
 };

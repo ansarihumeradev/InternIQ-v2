@@ -13,6 +13,7 @@ import ResumeBuilder from './pages/ResumeBuilder';
 import InterviewPrep from './pages/InterviewPrep';
 import SkillAssessment from './pages/SkillAssessment';
 import TestAuth from './pages/TestAuth';
+import Login from './pages/Login';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './components/NotificationSystem';
 import BackgroundService from './services/backgroundService';
@@ -69,33 +70,44 @@ function App() {
     <NotificationProvider>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <Header />
-            <motion.main
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/jobs" element={<Navigate to="/internships" replace />} />
-                <Route path="/internships" element={<Internships />} />
-                <Route path="/companies" element={<Companies />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/career-guidance" element={<CareerGuidance />} />
-                <Route path="/mentorship" element={<CareerGuidance />} />
-                <Route path="/resume-builder" element={<ResumeBuilder />} />
-                <Route path="/interview-prep" element={<InterviewPrep />} />
-                <Route path="/skill-assessment" element={<SkillAssessment />} />
-                <Route path="/skill-development" element={<SkillAssessment />} />
-                <Route path="/online-branding" element={<CareerGuidance />} />
-                <Route path="/quick-apply" element={<Internships />} />
-                <Route path="/test-auth" element={<TestAuth />} />
-              </Routes>
-            </motion.main>
-            <Footer />
-          </div>
+          <Routes>
+            {/* Auth pages — full screen, no Header/Footer */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Login initialMode="signup" />} />
+            <Route path="/signin" element={<Navigate to="/login" replace />} />
+            <Route path="/auth/callback" element={<Navigate to="/login" replace />} />
+
+            {/* All other pages — with Header + Footer */}
+            <Route path="/*" element={
+              <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+                <Header />
+                <motion.main
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/jobs" element={<Navigate to="/internships" replace />} />
+                    <Route path="/internships" element={<Internships />} />
+                    <Route path="/companies" element={<Companies />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/career-guidance" element={<CareerGuidance />} />
+                    <Route path="/mentorship" element={<CareerGuidance />} />
+                    <Route path="/resume-builder" element={<ResumeBuilder />} />
+                    <Route path="/interview-prep" element={<InterviewPrep />} />
+                    <Route path="/skill-assessment" element={<SkillAssessment />} />
+                    <Route path="/skill-development" element={<SkillAssessment />} />
+                    <Route path="/online-branding" element={<CareerGuidance />} />
+                    <Route path="/quick-apply" element={<Internships />} />
+                    <Route path="/test-auth" element={<TestAuth />} />
+                  </Routes>
+                </motion.main>
+                <Footer />
+              </div>
+            } />
+          </Routes>
         </Router>
       </AuthProvider>
     </NotificationProvider>

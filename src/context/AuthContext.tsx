@@ -33,6 +33,7 @@ interface AuthContextType {
   clearError: () => void;
   isAuthenticated: boolean;
   checkEmailExists: (email: string) => Promise<boolean>;
+  signInWithOAuth: (provider: 'google' | 'github', options?: { redirectTo?: string; role?: 'student' | 'recruiter' }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -281,6 +282,43 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     console.log('User logged out');
   };
 
+  const signInWithOAuth = async (
+    provider: 'google' | 'github',
+    options?: { redirectTo?: string; role?: 'student' | 'recruiter' }
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      if (options?.role) {
+        try {
+          sessionStorage.setItem('interniq_oauth_role', options.role);
+        } catch (e) {
+          // ignore storage error
+        }
+      }
+
+      const redirectUrl = options?.redirectTo || `${window.location.origin}/login`;
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: provider === 'google' ? {
+            access_type: 'offline',
+            prompt: 'select_account',
+          } : undefined,
+        },
+      });
+      if (oauthError) throw oauthError;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : `Failed to sign in with ${provider}`;
+      console.error(`OAuth error (${provider}):`, errorMessage);
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updateProfile = async (userData: Partial<User>) => {
     if (!user) return;
 
@@ -326,7 +364,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       updateProfile,
       clearError,
       isAuthenticated: !!user,
-      checkEmailExists
+      checkEmailExists,
+      signInWithOAuth
     }}>
       {children}
     </AuthContext.Provider>
