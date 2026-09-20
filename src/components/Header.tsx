@@ -53,6 +53,10 @@ const Header: React.FC = () => {
     logout();
   };
 
+  if (location.pathname === '/login' || location.pathname === '/signup') {
+    return null;
+  }
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
@@ -187,10 +191,10 @@ const Header: React.FC = () => {
               ) : (
                 <button
                   onClick={handleSignInClick}
-                  className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 rounded-btn font-medium hover:shadow-md transition-all duration-200"
+                  className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all duration-200"
                 >
                   Sign In
-                </button>
+                </Link>
               )}
 
               {/* Mobile menu button */}

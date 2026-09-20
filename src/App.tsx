@@ -13,6 +13,7 @@ import ResumeBuilder from './pages/ResumeBuilder';
 import InterviewPrep from './pages/InterviewPrep';
 import SkillAssessment from './pages/SkillAssessment';
 import TestAuth from './pages/TestAuth';
+import Login from './pages/Login';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './components/NotificationSystem';
 import BackgroundService from './services/backgroundService';
@@ -92,6 +93,10 @@ function App() {
                 <Route path="/online-branding" element={<CareerGuidance />} />
                 <Route path="/quick-apply" element={<Internships />} />
                 <Route path="/test-auth" element={<TestAuth />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signin" element={<Navigate to="/login" replace />} />
+                <Route path="/signup" element={<Login initialMode="signup" />} />
+                <Route path="/auth/callback" element={<Navigate to="/login" replace />} />
               </Routes>
             </motion.main>
             <Footer />
