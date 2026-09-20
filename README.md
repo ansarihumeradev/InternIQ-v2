@@ -4,7 +4,7 @@ InternIQ is an internship and hiring platform built for freshers and recruiters,
 
 ## Live Demo
 
-🔗 [Add your Vercel deployment link here]
+https://interniq-delta.vercel.app/
 
 ## Features
 
