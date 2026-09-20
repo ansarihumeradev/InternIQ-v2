@@ -1,6 +1,6 @@
 # InternIQ — Advanced Hiring & Internship Platform
 
-InternIQ is an AI-powered internship and hiring platform built for freshers and recruiters, designed as an advanced evolution of traditional internship listing platforms. It combines smart matching, a unified Skill Graph system, career guidance tools, and a trust-driven community layer to make internship discovery smarter and safer for students.
+InternIQ is an internship and hiring platform built for freshers and recruiters, designed as an advanced evolution of traditional internship listing platforms. It combines smart matching, a unified Skill Graph system, career guidance tools, and a trust-driven community layer to make internship discovery smarter and safer for students.
 
 ## Live Demo
 
