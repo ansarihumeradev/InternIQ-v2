@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, User, Bell, Menu, X, Briefcase, ChevronDown, Bookmark } from 'lucide-react';
+import { Menu, X, Briefcase, ChevronDown, Bookmark, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import AuthModal from './AuthModal';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -39,13 +38,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const handleSignInClick = () => {
-    console.log('Sign In button clicked');
-    setIsAuthModalOpen(true);
-  };
-
-  const handleAuthModalClose = () => {
-    console.log('Auth modal close requested');
-    setIsAuthModalOpen(false);
+    navigate('/login');
   };
 
   const handleLogout = () => {
@@ -249,7 +242,6 @@ const Header: React.FC = () => {
         )}
       </header>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={handleAuthModalClose} />
     </>
   );
 };
