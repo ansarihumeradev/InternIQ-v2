@@ -26,7 +26,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: Partial<User> & { password: string }) => Promise<void>;
+  register: (userData: Partial<User> & { password: string }) => Promise<{ success: boolean; requireConfirmation: boolean }>;
   resetPassword: (email: string) => Promise<void>;
   logout: () => void;
   updateProfile: (userData: Partial<User>) => Promise<void>;
@@ -180,14 +180,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const register = async (userData: Partial<User> & { password: string }) => {
+  const register = async (userData: Partial<User> & { password: string }): Promise<{ success: boolean; requireConfirmation: boolean }> => {
     setLoading(true);
     setError(null);
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     try {
       if (!userData.name || !userData.name.trim()) throw new Error('Name is required');
       if (!userData.email || !userData.email.trim()) throw new Error('Email is required');
-      if (!userData.email.includes('@')) throw new Error('Please enter a valid email address');
+      if (!emailRegex.test(userData.email.trim())) {
+        throw new Error('Please enter a valid email address (e.g., name@example.com)');
+      }
       if (!userData.password || userData.password.length < 6) {
         throw new Error('Password must be at least 6 characters long');
       }
@@ -231,15 +235,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.warn('Profile upsert note (trigger handles profile creation):', upsertErr);
       }
 
-      const mapped = await loadProfile(data.user.id, data.user.email!);
-      if (mapped) setUser(mapped);
-
-      // Check if email confirmation is required by Supabase Auth settings
-      if (!data.session) {
-        console.log('User created, confirmation email sent');
-      } else {
-        console.log('Registration successful:', mapped);
+      const requireConfirmation = !data.session;
+      if (data.session) {
+        const mapped = await loadProfile(data.user.id, data.user.email!);
+        if (mapped) setUser(mapped);
       }
+
+      return { success: true, requireConfirmation };
     } catch (err) {
       let errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
       if (errorMessage.toLowerCase().includes('email rate limit exceeded') || errorMessage.includes('429')) {

@@ -398,4 +398,23 @@ CREATE POLICY "Applicants can insert scam report" ON public.scam_reports
     )
   );
 
+-- 9. MOCK INTERVIEWS TABLE & POLICIES
+CREATE TABLE IF NOT EXISTS public.mock_interviews (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  interview_type TEXT NOT NULL,
+  date TEXT NOT NULL,
+  time_slot TEXT NOT NULL,
+  status TEXT DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'completed', 'cancelled')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
+ALTER TABLE public.mock_interviews ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Students can view own mock interviews" ON public.mock_interviews;
+CREATE POLICY "Students can view own mock interviews" ON public.mock_interviews
+  FOR SELECT USING (auth.uid() = student_id);
+
+DROP POLICY IF EXISTS "Students can insert own mock interviews" ON public.mock_interviews;
+CREATE POLICY "Students can insert own mock interviews" ON public.mock_interviews
+  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL AND auth.uid() = student_id);
