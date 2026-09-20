@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  Search, 
-  Users, 
-  Target, 
-  TrendingUp, 
-  CheckCircle, 
+import {
+  Search,
+  Users,
+  Target,
+  TrendingUp,
+  CheckCircle,
   Star,
   ArrowRight,
   Briefcase,
@@ -331,7 +331,7 @@ const Home: React.FC = () => {
                   </span>
                 </h1>
                 <p className="text-xl md:text-2xl text-iq-muted mb-8 max-w-4xl mx-auto leading-relaxed">
-                  Post internships, review pre-screened applications with verified Skill Graphs, 
+                  Post internships, review pre-screened applications with verified Skill Graphs,
                   and fast-track entry-level hiring with zero friction.
                 </p>
               </motion.div>
@@ -541,7 +541,7 @@ const Home: React.FC = () => {
                 Smarter Discovery
               </h1>
               <p className="text-xl md:text-2xl text-iq-muted mb-8 max-w-4xl mx-auto">
-                Connect with relevant opportunities through AI-powered matching, personalized career guidance, 
+                Connect with relevant opportunities through AI-powered matching, personalized career guidance,
                 and comprehensive support for building your professional presence.
               </p>
             </motion.div>
@@ -576,9 +576,8 @@ const Home: React.FC = () => {
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
             >
               {stats.map((stat, index) => (
-                <div key={index} className={`text-center p-5 rounded-card border border-iq-sage/40 shadow-nav backdrop-blur-sm ${
-                  index === 0 ? 'bg-iq-mint/60' : index === 1 ? 'bg-iq-lavender/50' : index === 2 ? 'bg-iq-blue/50' : 'bg-iq-butter/50'
-                }`}>
+                <div key={index} className={`text-center p-5 rounded-card border border-iq-sage/40 shadow-nav backdrop-blur-sm ${index === 0 ? 'bg-iq-mint/60' : index === 1 ? 'bg-iq-lavender/50' : index === 2 ? 'bg-iq-blue/50' : 'bg-iq-butter/50'
+                  }`}>
                   <div className="text-3xl md:text-4xl font-bold text-iq-teal mb-2">
                     {stat.number}
                   </div>
@@ -652,7 +651,7 @@ const Home: React.FC = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-iq-navy mb-4">
-              Why Choose FresherJobs?
+              Why Choose InternIQ?
             </h2>
             <p className="text-xl text-iq-muted max-w-3xl mx-auto">
               We understand the unique challenges freshers face and provide comprehensive solutions for career success
@@ -728,12 +727,12 @@ const Home: React.FC = () => {
                     </span>
                   )}
                 </div>
-                
+
                 <h3 className="font-semibold text-iq-navy mb-2 group-hover:text-iq-teal transition-colors">
                   {job.title}
                 </h3>
                 <p className="text-sm text-iq-muted mb-3">{job.company}</p>
-                
+
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-iq-faint">
                     <MapPin className="h-4 w-4 mr-1" />
