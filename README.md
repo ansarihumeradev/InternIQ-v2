@@ -16,7 +16,7 @@ https://interniq-delta.vercel.app/
   - GitHub activity (repos, languages, commit history)
   - Resume parsing
   - Manually added skills
-- AI-powered internship & job matching based on Skill Graph data
+- Internship & job matching based on Skill Graph data
 - Course recommendations to close identified skill gaps
 - **Career Guidance** hub with mock interview scheduling (real email confirmations via Resend) and curated resources
 - Internship/job search with filters (location, stipend, skills, duration)
